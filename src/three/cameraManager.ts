@@ -39,8 +39,8 @@ export class CameraManager {
   }
 
   public update(time : number): void {
-    // this.camera.position.x = Math.sin(time * 0.1) * 0.1;
-    // this.camera.position.y = Math.cos(time * 0.1) * 0.1;
+    this.camera.position.x = Math.sin(time * 0.1) * 0.5;
+    this.camera.position.y = Math.cos(time * 0.1 + 500) * 0.5;
     // this.camera.position.z = 5
     this.camera.lookAt(0, 0, 0);
   }

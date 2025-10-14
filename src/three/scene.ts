@@ -3,6 +3,8 @@ import gsap from 'gsap';
 import { CameraManager } from './cameraManager';
 import { vec4 ,length, vec2, normalLocal } from 'three/tsl';
 import { Environement } from './environement';
+import Stats from 'stats.js';
+import { PhysicsEngine } from './phisics';
 
 export class SceneManager {
   private static instance: SceneManager;
@@ -11,8 +13,15 @@ export class SceneManager {
   private renderer: THREE.WebGPURenderer;
   private camera: CameraManager;
   private env: Environement;
+  private stats: Stats;
+  private physicsEngine: PhysicsEngine;
 
   private constructor(canvas: HTMLDivElement) {
+    // stats
+    this.physicsEngine = PhysicsEngine.getInstance();
+    this.stats = new Stats();
+    document.body.appendChild( this.stats.dom );
+
     this.scene = new THREE.Scene();
     // this.scene.background = new THREE.Color(0x111121);
     this.canvas = canvas;
@@ -23,7 +32,6 @@ export class SceneManager {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera = CameraManager.getInstance(this.renderer , this.scene);
     this.env = Environement.getInstance(this.scene, this.camera.getCamera(), this.renderer);
-
     // ambian light
     const ambientLight = new THREE.AmbientLight(0x9090c0);
     this.scene.add(ambientLight);
@@ -72,10 +80,12 @@ export class SceneManager {
   }
 
   private animate(time: number, deltatime : number) {
-    // put per-frame logic here (object updates, controls, etc.)
-    this.camera.update(time);
-    this.renderer.render(this.scene, this.camera.getCamera());
-    // this.water.update(time);
+      this.physicsEngine.update(deltatime);
+    	this.stats.begin();
+      this.camera.update(time);
+      this.renderer.render(this.scene, this.camera.getCamera());
+      // this.water.update(time);
+    	this.stats.end();
   }
 
   public getScene(): THREE.Scene {
