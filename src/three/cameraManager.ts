@@ -1,23 +1,22 @@
 import * as THREE from 'three/webgpu';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export class CameraManager {
   private static instance: CameraManager;
   private camera: THREE.PerspectiveCamera;
-  private controls: OrbitControls;
+  private cameraGroup: THREE.Group;
 
   private constructor(renderer: THREE.WebGPURenderer, scene: THREE.Scene) {
     this.camera = new THREE.PerspectiveCamera(
-      75,
+      52,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
+    this.cameraGroup = new THREE.Group();
+    this.cameraGroup.position.set(0, 0, 0);
+    scene.add(this.cameraGroup);
     this.camera.position.set(0, 0, 5);
-
-    this.controls = new OrbitControls(this.camera, renderer.domElement);
-    this.controls.enableDamping = true;
-    scene.add(this.camera);
+    this.cameraGroup.add(this.camera);
 
     window.addEventListener('resize', () => {
       this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -39,7 +38,10 @@ export class CameraManager {
     return this.camera;
   }
 
-  public update(deltatime : number): void {
-    this.controls.update( deltatime);
+  public update(time : number): void {
+    // this.camera.position.x = Math.sin(time * 0.1) * 0.1;
+    // this.camera.position.y = Math.cos(time * 0.1) * 0.1;
+    // this.camera.position.z = 5
+    this.camera.lookAt(0, 0, 0);
   }
 }

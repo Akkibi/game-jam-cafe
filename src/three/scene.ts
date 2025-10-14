@@ -1,8 +1,8 @@
 import * as THREE from 'three/webgpu';
 import gsap from 'gsap';
-// import { Water } from './water';
 import { CameraManager } from './cameraManager';
 import { vec4 ,length, vec2, normalLocal } from 'three/tsl';
+import { Environement } from './environement';
 
 export class SceneManager {
   private static instance: SceneManager;
@@ -10,19 +10,19 @@ export class SceneManager {
   private scene: THREE.Scene;
   private renderer: THREE.WebGPURenderer;
   private camera: CameraManager;
-
+  private env: Environement;
 
   private constructor(canvas: HTMLDivElement) {
     this.scene = new THREE.Scene();
     // this.scene.background = new THREE.Color(0x111121);
     this.canvas = canvas;
     // this.water = Water.getInstance(this.scene);
-
     this.renderer = new THREE.WebGPURenderer();
     this.renderer.init();
     this.renderer.shadowMap.enabled = true;
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera = CameraManager.getInstance(this.renderer , this.scene);
+    this.env = Environement.getInstance(this.scene, this.camera.getCamera(), this.renderer);
 
     // ambian light
     const ambientLight = new THREE.AmbientLight(0x9090c0);
@@ -73,7 +73,7 @@ export class SceneManager {
 
   private animate(time: number, deltatime : number) {
     // put per-frame logic here (object updates, controls, etc.)
-    this.camera.update(deltatime);
+    this.camera.update(time);
     this.renderer.render(this.scene, this.camera.getCamera());
     // this.water.update(time);
   }
