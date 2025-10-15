@@ -4,7 +4,8 @@ import { CameraManager } from './cameraManager';
 import { vec4 ,length, vec2, normalLocal } from 'three/tsl';
 import { Environement } from './environement';
 import Stats from 'stats.js';
-import { PhysicsEngine } from './phisics';
+import { PhysicsEngine } from './physics';
+import { Player } from './player';
 
 export class SceneManager {
   private static instance: SceneManager;
@@ -15,14 +16,15 @@ export class SceneManager {
   private env: Environement;
   private stats: Stats;
   private physicsEngine: PhysicsEngine;
+  private player: Player;
 
   private constructor(canvas: HTMLDivElement) {
     // stats
     this.physicsEngine = PhysicsEngine.getInstance();
     this.stats = new Stats();
     document.body.appendChild( this.stats.dom );
-
     this.scene = new THREE.Scene();
+    this.player = Player.getInstance(this.scene, this.physicsEngine.getPlayer());
     // this.scene.background = new THREE.Color(0x111121);
     this.canvas = canvas;
     // this.water = Water.getInstance(this.scene);
@@ -52,6 +54,18 @@ export class SceneManager {
     window.addEventListener('resize', this.resize.bind(this));
     this.init(canvas);
     this.createBackgroundShader();
+
+
+    // test object
+    const test = new THREE.Mesh(
+      new THREE.BoxGeometry(1, 1, 1),
+      new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+    );
+    test.position.set(0, 0,0 );
+    test.scale.set(0.5, 0.5, 0.5);
+    this.scene.add(test);
+    const id = this.physicsEngine.addObject(test.position, test.scale);
+    console.log(id);
   }
 
   private createBackgroundShader() {
@@ -86,6 +100,8 @@ export class SceneManager {
       this.renderer.render(this.scene, this.camera.getCamera());
       // this.water.update(time);
     	this.stats.end();
+
+     this.player.update(this.physicsEngine.getPlayer());
   }
 
   public getScene(): THREE.Scene {
