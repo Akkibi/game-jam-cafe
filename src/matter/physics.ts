@@ -106,7 +106,7 @@ export class PhysicsEngine {
     this.visualizer.update();
     const speed = this.gamecontrols.getSpeed();
     const bodyVelocity = Matter.Body.getVelocity(this.player);
-    const newVelocityY = speed.y && (this.collisionWatcher.getCollisions().length > 1) ? speed.y : bodyVelocity.y;
+    const newVelocityY = speed.y && (this.collisionWatcher.getCollisions().length > 1) ? speed.y : (bodyVelocity.y > 0 ? bodyVelocity.y -0.1 : bodyVelocity.y ) ;
     const newVelocityX = Math.min(Math.max(bodyVelocity.x + speed.x, -5), 5);
     Matter.Body.setVelocity(this.player, {x: newVelocityX, y: newVelocityY});
     Matter.Body.setAngularSpeed(this.player, 0);

@@ -18,15 +18,16 @@ export class FallingManager {
     this.falls = [];
 
     for (let i = 0; i < 10; i++) {
+      const scale = Math.random() * 0.3 + 0.05;
       const boxPosition = new THREE.Vector3(0, -2, 0);
-      const boxScale = new THREE.Vector3(0.1, 0.1, 0.1);
+      const boxScale = new THREE.Vector3(scale, scale, scale);
       const object = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0x0000ff }));
       object.scale.multiply(boxScale);
       const body = this.physicsEngine.addObject(boxPosition, boxScale, true);
       const elem = {
         mesh: object,
         body: body,
-        distance: Math.random() + 1
+        distance: Math.random() + 1,
       };
       this.falls.push(elem);
       scene.add(object);
@@ -38,9 +39,7 @@ export class FallingManager {
       const fallingObject = this.falls[i];
       if (fallingObject.body.position.y > (window.innerHeight * fallingObject.distance)) {
         Matter.Body.setPosition(fallingObject.body, { x: Math.random() * window.innerWidth, y: -window.innerHeight * 0.5});
-
       }
-
       const newPos = mapCoords(fallingObject.body.position, false);
       const rotation = fallingObject.body.angle;
       this.falls[i].mesh.position.set(newPos.x, newPos.y, 0);

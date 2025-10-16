@@ -4,7 +4,7 @@ export class Visualizer {
   private static instance: Visualizer;
   private render: Matter.Render | null = null;
   private canvas: HTMLCanvasElement | null = null;
-  private visible = true;
+  private visible = false;
   private engine: Matter.Engine;
   private width: number;
   private height: number;
@@ -40,7 +40,7 @@ export class Visualizer {
     this.canvas.style.top = "50%";
     this.canvas.style.left = "50%";
     this.canvas.style.border = "1px solid #888";
-    this.canvas.style.display = "block";
+    this.canvas.style.display = "none";
     this.canvas.style.transform = "scale(0.25) translate(-50%, -50%)";
     document.body.appendChild(this.canvas);
 
