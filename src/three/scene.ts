@@ -60,34 +60,20 @@ export class SceneManager {
     // fallingObjects
     this.fallingManager = FallingManager.getInstance(this.scene, this.physicsEngine);
 
-    // test object
-    const test = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshBasicMaterial({ color: 0x000 })
-    );
-    test.position.set(0, 0,0 );
-    test.scale.set(0.5, 0.5, 1);
-    this.scene.add(test);
-    this.physicsEngine.addObject(test.position, test.scale);
 
-    const test2 = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshBasicMaterial({ color: 0x000 })
-    );
-    test2.position.set(-2, -1,0);
-    test2.scale.set(2, 0.25, 1);
-    this.scene.add(test2);
-    this.physicsEngine.addObject(test2.position, test2.scale);
-
-    const test3 = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshBasicMaterial({ color: 0x000 })
-    );
-    test3.position.set(2, -1,0);
-    test3.scale.set(0.5, 0.25, 1);
-    this.scene.add(test3);
-    this.physicsEngine.addObject(test3.position, test3.scale);
-
+    for (let i = -3; i <= 3; i++) {
+      for (let j = -2; j <= 2; j++) {
+        const test = new THREE.Mesh(
+          new THREE.BoxGeometry(1, 1, 1),
+          new THREE.MeshBasicMaterial({ color: 0x000 })
+        );
+        const pos = j % 2 === 0 ? i : i + 0.5;
+        test.position.set(pos, j * 0.7 - 0.2, 0);
+        test.scale.set(0.5, 0.1, 1);
+        this.scene.add(test);
+        this.physicsEngine.addObject(test.position, test.scale);
+      }
+    }
   }
 
   private createBackgroundShader() {
