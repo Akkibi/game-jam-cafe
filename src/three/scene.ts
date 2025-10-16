@@ -4,8 +4,9 @@ import { CameraManager } from './cameraManager';
 import { vec4 ,length, vec2, normalLocal } from 'three/tsl';
 import { Environement } from './environement';
 import Stats from 'stats.js';
-import { PhysicsEngine } from './physics';
+import { PhysicsEngine } from '../matter/physics';
 import { Player } from './player';
+import { FallingManager } from './fallingManager';
 
 export class SceneManager {
   private static instance: SceneManager;
@@ -17,6 +18,7 @@ export class SceneManager {
   private stats: Stats;
   private physicsEngine: PhysicsEngine;
   private player: Player;
+  private fallingManager: FallingManager;
 
   private constructor(canvas: HTMLDivElement) {
     // stats
@@ -55,17 +57,37 @@ export class SceneManager {
     this.init(canvas);
     this.createBackgroundShader();
 
+    // fallingObjects
+    this.fallingManager = FallingManager.getInstance(this.scene, this.physicsEngine);
 
     // test object
     const test = new THREE.Mesh(
       new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+      new THREE.MeshBasicMaterial({ color: 0xff0000 })
     );
     test.position.set(0, 0,0 );
     test.scale.set(0.5, 0.5, 0.5);
     this.scene.add(test);
-    const id = this.physicsEngine.addObject(test.position, test.scale);
-    console.log(id);
+    this.physicsEngine.addObject(test.position, test.scale);
+
+    const test2 = new THREE.Mesh(
+      new THREE.BoxGeometry(1, 1, 1),
+      new THREE.MeshBasicMaterial({ color: 0xff0000 })
+    );
+    test2.position.set(-2, -1,0);
+    test2.scale.set(2, 0.25, 0.5);
+    this.scene.add(test2);
+    this.physicsEngine.addObject(test2.position, test2.scale);
+
+    const test3 = new THREE.Mesh(
+      new THREE.BoxGeometry(1, 1, 1),
+      new THREE.MeshBasicMaterial({ color: 0xff0000 })
+    );
+    test3.position.set(2, -1,0);
+    test3.scale.set(0.5, 0.25, 0.5);
+    this.scene.add(test3);
+    this.physicsEngine.addObject(test3.position, test3.scale);
+
   }
 
   private createBackgroundShader() {
@@ -94,14 +116,15 @@ export class SceneManager {
   }
 
   private animate(time: number, deltatime : number) {
-      this.physicsEngine.update(deltatime);
     	this.stats.begin();
+      this.physicsEngine.update(deltatime);
       this.camera.update(time);
       this.renderer.render(this.scene, this.camera.getCamera());
       // this.water.update(time);
-    	this.stats.end();
 
      this.player.update(this.physicsEngine.getPlayer());
+     this.fallingManager.update();
+   	this.stats.end();
   }
 
   public getScene(): THREE.Scene {

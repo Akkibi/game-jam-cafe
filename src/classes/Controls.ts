@@ -1,8 +1,18 @@
 import Axis from "axis-api";
 import { useStore } from "../store/globalStore";
+import type { Vec2Type } from "../matter/physics";
 
-export class Controls {
-	constructor() {
+
+export class GameControls {
+  private static instance: GameControls;
+  private gamepadSpeed: Vec2Type = {x: 0, y: 0};
+  private keyDownSpeed: Vec2Type = {x: 0, y: 0};
+  private keysPressed : boolean[] = [false, false, false];
+  private moveSpeed: number;
+
+	private constructor() {
+    this.moveSpeed = window.innerHeight * 0.0006;
+    console.log("this.gamepadSpeed",this.gamepadSpeed);
 		// Map Keyboard Keys to Axis Machine Buttons from group 1
 		Axis.registerKeys("q", "a", 1); // keyboard key "q" to button "a" from group 1
 		Axis.registerKeys("d", "x", 1); // keyboard key "d" to button "x" from group 1
@@ -43,63 +53,113 @@ export class Controls {
 		update();
 	}
 
-	public handleInputGamepad(e) {
+	public getSpeed = () => {
+	  const speed = {x: this.gamepadSpeed.x, y: this.gamepadSpeed.y};
+	  if (this.keysPressed[0]){
+			this.keysPressed[0] = false;
+			this.gamepadSpeed.y = 0;
+	  }
+		return speed;
+	}
+
+	public static getInstance(): GameControls {
+        if (!GameControls.instance) {
+            GameControls.instance = new GameControls();
+        }
+        return GameControls.instance;
+    }
+
+
+	public handleInputGamepad(e : Axis.GamepadEmulatorEvent) {
 		// Now this will correctly receive events from both joysticks
+    // console.log(e);
 		if (e.id === 1) {
-			const speed = 50;
-			console.log(
-				"Joystick 1 (Left):",
-				speed * e.position.x,
-				speed * e.position.y
-			);
+			// console.log(
+			// 	"Joystick 1 (Left):",
+			// 	speed * e.position.x,
+			// 	speed * e.position.y
+			// );
+			console.log(this.gamepadSpeed);
+			this.gamepadSpeed.x = this.moveSpeed * e.position.x;
+			this.gamepadSpeed.y = this.moveSpeed * e.position.y;
 		}
 
-		if (e.id === 2) {
-			const speed = 50;
-			console.log(
-				"Joystick 2 (Right):",
-				speed * e.position.x,
-				speed * e.position.y
-			);
-		}
+		// if (e.id === 2) {
+		// 	const speed = 50;
+		// 	console.log(
+		// 		"Joystick 2 (Right):",
+		// 		speed * e.position.x,
+		// 		speed * e.position.y
+		// 	);
+		// }
 	}
 
 	public handleInputKeyboard(event: KeyboardEvent) {
 		const gameState = useStore.getState();
 		if (gameState.game_status === "game_over") return;
-
-		console.log(event.type, event.key);
+		console.log(this.gamepadSpeed, event, event.key);
 
 		switch (event.key) {
-			case "ArrowUp":
-				console.log("Move player up");
-				break;
-			case "ArrowDown":
-				console.log("Move player down");
-				break;
-			case "ArrowLeft":
+			// case "i":
+			//   this.keysPressed[0] = true;
+			// 	console.log("Move player up");
+			// 	break;
+			// case "s":
+			//   this.keysPressed[2] = true;
+			// 	console.log("Move player down");
+			// 	break;
+			case "a":
+			this.keysPressed[1] = true;
 				console.log("Move player left");
 				break;
-			case "ArrowRight":
+			case "x":
+			this.keysPressed[2] = true;
 				console.log("Move player right");
 				break;
+      case "i":
+      this.keysPressed[0] = true;
+        break;
+			default:
+				break;
+		}
+		this.updateKeySpeed();
+	};
+
+	public handleRemoveInputKeyboard(event: KeyboardEvent) {
+		switch (event.key) {
+			// case "i":
+			// this.keysPressed[0] = false;
+			// 	console.log("Move player up");
+			// 	break;
+			// case "s":
+			// this.keysPressed[2] = false;
+			// 	console.log("Move player down");
+			// 	break;
 			case "a":
-				console.log("A pressed");
+			this.keysPressed[1] = false;
+				console.log("Move player left");
 				break;
-			case "d":
-				console.log("D pressed");
-				break;
-			case " ":
-				console.log("Space pressed");
+			case "x":
+			this.keysPressed[2] = false;
+				console.log("Move player right");
 				break;
 			default:
 				break;
 		}
+		this.updateKeySpeed();
+	};
+
+	private updateKeySpeed() {
+		this.gamepadSpeed.x = this.keysPressed[1] && !this.keysPressed[2] ? -this.moveSpeed : (!this.keysPressed[1] && this.keysPressed[2])? this.moveSpeed : 0;
+		if (this.keysPressed[0]){
+			this.gamepadSpeed.y = -this.moveSpeed * 20;
+			console.log("Move player up");
+		}
 	}
 
 	public keyHandlerSetup() {
-		Axis.addEventListener("keydown", this.handleInputKeyboard);
-		Axis.addEventListener("keyup", this.handleInputKeyboard);
-		Axis.addEventListener("joystick:move", this.handleInputGamepad);
+		Axis.addEventListener("keydown", this.handleInputKeyboard.bind(this));
+		Axis.addEventListener("keyup", this.handleRemoveInputKeyboard.bind(this));
+		Axis.addEventListener("joystick:move", this.handleInputGamepad.bind(this));
 	}
 }

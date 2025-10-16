@@ -1,10 +1,14 @@
-import { Controls } from "./classes/Controls";
+
+// import { useEffect } from "react";
 import ThreeManager from "./three/threeScene";
+// import { GameControls } from "./classes/Controls";
 
 function App() {
-	const controls = new Controls();
 
-	controls.keyHandlerSetup();
+  // useEffect(() => {
+  //   const controls = GameControls.getInstance();
+  //   controls.keyHandlerSetup();
+  // }, [])
 
 	return <ThreeManager />;
 }
