@@ -27,7 +27,7 @@ export class Player {
   }
 
   public update(body: Matter.Body) {
-    if (body.position.y > window.innerHeight) {
+    if (body.position.y > window.innerHeight * 1.5) {
       Matter.Body.setPosition(body, { x: body.position.x, y: -window.innerHeight * 0.5});
 
     }

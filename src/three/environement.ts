@@ -5,15 +5,11 @@ import { PhysicsEngine } from '../matter/physics';
 export class Environement {
   private static instance: Environement;
   private scene: THREE.Scene;
-  private camera: THREE.Camera;
-  private renderer: THREE.WebGPURenderer;
   private instanceGroup: THREE.Group;
   private physicsEngine: PhysicsEngine;
 
-  private constructor(scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGPURenderer) {
+  private constructor(scene: THREE.Scene) {
     this.scene = scene;
-    this.camera = camera;
-    this.renderer = renderer;
     this.instanceGroup = new THREE.Group();
     this.scene.add(this.instanceGroup);
     this.physicsEngine = PhysicsEngine.getInstance();
@@ -33,9 +29,9 @@ export class Environement {
     this.physicsEngine.addObject(boxPosition, boxScale, true);
   }
 
-  public static getInstance(scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGPURenderer): Environement {
+  public static getInstance(scene: THREE.Scene): Environement {
     if (!Environement.instance) {
-      Environement.instance = new Environement(scene, camera, renderer);
+      Environement.instance = new Environement(scene);
     }
     return Environement.instance;
   }

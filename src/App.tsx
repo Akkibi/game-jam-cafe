@@ -1,6 +1,7 @@
 
 // import { useEffect } from "react";
 import ThreeManager from "./three/threeScene";
+import UiElements from "./uiElements";
 // import { GameControls } from "./classes/Controls";
 
 function App() {
@@ -10,7 +11,10 @@ function App() {
   //   controls.keyHandlerSetup();
   // }, [])
 
-	return <ThreeManager />;
+	return <>
+	<ThreeManager />
+	<UiElements/>
+	</>
 }
 
 export default App;

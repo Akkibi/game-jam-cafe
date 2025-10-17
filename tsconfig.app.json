@@ -24,5 +24,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "src/classes/CoffeeGrinder.ts"]
+  "include": ["src", "src/classes/CoffeeGrinder.ts", "global.d.ts"]
 }

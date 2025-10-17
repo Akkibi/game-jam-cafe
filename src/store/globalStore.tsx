@@ -22,6 +22,7 @@ type Store = {
 	) => void;
 	setCaffeineLvl: (n: number) => void;
 	setPlayerSmashed: (n: boolean) => void;
+	isGameOver: boolean;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -31,4 +32,5 @@ export const useStore = create<Store>((set) => ({
 	setGameStatus: (status) => set(() => ({ game_status: status })),
 	setCaffeineLvl: (n) => set(() => ({ caffeineLvl: n })),
 	setPlayerSmashed: (n) => set(() => ({ playerSmashed: n })),
+	isGameOver: false,
 }));

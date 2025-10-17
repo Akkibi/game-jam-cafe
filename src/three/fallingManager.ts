@@ -17,11 +17,16 @@ export class FallingManager {
     this.physicsEngine = physicsEngine;
     this.falls = [];
 
-    for (let i = 0; i < 10; i++) {
+    const link = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWOM_o2oTW8KUqTXv45lrQlw2yFDvbG8uvZszj2luLZNKdpGva847aBYnsDahiBoWXDIA&usqp=CAU";
+
+    const texture = new THREE.TextureLoader().load(link )
+texture.colorSpace = THREE.SRGBColorSpace;
+
+    for (let i = 0; i < 20; i++) {
       const scale = Math.random() * 0.3 + 0.05;
       const boxPosition = new THREE.Vector3(0, -2, 0);
       const boxScale = new THREE.Vector3(scale, scale, scale);
-      const object = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0x0000ff }));
+      const object = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({map : texture}));
       object.scale.multiply(boxScale);
       const body = this.physicsEngine.addObject(boxPosition, boxScale, true);
       const elem = {
@@ -32,6 +37,7 @@ export class FallingManager {
       this.falls.push(elem);
       scene.add(object);
     }
+
   }
 
   update(): void {

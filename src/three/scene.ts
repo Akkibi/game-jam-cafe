@@ -34,8 +34,8 @@ export class SceneManager {
     this.renderer.init();
     this.renderer.shadowMap.enabled = true;
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.camera = CameraManager.getInstance(this.renderer , this.scene);
-    this.env = Environement.getInstance(this.scene, this.camera.getCamera(), this.renderer);
+    this.camera = CameraManager.getInstance(this.scene);
+    this.env = Environement.getInstance(this.scene);
     // ambian light
     const ambientLight = new THREE.AmbientLight(0x9090c0);
     this.scene.add(ambientLight);
@@ -61,19 +61,21 @@ export class SceneManager {
     this.fallingManager = FallingManager.getInstance(this.scene, this.physicsEngine);
 
 
-    for (let i = -3; i <= 3; i++) {
+    for (let i = -2; i <= 2; i++) {
       for (let j = -2; j <= 2; j++) {
         const test = new THREE.Mesh(
           new THREE.BoxGeometry(1, 1, 1),
           new THREE.MeshBasicMaterial({ color: 0x000 })
         );
-        const pos = j % 2 === 0 ? i : i + 0.5;
+        const pos = j % 2 === 0 ? i * 1.5 : i * 1.5 + 0.8;
         test.position.set(pos, j * 0.7 - 0.2, 0);
         test.scale.set(0.5, 0.1, 1);
         this.scene.add(test);
         this.physicsEngine.addObject(test.position, test.scale);
       }
     }
+
+    console.log(this.canvas, this.env);
   }
 
   private createBackgroundShader() {
@@ -110,7 +112,7 @@ export class SceneManager {
 
      this.player.update(this.physicsEngine.getPlayer());
      this.fallingManager.update();
-   	this.stats.end();
+     this.stats.end();
   }
 
   public getScene(): THREE.Scene {

@@ -39,24 +39,22 @@ export class PhysicsEngine {
   private static _instance: PhysicsEngine;
   private engine: Matter.Engine;
   private player: Matter.Body;
-  private box: Matter.Body;
   private visualizer: Visualizer;
   private collisionWatcher: CollisionWatcher;
   private gamecontrols : GameControls;
+  private lastTouch : number;
 
   private constructor() {
+    this.lastTouch = 0;
     this.gamecontrols = GameControls.getInstance()
     this.gamecontrols.keyHandlerSetup();
     this.engine = Matter.Engine.create();
-    this.player = Matter.Bodies.rectangle(40, 0, 40, 80, { restitution: 0, friction: 0.01 });
+    this.player = Matter.Bodies.rectangle(40, 0, 40, 80, { restitution: 0, friction: 0.05 });
     this.player.inertia = Infinity;
     // Matter.Body.setAngularVelocity(this.player, 0);
 
-    this.box = Matter.Bodies.rectangle(150, -100, 40, 40, { restitution: 0.5 });
-
-    const colliders = [this.player, this.box];
+    const colliders = [this.player];
     Matter.World.add(this.engine.world, colliders);
-    this.bindControls();
     this.visualizer = Visualizer.getInstance(this.engine);
     this.collisionWatcher = CollisionWatcher.getInstance(this.player);
     this.collisionWatcher.addBodies(colliders);
@@ -85,29 +83,20 @@ export class PhysicsEngine {
     Matter.World.remove(this.engine.world, object);
   }
 
-  private bindControls(): void {
-    // document.addEventListener("keydown", (event) => {
-    //     const speed = 5;
-    //     const body = this.player
-    //     const velocity = { x: body.velocity.x, y: body.velocity.y };
-
-    //     console.log(this.collisionWatcher.getCollisions());
-    //     if (event.key === 'ArrowUp' && this.collisionWatcher.getCollisions().length > 0) velocity.y = -speed * 2;
-    //     if (event.key === 'ArrowDown') velocity.y = speed;
-    //     if (event.key === 'ArrowLeft') velocity.x = -speed;
-    //     if (event.key === 'ArrowRight') velocity.x = speed;
-
-    //     Matter.Body.setVelocity(body, velocity);
-    // });
-  }
-
   public update(deltaTime: number): void {
+
     Matter.Engine.update(this.engine, deltaTime);
     this.visualizer.update();
+
     const speed = this.gamecontrols.getSpeed();
     const bodyVelocity = Matter.Body.getVelocity(this.player);
-    const newVelocityY = speed.y && (this.collisionWatcher.getCollisions().length > 1) ? speed.y : (bodyVelocity.y > 0 ? bodyVelocity.y -0.1 : bodyVelocity.y ) ;
+    if (this.collisionWatcher.getCollisions().length > 1) {
+      this.lastTouch = Date.now();
+    }
+    const isTouch = this.lastTouch > Date.now() - 200;
+    const newVelocityY = speed.y && isTouch ? speed.y : (bodyVelocity.y > 0 ? Math.min(bodyVelocity.y +1, 25) : bodyVelocity.y ) ;
     const newVelocityX = Math.min(Math.max(bodyVelocity.x + speed.x, -5), 5);
+
     Matter.Body.setVelocity(this.player, {x: newVelocityX, y: newVelocityY});
     Matter.Body.setAngularSpeed(this.player, 0);
 
