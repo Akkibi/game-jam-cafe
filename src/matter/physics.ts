@@ -5,8 +5,8 @@ import * as THREE from "three/webgpu";
 import { GameControls } from "../classes/Controls";
 
 export interface Vec2Type {
-    x: number;
-    y: number;
+  x: number;
+  y: number;
 }
 
 export interface Range {
@@ -19,19 +19,28 @@ export interface RangeType {
   y: Range;
 }
 
-const threeRange = { x: { min: -3.4, max: 3.4 }, y: { min: -1.9, max: 1.9 } }
-const matterRange = { x: { min: 0, max: window.innerWidth }, y: { min: 0, max: window.innerHeight } }
+const threeRange = { x: { min: -3.4, max: 3.4 }, y: { min: -1.9, max: 1.9 } };
+const matterRange = {
+  x: { min: 0, max: window.innerWidth },
+  y: { min: 0, max: window.innerHeight },
+};
 const amplitude = { x: window.innerWidth / 6.8, y: window.innerHeight / 3.8 };
-export function mapRange(value : number, inMin : number, inMax : number, outMin : number, outMax : number) {
+export function mapRange(
+  value: number,
+  inMin: number,
+  inMax: number,
+  outMin: number,
+  outMax: number,
+) {
   return outMin + ((value - inMin) * (outMax - outMin)) / (inMax - inMin);
 }
 
-export function mapCoords({ x, y } : Vec2Type, tToM : boolean) : Vec2Type {
+export function mapCoords({ x, y }: Vec2Type, tToM: boolean): Vec2Type {
   const initial = tToM ? threeRange : matterRange;
   const target = tToM ? matterRange : threeRange;
   return {
     x: mapRange(x, initial.x.min, initial.x.max, target.x.min, target.x.max),
-    y: mapRange(y, initial.y.min, initial.y.max, target.y.max, target.y.min) // invert Y if needed
+    y: mapRange(y, initial.y.min, initial.y.max, target.y.max, target.y.min), // invert Y if needed
   };
 }
 
@@ -41,15 +50,18 @@ export class PhysicsEngine {
   private player: Matter.Body;
   private visualizer: Visualizer;
   private collisionWatcher: CollisionWatcher;
-  private gamecontrols : GameControls;
-  private lastTouch : number;
+  private gamecontrols: GameControls;
+  private lastTouch: number;
 
   private constructor() {
     this.lastTouch = 0;
-    this.gamecontrols = GameControls.getInstance()
+    this.gamecontrols = GameControls.getInstance();
     this.gamecontrols.keyHandlerSetup();
     this.engine = Matter.Engine.create();
-    this.player = Matter.Bodies.rectangle(40, 0, 40, 80, { restitution: 0, friction: 0.05 });
+    this.player = Matter.Bodies.rectangle(40, 0, 40, 80, {
+      restitution: 0,
+      friction: 0.05,
+    });
     this.player.inertia = Infinity;
     // Matter.Body.setAngularVelocity(this.player, 0);
 
@@ -67,11 +79,21 @@ export class PhysicsEngine {
 
   public getPlayer = (): Matter.Body => this.player;
 
-  public addObject(position: THREE.Vector3, size: THREE.Vector3, moving: boolean = false): Matter.Body {
+  public addObject(
+    position: THREE.Vector3,
+    size: THREE.Vector3,
+    moving: boolean = false,
+  ): Matter.Body {
     const newCoord = mapCoords(position, true);
 
     // console.log(newCoord, {x: 40, y: 40});
-    const object = Matter.Bodies.rectangle(newCoord.x, newCoord.y, size.x * amplitude.x, size.y * amplitude.y, { isStatic: !moving });
+    const object = Matter.Bodies.rectangle(
+      newCoord.x,
+      newCoord.y,
+      size.x * amplitude.x,
+      size.y * amplitude.y,
+      { isStatic: !moving },
+    );
 
     Matter.World.add(this.engine.world, object);
     this.collisionWatcher.addBodies([object]);
@@ -84,21 +106,28 @@ export class PhysicsEngine {
   }
 
   public update(deltaTime: number): void {
-
     Matter.Engine.update(this.engine, deltaTime);
     this.visualizer.update();
 
     const speed = this.gamecontrols.getSpeed();
     const bodyVelocity = Matter.Body.getVelocity(this.player);
-    if (this.collisionWatcher.getCollisions().length > 1) {
+    const isCurrentTouch = this.collisionWatcher.getCollisions().length > 1;
+    if (this.collisionWatcher.getCollisions().length > 1) {
       this.lastTouch = Date.now();
     }
-    const isTouch = this.lastTouch > Date.now() - 200;
-    const newVelocityY = speed.y && isTouch ? speed.y : (bodyVelocity.y > 0 ? Math.min(bodyVelocity.y +1, 25) : bodyVelocity.y ) ;
-    const newVelocityX = Math.min(Math.max(bodyVelocity.x + speed.x, -5), 5);
+    const isTouch = isCurrentTouch ? true : this.lastTouch > Date.now() - 200;
+    const newVelocityY =
+      speed.y && isTouch
+        ? speed.y
+        : bodyVelocity.y > 0
+          ? Math.min(bodyVelocity.y + 1, 25)
+          : bodyVelocity.y;
+    const newVelocityX = Math.min(
+      Math.max(bodyVelocity.x + speed.x * (isCurrentTouch ? 1.5 : 1), -5),
+      5,
+    );
 
-    Matter.Body.setVelocity(this.player, {x: newVelocityX, y: newVelocityY});
+    Matter.Body.setVelocity(this.player, { x: newVelocityX, y: newVelocityY });
     Matter.Body.setAngularSpeed(this.player, 0);
-
-  };
+  }
 }

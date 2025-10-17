@@ -1,12 +1,11 @@
-import * as THREE from 'three/webgpu';
-import gsap from 'gsap';
-import { CameraManager } from './cameraManager';
-import { vec4 ,length, vec2, normalLocal } from 'three/tsl';
-import { Environement } from './environement';
-import Stats from 'stats.js';
-import { PhysicsEngine } from '../matter/physics';
-import { Player } from './player';
-import { FallingManager } from './fallingManager';
+import * as THREE from "three/webgpu";
+import gsap from "gsap";
+import { CameraManager } from "./cameraManager";
+import { Environement } from "./environement";
+import Stats from "stats.js";
+import { PhysicsEngine } from "../matter/physics";
+import { Player } from "./player";
+import { FallingManager } from "./fallingManager";
 
 export class SceneManager {
   private static instance: SceneManager;
@@ -24,9 +23,12 @@ export class SceneManager {
     // stats
     this.physicsEngine = PhysicsEngine.getInstance();
     this.stats = new Stats();
-    document.body.appendChild( this.stats.dom );
+    document.body.appendChild(this.stats.dom);
     this.scene = new THREE.Scene();
-    this.player = Player.getInstance(this.scene, this.physicsEngine.getPlayer());
+    this.player = Player.getInstance(
+      this.scene,
+      this.physicsEngine.getPlayer(),
+    );
     // this.scene.background = new THREE.Color(0x111121);
     this.canvas = canvas;
     // this.water = Water.getInstance(this.scene);
@@ -52,20 +54,22 @@ export class SceneManager {
     this.scene.add(sunLight);
 
     // hook GSAP ticker instead of setAnimationLoop
-    gsap.ticker.add((time, deltatime) => this.animate(time,deltatime));
-    window.addEventListener('resize', this.resize.bind(this));
+    gsap.ticker.add((time, deltatime) => this.animate(time, deltatime));
+    window.addEventListener("resize", this.resize.bind(this));
     this.init(canvas);
-    this.createBackgroundShader();
+    // this.createBackgroundShader();
 
     // fallingObjects
-    this.fallingManager = FallingManager.getInstance(this.scene, this.physicsEngine);
-
+    this.fallingManager = FallingManager.getInstance(
+      this.scene,
+      this.physicsEngine,
+    );
 
     for (let i = -2; i <= 2; i++) {
       for (let j = -2; j <= 2; j++) {
         const test = new THREE.Mesh(
           new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshBasicMaterial({ color: 0x000 })
+          new THREE.MeshBasicMaterial({ color: 0x000 }),
         );
         const pos = j % 2 === 0 ? i * 1.5 : i * 1.5 + 0.8;
         test.position.set(pos, j * 0.7 - 0.2, 0);
@@ -78,9 +82,9 @@ export class SceneManager {
     console.log(this.canvas, this.env);
   }
 
-  private createBackgroundShader() {
-    this.scene.backgroundNode = vec4(length(vec2(normalLocal.add(0, - 0.5))), length(vec2(normalLocal.add(0.5, - 0.5))), length(vec2(normalLocal.add(1, - 0.5))), 1);
-  }
+  // private createBackgroundShader() {
+  //   this.scene.backgroundNode = vec4(length(vec2(normalLocal.add(0, - 0.5))), length(vec2(normalLocal.add(0.5, - 0.5))), length(vec2(normalLocal.add(1, - 0.5))), 1);
+  // }
 
   public static getInstance(canvas: HTMLDivElement): SceneManager {
     if (!SceneManager.instance) {
@@ -103,16 +107,16 @@ export class SceneManager {
     canvas.appendChild(this.renderer.domElement);
   }
 
-  private animate(time: number, deltatime : number) {
-    	this.stats.begin();
-      this.physicsEngine.update(deltatime);
-      this.camera.update(time);
-      this.renderer.render(this.scene, this.camera.getCamera());
-      // this.water.update(time);
+  private animate(time: number, deltatime: number) {
+    this.stats.begin();
+    this.physicsEngine.update(deltatime);
+    this.camera.update(deltatime);
+    this.renderer.render(this.scene, this.camera.getCamera());
+    // this.water.update(time);
 
-     this.player.update(this.physicsEngine.getPlayer());
-     this.fallingManager.update();
-     this.stats.end();
+    this.player.update(this.physicsEngine.getPlayer());
+    this.fallingManager.update();
+    this.stats.end();
   }
 
   public getScene(): THREE.Scene {
