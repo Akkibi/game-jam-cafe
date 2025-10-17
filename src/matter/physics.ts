@@ -120,7 +120,7 @@ export class PhysicsEngine {
       speed.y && isTouch
         ? speed.y
         : bodyVelocity.y > 0
-          ? Math.min(bodyVelocity.y + 1, 25)
+          ? Math.min(bodyVelocity.y + 0.05 * deltaTime, 25)
           : bodyVelocity.y;
     const newVelocityX = Math.min(
       Math.max(bodyVelocity.x + speed.x * (isCurrentTouch ? 1.5 : 1), -5),

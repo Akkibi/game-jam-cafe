@@ -54,7 +54,7 @@ export class SceneManager {
     this.scene.add(sunLight);
 
     // hook GSAP ticker instead of setAnimationLoop
-    gsap.ticker.add((deltatime) => this.animate(deltatime));
+    gsap.ticker.add((_time, deltatime) => this.animate(deltatime));
     window.addEventListener("resize", this.resize.bind(this));
     this.init(canvas);
     // this.createBackgroundShader();
@@ -109,7 +109,7 @@ export class SceneManager {
 
   private animate(deltatime: number) {
     this.stats.begin();
-    this.physicsEngine.update(deltatime);
+    this.physicsEngine.update(deltatime * 1.5);
     this.camera.update(deltatime);
     this.renderer.render(this.scene, this.camera.getCamera());
     // this.water.update(time);
