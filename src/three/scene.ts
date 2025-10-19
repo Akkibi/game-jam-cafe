@@ -65,18 +65,33 @@ export class SceneManager {
       this.physicsEngine,
     );
 
-    for (let i = -2; i <= 2; i++) {
-      for (let j = -2; j <= 2; j++) {
-        const test = new THREE.Mesh(
-          new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshBasicMaterial({ color: 0x000 }),
-        );
-        const pos = j % 2 === 0 ? i * 1.5 : i * 1.5 + 0.8;
-        test.position.set(pos, j * 0.7 - 0.2, 0);
-        test.scale.set(0.5, 0.1, 1);
-        this.scene.add(test);
-        this.physicsEngine.addObject(test.position, test.scale);
-      }
+    // for (let i = -2; i <= 2; i++) {
+    //   for (let j = -2; j <= 2; j++) {
+    //     const test = new THREE.Mesh(
+    //       new THREE.BoxGeometry(1, 1, 1),
+    //       new THREE.MeshBasicMaterial({ color: 0x000 }),
+    //     );
+    //     const pos = j % 2 === 0 ? i * 1.5 : i * 1.5 + 0.8;
+    //     test.position.set(pos, j * 0.7 - 0.2, 0);
+    //     test.scale.set(0.5, 0.1, 1);
+    //     this.scene.add(test);
+    //     this.physicsEngine.addObject(test.position, test.scale);
+    //   }
+    // }
+
+    for (let i = 0; i < 20; i++) {
+      const plateform = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        new THREE.MeshBasicMaterial({ color: 0x000 }),
+      );
+      plateform.position.set(
+        (Math.random() - 0.5) * 6,
+        (Math.random() - 0.5) * 3,
+        0,
+      );
+      plateform.scale.set(0.5 * Math.random() + 0.5, 0.15, 1.9);
+      this.scene.add(plateform);
+      this.physicsEngine.addObject(plateform.position, plateform.scale);
     }
 
     console.log(this.canvas, this.env);
@@ -114,7 +129,7 @@ export class SceneManager {
     this.renderer.render(this.scene, this.camera.getCamera());
     // this.water.update(time);
 
-    this.player.update(this.physicsEngine.getPlayer());
+    this.player.update(deltatime);
     this.fallingManager.update();
     this.stats.end();
   }

@@ -115,18 +115,21 @@ export class PhysicsEngine {
     if (this.collisionWatcher.getCollisions().length > 1) {
       this.lastTouch = Date.now();
     }
-    const isTouch = isCurrentTouch ? true : this.lastTouch > Date.now() - 200;
-    const newVelocityY =
-      speed.y && isTouch
-        ? speed.y
-        : bodyVelocity.y > 0
-          ? Math.min(bodyVelocity.y + 0.05 * deltaTime, 25)
-          : bodyVelocity.y;
+    const isTouch = isCurrentTouch ? true : this.lastTouch > Date.now() - 100;
+
+    let newVelocityY = bodyVelocity.y;
+
+    if (bodyVelocity.y > 0 && !isTouch) {
+      newVelocityY = Math.min(bodyVelocity.y + 0.05 * deltaTime, 25);
+    }
+    if (speed.y && isTouch) {
+      newVelocityY = speed.y;
+    }
+
     const newVelocityX = Math.min(
-      Math.max(bodyVelocity.x + speed.x * (isCurrentTouch ? 1.5 : 1), -5),
+      Math.max(bodyVelocity.x + speed.x * (isCurrentTouch ? 1.6 : 1), -5),
       5,
     );
-
     Matter.Body.setVelocity(this.player, { x: newVelocityX, y: newVelocityY });
     Matter.Body.setAngularSpeed(this.player, 0);
   }

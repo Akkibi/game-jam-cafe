@@ -1,0 +1,31 @@
+export const characterRunFrames = [
+  "/assets/sprites/run1.opti.webp",
+  "/assets/sprites/run2.opti.webp",
+  "/assets/sprites/run3.opti.webp",
+  "/assets/sprites/run4.opti.webp",
+  "/assets/sprites/run1_c.opti.webp",
+  "/assets/sprites/run2.opti.webp",
+  "/assets/sprites/run3.opti.webp",
+  "/assets/sprites/run4.opti.webp",
+  "/assets/sprites/run1.opti.webp",
+  "/assets/sprites/run2_c.opti.webp",
+  "/assets/sprites/run3.opti.webp",
+  "/assets/sprites/run4.opti.webp",
+  "/assets/sprites/run1.opti.webp",
+  "/assets/sprites/run2.opti.webp",
+  "/assets/sprites/run3_c.opti.webp",
+  "/assets/sprites/run4.opti.webp",
+  "/assets/sprites/run1.opti.webp",
+  "/assets/sprites/run2.opti.webp",
+  "/assets/sprites/run3.opti.webp",
+  "/assets/sprites/run4_c.opti.webp",
+];
+
+export const characterIdleFrames = [
+  "/assets/sprites/idle1.opti.webp",
+  "/assets/sprites/idle2.opti.webp",
+  "/assets/sprites/idle1_c.opti.webp",
+  "/assets/sprites/idle2.opti.webp",
+  "/assets/sprites/idle1.opti.webp",
+  "/assets/sprites/idle2_c.opti.webp",
+];

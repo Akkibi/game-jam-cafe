@@ -1,17 +1,24 @@
 import Matter from "matter-js";
-import * as THREE from "three/webgpu"
+import * as THREE from "three/webgpu";
 import { mapCoords } from "../matter/physics";
+import Animation from "../utils/animationManager";
+import { characterIdleFrames, characterRunFrames } from "../static";
+import { GameControls } from "../classes/Controls";
 
-
-const physicsScale = 0.004;
+const physicsScale = 0.25;
 // const physicsTransform = new THREE.Vector2(-window.innerWidth/2, -window.innerHeight/2);
 
 export class Player {
   private static _instance: Player;
   private object: THREE.Mesh;
   private scene: THREE.Scene;
+  private body: Matter.Body;
+  private animationManager: Animation;
+  private controls: GameControls;
+  private isRunning: boolean;
+  private isright: boolean;
 
-  public static getInstance(scene : THREE.Scene, body: Matter.Body): Player {
+  public static getInstance(scene: THREE.Scene, body: Matter.Body): Player {
     if (!Player._instance) {
       Player._instance = new Player(scene, body);
     }
@@ -20,20 +27,76 @@ export class Player {
 
   constructor(scene: THREE.Scene, body: Matter.Body) {
     this.scene = scene;
-    const width = body.bounds.max.x - body.bounds.min.x;
-    const height = body.bounds.max.y - body.bounds.min.y;
-    this.object = new THREE.Mesh(new THREE.PlaneGeometry(width * physicsScale, height * physicsScale), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+    this.isRunning = false;
+    this.isright = false;
+    this.body = body;
+    this.controls = GameControls.getInstance();
+    // const width = body.bounds.max.x - body.bounds.min.x;
+    // const height = body.bounds.max.y - body.bounds.min.y;
+    const width = 0.788530466;
+    const height = 1;
+    const material = new THREE.MeshBasicMaterial({
+      map: null,
+      transparent: true,
+    });
+    this.object = new THREE.Mesh(
+      new THREE.PlaneGeometry(width * physicsScale, height * physicsScale),
+      material,
+    );
     this.scene.add(this.object);
+    this.animationManager = new Animation(material);
+    this.animationManager.setFrame(0);
+    this.animationManager.set(characterIdleFrames);
+    this.animationManager.setSpeed(100);
   }
 
-  public update(body: Matter.Body) {
+  public update(deltatime: number): void {
+    const body = this.body;
     if (body.position.y > window.innerHeight * 1.5) {
-      Matter.Body.setPosition(body, { x: body.position.x, y: -window.innerHeight * 0.5});
-
+      Matter.Body.setPosition(body, {
+        x: body.position.x,
+        y: -window.innerHeight * 0.5,
+      });
     }
     const newPos = mapCoords(body.position, false);
     this.object.position.set(newPos.x, newPos.y, 0);
 
     // this.object.position.set((body.position.x+ physicsTransform.x) * physicsScale, (currentPhysics.position.y + physicsTransform.y) * -physicsScale, 0);
+    this.animationManager.update(deltatime);
+
+    const speed = this.controls.getSpeed();
+
+    const lastRunning = this.isRunning;
+    const lastRight = this.isright;
+
+    if (Math.abs(speed.x) < 0.5) {
+      this.isRunning = false;
+    } else {
+      this.isRunning = true;
+    }
+
+    if (speed.x > 0 && Math.abs(speed.x) > 0.1) {
+      this.isright = true;
+    } else if (speed.x < 0 && Math.abs(speed.x) > 0.1) {
+      this.isright = false;
+    }
+
+    if (lastRunning !== this.isRunning) {
+      if (this.isRunning) {
+        this.animationManager.setFrame(0);
+        this.animationManager.set(characterRunFrames);
+      } else {
+        this.animationManager.setFrame(0);
+        this.animationManager.set(characterIdleFrames);
+      }
+    }
+
+    if (lastRight !== this.isright) {
+      if (this.isright) {
+        this.object.scale.x = 1;
+      } else {
+        this.object.scale.x = -1;
+      }
+    }
   }
 }
