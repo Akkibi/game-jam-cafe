@@ -58,7 +58,7 @@ export class PhysicsEngine {
     this.gamecontrols = GameControls.getInstance();
     this.gamecontrols.keyHandlerSetup();
     this.engine = Matter.Engine.create();
-    this.player = Matter.Bodies.rectangle(40, 0, 40, 80, {
+    this.player = Matter.Bodies.rectangle(150, 0, 60, 100, {
       restitution: 0,
       friction: 0.05,
     });

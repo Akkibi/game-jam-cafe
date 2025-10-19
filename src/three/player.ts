@@ -5,7 +5,7 @@ import Animation from "../utils/animationManager";
 import { characterIdleFrames, characterRunFrames } from "../static";
 import { GameControls } from "../classes/Controls";
 
-const physicsScale = 0.25;
+const physicsScale = 0.4;
 // const physicsTransform = new THREE.Vector2(-window.innerWidth/2, -window.innerHeight/2);
 
 export class Player {

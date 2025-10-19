@@ -84,11 +84,10 @@ export class SceneManager {
         new THREE.BoxGeometry(1, 1, 1),
         new THREE.MeshBasicMaterial({ color: 0x000 }),
       );
-      plateform.position.set(
-        (Math.random() - 0.5) * 6,
-        (Math.random() - 0.5) * 3,
-        0,
-      );
+
+      const x = (Math.round(Math.random() * 10) * 0.1 - 0.5) * 6;
+      const y = (Math.round(Math.random() * 4) * 0.25 - 0.5) * 3;
+      plateform.position.set(x, y, 0);
       plateform.scale.set(0.5 * Math.random() + 0.5, 0.15, 1.9);
       this.scene.add(plateform);
       this.physicsEngine.addObject(plateform.position, plateform.scale);
