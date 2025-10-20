@@ -38,6 +38,7 @@ export class Player {
     const material = new THREE.MeshBasicMaterial({
       map: null,
       transparent: true,
+      side: THREE.DoubleSide,
     });
     this.object = new THREE.Mesh(
       new THREE.PlaneGeometry(width * physicsScale, height * physicsScale),
@@ -50,6 +51,15 @@ export class Player {
     this.animationManager.setSpeed(100);
   }
 
+  public getPosition(): THREE.Vector3 {
+    return this.object.position;
+  }
+
+  public eat() {
+    this.animationManager.setFrame(1);
+    // this.animationManager.set(characterEatFrames);
+  }
+
   public update(deltatime: number): void {
     const body = this.body;
     if (body.position.y > window.innerHeight * 1.5) {
@@ -59,7 +69,7 @@ export class Player {
       });
     }
     const newPos = mapCoords(body.position, false);
-    this.object.position.set(newPos.x, newPos.y, 0);
+    this.object.position.set(newPos.x, newPos.y + 0.1, 0);
 
     // this.object.position.set((body.position.x+ physicsTransform.x) * physicsScale, (currentPhysics.position.y + physicsTransform.y) * -physicsScale, 0);
     this.animationManager.update(deltatime);
@@ -83,19 +93,21 @@ export class Player {
 
     if (lastRunning !== this.isRunning) {
       if (this.isRunning) {
-        this.animationManager.setFrame(0);
+        this.animationManager.setSpeed(100);
         this.animationManager.set(characterRunFrames);
+        this.animationManager.setFrame(1);
       } else {
-        this.animationManager.setFrame(0);
+        this.animationManager.setSpeed(500);
         this.animationManager.set(characterIdleFrames);
+        this.animationManager.setFrame(1);
       }
     }
 
     if (lastRight !== this.isright) {
       if (this.isright) {
-        this.object.scale.x = 1;
+        this.object.rotation.y = 0;
       } else {
-        this.object.scale.x = -1;
+        this.object.rotation.y = Math.PI;
       }
     }
   }

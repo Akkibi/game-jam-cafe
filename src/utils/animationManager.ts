@@ -33,6 +33,7 @@ class Animation {
 
   public setFrame = (frame: number) => {
     this.currentIndex = frame;
+    this.deltatime = Infinity;
   };
 
   public set = async (animData: AnimationType) => {

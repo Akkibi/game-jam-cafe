@@ -5,7 +5,8 @@ import { Environement } from "./environement";
 import Stats from "stats.js";
 import { PhysicsEngine } from "../matter/physics";
 import { Player } from "./player";
-import { FallingManager } from "./fallingManager";
+import { SeedManager } from "./seedManager";
+// import { FallingManager } from "./fallingManager";
 
 export class SceneManager {
   private static instance: SceneManager;
@@ -17,7 +18,8 @@ export class SceneManager {
   private stats: Stats;
   private physicsEngine: PhysicsEngine;
   private player: Player;
-  private fallingManager: FallingManager;
+  private seedManager: SeedManager;
+  // private fallingManager: FallingManager;
 
   private constructor(canvas: HTMLDivElement) {
     // stats
@@ -38,6 +40,7 @@ export class SceneManager {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera = CameraManager.getInstance(this.scene);
     this.env = Environement.getInstance(this.scene);
+    this.seedManager = SeedManager.getInstance(this.player, this.scene);
     // ambian light
     const ambientLight = new THREE.AmbientLight(0x9090c0);
     this.scene.add(ambientLight);
@@ -54,16 +57,16 @@ export class SceneManager {
     this.scene.add(sunLight);
 
     // hook GSAP ticker instead of setAnimationLoop
-    gsap.ticker.add((_time, deltatime) => this.animate(deltatime));
+    gsap.ticker.add((time, deltatime) => this.animate(time, deltatime));
     window.addEventListener("resize", this.resize.bind(this));
     this.init(canvas);
     // this.createBackgroundShader();
 
     // fallingObjects
-    this.fallingManager = FallingManager.getInstance(
-      this.scene,
-      this.physicsEngine,
-    );
+    // this.fallingManager = FallingManager.getInstance(
+    //   this.scene,
+    //   this.physicsEngine,
+    // );
 
     // for (let i = -2; i <= 2; i++) {
     //   for (let j = -2; j <= 2; j++) {
@@ -79,6 +82,9 @@ export class SceneManager {
     //   }
     // }
 
+    // const seedPosition = new THREE.Vector3(-1, 0.1, 0);
+    // this.seedManager.addSeed(seedPosition, 1);
+
     for (let i = 0; i < 20; i++) {
       const plateform = new THREE.Mesh(
         new THREE.BoxGeometry(1, 1, 1),
@@ -88,6 +94,10 @@ export class SceneManager {
       const x = (Math.round(Math.random() * 10) * 0.1 - 0.5) * 6;
       const y = (Math.round(Math.random() * 4) * 0.25 - 0.5) * 3;
       plateform.position.set(x, y, 0);
+      const seedPosition = plateform.position
+        .clone()
+        .add(new THREE.Vector3(0, 0.3, 0));
+      this.seedManager.addSeed(seedPosition);
       plateform.scale.set(0.5 * Math.random() + 0.5, 0.15, 1.9);
       this.scene.add(plateform);
       this.physicsEngine.addObject(plateform.position, plateform.scale);
@@ -121,7 +131,7 @@ export class SceneManager {
     canvas.appendChild(this.renderer.domElement);
   }
 
-  private animate(deltatime: number) {
+  private animate(time: number, deltatime: number) {
     this.stats.begin();
     this.physicsEngine.update(deltatime * 1.5);
     this.camera.update(deltatime);
@@ -129,7 +139,8 @@ export class SceneManager {
     // this.water.update(time);
 
     this.player.update(deltatime);
-    this.fallingManager.update();
+    // this.fallingManager.update();
+    this.seedManager.update(time);
     this.stats.end();
   }
 
