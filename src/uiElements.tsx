@@ -1,9 +1,10 @@
 import MultBar from "./multBar";
+import Score from "./score";
 
 const UiElements = () => {
   return (
     <>
-      <p className="absolute right-5 bottom-5">Score : 0</p>
+      <Score />
       <MultBar />
     </>
   );

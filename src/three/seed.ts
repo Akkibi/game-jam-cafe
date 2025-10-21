@@ -15,7 +15,7 @@ export class Seed {
     this.random = Math.random() * 5;
     this.seeds = seeds;
 
-    const link = "/assets/seed.png";
+    const link = "/assets/seed.webp";
 
     const texture = new THREE.TextureLoader().load(link);
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -35,7 +35,7 @@ export class Seed {
   }
 
   public destroy() {
-    this.scene.remove(this.mesh);
     this.seeds.splice(this.seeds.indexOf(this), 1);
+    this.scene.remove(this.mesh);
   }
 }

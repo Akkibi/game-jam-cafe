@@ -2,8 +2,13 @@ import Matter from "matter-js";
 import * as THREE from "three/webgpu";
 import { mapCoords } from "../matter/physics";
 import Animation from "../utils/animationManager";
-import { characterIdleFrames, characterRunFrames } from "../static";
+import {
+  characterFallingFrames,
+  characterIdleFrames,
+  characterRunFrames,
+} from "../static";
 import { GameControls } from "../classes/Controls";
+import { CollisionWatcher } from "../matter/collisions";
 
 const physicsScale = 0.4;
 // const physicsTransform = new THREE.Vector2(-window.innerWidth/2, -window.innerHeight/2);
@@ -17,6 +22,8 @@ export class Player {
   private controls: GameControls;
   private isRunning: boolean;
   private isright: boolean;
+  private isFalling: boolean;
+  private collisionWatcher: CollisionWatcher;
 
   public static getInstance(scene: THREE.Scene, body: Matter.Body): Player {
     if (!Player._instance) {
@@ -28,6 +35,8 @@ export class Player {
   constructor(scene: THREE.Scene, body: Matter.Body) {
     this.scene = scene;
     this.isRunning = false;
+    this.isFalling = false;
+    this.collisionWatcher = CollisionWatcher.getInstance(body);
     this.isright = false;
     this.body = body;
     this.controls = GameControls.getInstance();
@@ -56,7 +65,7 @@ export class Player {
   }
 
   public eat() {
-    this.animationManager.setFrame(1);
+    this.animationManager.setFrame(0);
     // this.animationManager.set(characterEatFrames);
   }
 
@@ -78,6 +87,7 @@ export class Player {
 
     const lastRunning = this.isRunning;
     const lastRight = this.isright;
+    const lastFalling = this.isFalling;
 
     if (Math.abs(speed.x) < 0.5) {
       this.isRunning = false;
@@ -91,23 +101,44 @@ export class Player {
       this.isright = false;
     }
 
-    if (lastRunning !== this.isRunning) {
+    const isFalling =
+      this.collisionWatcher.getCollisions().length <= 1 &&
+      this.body.velocity.y > 0.1;
+    console.log(isFalling, this.body.velocity.y > 0.1);
+
+    if (isFalling !== lastFalling && isFalling) {
+      this.animationManager.setSpeed(5000);
+      this.animationManager.set(characterFallingFrames);
+      this.animationManager.setFrame(0);
+    } else if (lastRunning !== this.isRunning || lastFalling !== isFalling) {
       if (this.isRunning) {
         this.animationManager.setSpeed(100);
         this.animationManager.set(characterRunFrames);
-        this.animationManager.setFrame(1);
+        this.animationManager.setFrame(0);
       } else {
         this.animationManager.setSpeed(500);
         this.animationManager.set(characterIdleFrames);
-        this.animationManager.setFrame(1);
+        this.animationManager.setFrame(0);
       }
     }
 
     if (lastRight !== this.isright) {
       if (this.isright) {
-        this.object.rotation.y = 0;
+        this.object.scale.x = 0.5;
+        requestAnimationFrame(() => {
+          this.object.rotation.y = 0;
+          requestAnimationFrame(() => {
+            this.object.scale.x = 1;
+          });
+        });
       } else {
-        this.object.rotation.y = Math.PI;
+        this.object.scale.x = 0.5;
+        requestAnimationFrame(() => {
+          this.object.rotation.y = Math.PI;
+          requestAnimationFrame(() => {
+            this.object.scale.x = 1;
+          });
+        });
       }
     }
   }

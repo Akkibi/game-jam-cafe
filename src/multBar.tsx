@@ -56,10 +56,10 @@ const MultBar = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       if (caffeineLvl >= 0) {
-        setCaffeineLvl(caffeineLvl - 5);
+        setCaffeineLvl(caffeineLvl - 1);
         console.log(caffeineLvl);
       }
-    }, 1000);
+    }, 500);
     return () => clearInterval(timer);
   }, [caffeineLvl, setCaffeineLvl]);
 
@@ -79,20 +79,28 @@ const MultBar = () => {
           }}
         >
           <div
-            className="absolute inset-0 right-auto w-20 bg-[#61351a] opacity-50"
+            className="absolute inset-0 right-auto w-20 bg-[#61351a] opacity-50  duration-100 ease-out"
             style={{ width: `${caffeineLvl}%` }}
           >
             <div
-              className="absolute top-0 bottom-0 left-full w-[10vh] bg-[url('/assets/bar/coffee.svg')] bg-no-repeat bg-cover"
+              className="absolute top-0 bottom-0 left-full w-[7vh] bg-[url('/assets/bar/coffee.svg')] bg-no-repeat bg-cover"
               ref={wave2Ref}
+              style={{
+                backgroundPositionX: "100%",
+                backgroundSize: "20vh",
+              }}
             ></div>
           </div>
           <div
-            className="absolute inset-0 right-auto w-20 bg-[#61351a] z-10 duration-200"
+            className="absolute inset-0 right-auto w-20 bg-[#61351a] z-10 duration-500 ease-out"
             style={{ width: `${caffeineLvl}%` }}
           >
             <div
-              className="absolute top-0 bottom-0 left-full w-[10vh] bg-[url('/assets/bar/coffee.svg')] bg-no-repeat bg-cover"
+              className="absolute top-0 bottom-0 left-full w-[6vh] bg-[url('/assets/bar/coffee.svg')] bg-no-repeat"
+              style={{
+                backgroundPositionX: "100%",
+                backgroundSize: "20vh",
+              }}
               ref={waveRef}
             ></div>
           </div>

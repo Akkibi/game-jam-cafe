@@ -36,14 +36,14 @@ export class SeedManager {
     this.seeds.forEach((seed) => seed.update(time));
     this.seeds.forEach((seed) => {
       if (seed.position.distanceTo(this.player.getPosition()) < 0.1) {
+        seed.destroy();
         if (useStore.getState().caffeineLvl + 20 >= 100) {
           useStore.setState({ caffeineLvl: 100 });
         } else {
           useStore.setState({
-            caffeineLvl: useStore.getState().caffeineLvl + 20,
+            caffeineLvl: useStore.getState().caffeineLvl + 10,
           });
         }
-        seed.destroy();
         this.player.eat();
       }
     });

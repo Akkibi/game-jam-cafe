@@ -29,3 +29,5 @@ export const characterIdleFrames = [
   "/assets/sprites/idle1.webp",
   "/assets/sprites/idle2_c.webp",
 ];
+
+export const characterFallingFrames = ["/assets/sprites/fall.webp"];
