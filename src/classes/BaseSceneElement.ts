@@ -1,6 +1,6 @@
 import * as Three from "three";
 import { Vector3 } from "three";
-import type { PhysicsEngine } from "../matter/physics";
+import { PhysicsEngine } from "../matter/physics";
 
 export class BaseSceneElement {
 	private id: number = -1;
@@ -8,9 +8,11 @@ export class BaseSceneElement {
 	protected physics: PhysicsEngine;
 	public position: Vector3;
 	public size: Vector3;
+	public isActive: boolean;
 	protected isMoving: boolean;
 	protected direction: Vector3;
-	protected lifeSpan: number;
+	public lifeSpan: number | null;
+	private timestampAdded: number = 0;
 	protected mesh: Three.Mesh;
 	private object: Matter.Body | null = null;
 	private blinkInterval: number | null = null;
@@ -22,7 +24,7 @@ export class BaseSceneElement {
 		physics: PhysicsEngine,
 		position: Vector3,
 		size: Vector3,
-		lifeSpan: number,
+		lifeSpan: number | null,
 		mesh: Three.Mesh
 	) {
 		this.id = id;
@@ -34,6 +36,7 @@ export class BaseSceneElement {
 		this.isMoving = false;
 		this.direction = new Vector3();
 		this.mesh = mesh;
+		this.isActive = false;
 
 		this.mesh.position.copy(this.position);
 	}
@@ -42,19 +45,17 @@ export class BaseSceneElement {
 		this.scene.add(this.mesh);
 		this.object = this.physics.addObject(this.position, this.size);
 
-		// Start blinking when 80% of lifespan has passed
-		const blinkStartTime = this.lifeSpan * 0.8;
+		// if (this.lifeSpan)
+		// 	this.removalTimeout = window.setTimeout(() => {
+		// 		this.removeFromScene();
+		// 	}, this.lifeSpan);
 
-		setTimeout(() => {
-			this.startBlinking();
-		}, blinkStartTime);
-
-		this.removalTimeout = window.setTimeout(() => {
-			this.removeFromScene();
-		}, this.lifeSpan);
+		this.isActive = true;
 	}
 
 	private startBlinking() {
+		console.log("Removing plateform.");
+		if (this.blinkInterval != null) return;
 		let isVisible = true;
 		const blinkSpeed = 150; // milliseconds between blinks
 
@@ -73,6 +74,7 @@ export class BaseSceneElement {
 	}
 
 	public removeFromScene() {
+		if (!this.isActive) return;
 		this.stopBlinking();
 
 		if (this.removalTimeout !== null) {
@@ -82,5 +84,22 @@ export class BaseSceneElement {
 
 		this.scene.remove(this.mesh);
 		if (this.object) this.physics.removeObject(this.object);
+
+		this.isActive = false;
+		console.log("Plateform removed.");
+	}
+
+	public update(time: number) {
+		if (!this.isActive) return;
+		if (this.timestampAdded === 0) this.timestampAdded = time;
+
+		const timeElapsed = time - this.timestampAdded;
+		if (this.lifeSpan) {
+			if (timeElapsed > this.lifeSpan * 0.8) this.startBlinking();
+
+			if (time - this.timestampAdded > this.lifeSpan) {
+				this.removeFromScene();
+			}
+		}
 	}
 }

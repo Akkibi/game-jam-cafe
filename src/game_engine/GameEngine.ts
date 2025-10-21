@@ -9,6 +9,7 @@ export class GameEngine {
 	private physics: PhysicsEngine;
 	private scene: THREE.Scene;
 	private blocks: GameBlock[] = [];
+	public activeBlocks: { block: GameBlock; id: number }[] = [];
 
 	constructor(physics: PhysicsEngine, scene: THREE.Scene) {
 		this.physics = physics;
@@ -32,32 +33,44 @@ export class GameEngine {
 						p.position,
 						this.physics,
 						p.size,
-						p.lifeSpan
+						p.lifeSpan,
+						p.type
 					)
 			);
 
 			this.blocks.push(
 				new GameBlock(
 					b.id,
-					b.duration,
+					b.addDelay,
+					b.stagger,
 					plateforms,
 					this.physics,
 					this.scene
 				)
 			);
 		});
-		console.log(this.blocks[0]);
-		this.blocks[0].addBlock();
 	}
 
-	// public update() {
-	// 	const gameState = useStore.getState();
-	// 	if (gameState.game_status === "game_over") return;
+	private addBlocks() {
+		this.blocks.forEach((b, i) => {
+			if (i < 4) {
+				setTimeout(() => {
+					b.setBlockActive();
+				}, b.stagger * i);
+				this.activeBlocks.push({ block: b, id: i });
+			}
+		});
+	}
 
-	// 	console.log(this.blocks[0]);
+	public update(time: number) {
+		if (this.activeBlocks.length === 0) {
+			console.log("addBlock");
+			// Add the first 4 blocks
+			this.addBlocks();
+		}
 
-	// 	this.blocks[0].addBlock();
-	// }
-
-	public phase1() {}
+		this.activeBlocks.forEach((ab) => {
+			if (ab) ab.block.update(time);
+		});
+	}
 }
