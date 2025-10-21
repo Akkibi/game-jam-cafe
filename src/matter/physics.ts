@@ -145,9 +145,9 @@ export class PhysicsEngine {
     const isTooHigh = this.player.position.y < 0;
     if (
       (isTooHigh && this.player.position.x < 50) ||
-      (isTooHigh && this.player.position.x > window.innerWidth - 50)
+      (isTooHigh && this.player.position.x > matterRange.x.max - 50)
     ) {
-      Matter.Body.setVelocity(this.player, { x: 0, y: 5 });
+      Matter.Body.setVelocity(this.player, { x: this.player.velocity.x, y: 1 });
     }
     Matter.Body.setAngularSpeed(this.player, 0);
   }

@@ -1,13 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=Slackey&display=swap");
+@font-face {
+  font-family: Childstone; /* set name */
+  src: url(childstone.otf); /* url of the font */
+}
 @import "tailwindcss";
 
 :root {
-  font-family: "Slackey", "Times New Roman", Times, serif;
+  font-family: "Childstone", "Times New Roman", Times, serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: white;
   background-color: #242424;
 
   font-synthesis: none;
@@ -27,11 +30,10 @@ a:hover {
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  overflow: hidden;
+  width: full;
+  height: full;
+  inset: 0;
 }
 
 h1 {
@@ -69,4 +71,16 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.custom-shadow {
+  text-shadow:
+    2px 0 black,
+    -2px 0 black,
+    0 2px black,
+    0 -2px black,
+    1px 1px black,
+    -1px -1px black,
+    1px -1px black,
+    -1px 1px black;
 }

@@ -10,8 +10,13 @@ import {
 import { GameControls } from "../classes/Controls";
 import { CollisionWatcher } from "../matter/collisions";
 
-const physicsScale = 0.4;
+const physicsScale = 0.5;
 // const physicsTransform = new THREE.Vector2(-window.innerWidth/2, -window.innerHeight/2);
+
+interface animationstates {
+  falling: boolean;
+  running: boolean;
+}
 
 export class Player {
   private static _instance: Player;
@@ -24,6 +29,7 @@ export class Player {
   private isright: boolean;
   private isFalling: boolean;
   private collisionWatcher: CollisionWatcher;
+  private states: animationstates;
 
   public static getInstance(scene: THREE.Scene, body: Matter.Body): Player {
     if (!Player._instance) {
@@ -33,6 +39,10 @@ export class Player {
   }
 
   constructor(scene: THREE.Scene, body: Matter.Body) {
+    this.states = {
+      falling: false,
+      running: false,
+    };
     this.scene = scene;
     this.isRunning = false;
     this.isFalling = false;
@@ -78,7 +88,7 @@ export class Player {
       });
     }
     const newPos = mapCoords(body.position, false);
-    this.object.position.set(newPos.x, newPos.y + 0.1, 0);
+    this.object.position.set(newPos.x, newPos.y + 0.14, 0);
 
     // this.object.position.set((body.position.x+ physicsTransform.x) * physicsScale, (currentPhysics.position.y + physicsTransform.y) * -physicsScale, 0);
     this.animationManager.update(deltatime);
@@ -101,21 +111,28 @@ export class Player {
       this.isright = false;
     }
 
-    const isFalling =
+    this.isFalling =
       this.collisionWatcher.getCollisions().length <= 1 &&
       this.body.velocity.y > 0.1;
-    console.log(isFalling, this.body.velocity.y > 0.1);
 
-    if (isFalling !== lastFalling && isFalling) {
-      this.animationManager.setSpeed(5000);
-      this.animationManager.set(characterFallingFrames);
-      this.animationManager.setFrame(0);
-    } else if (lastRunning !== this.isRunning || lastFalling !== isFalling) {
-      if (this.isRunning) {
+    this.states.running = this.isRunning || lastRunning !== this.isRunning;
+    this.states.falling = this.isFalling || lastFalling !== this.isFalling;
+
+    console.log(this.animationManager.speed);
+    if (this.states.falling) {
+      if (this.animationManager.currentFrames !== characterFallingFrames) {
+        this.animationManager.setSpeed(5000);
+        this.animationManager.set(characterFallingFrames);
+        this.animationManager.setFrame(0);
+      }
+    } else if (this.states.running) {
+      if (this.animationManager.currentFrames !== characterRunFrames) {
         this.animationManager.setSpeed(100);
         this.animationManager.set(characterRunFrames);
         this.animationManager.setFrame(0);
-      } else {
+      }
+    } else {
+      if (this.animationManager.currentFrames !== characterIdleFrames) {
         this.animationManager.setSpeed(500);
         this.animationManager.set(characterIdleFrames);
         this.animationManager.setFrame(0);
