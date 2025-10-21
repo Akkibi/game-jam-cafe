@@ -1,6 +1,6 @@
 @font-face {
   font-family: Childstone; /* set name */
-  src: url(childstone.otf); /* url of the font */
+  src: url(/childstone.otf); /* url of the font */
 }
 @import "tailwindcss";
 
