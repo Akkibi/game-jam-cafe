@@ -145,6 +145,7 @@ export class SceneManager {
 		this.renderer.render(this.scene, this.camera.getCamera());
 		// this.water.update(time);
 
+        this.gameEngine.update(time);
 		this.player.update(deltatime);
 		// this.fallingManager.update();
 		this.seedManager.update(time);

@@ -57,7 +57,7 @@ const MultBar = () => {
     const timer = setInterval(() => {
       if (caffeineLvl >= 0) {
         setCaffeineLvl(caffeineLvl - 1);
-        console.log(caffeineLvl);
+        // console.log(caffeineLvl);
       }
     }, 500);
     return () => clearInterval(timer);

@@ -104,7 +104,7 @@ export class Player {
     const isFalling =
       this.collisionWatcher.getCollisions().length <= 1 &&
       this.body.velocity.y > 0.1;
-    console.log(isFalling, this.body.velocity.y > 0.1);
+    // console.log(isFalling, this.body.velocity.y > 0.1);
 
     if (isFalling !== lastFalling && isFalling) {
       this.animationManager.setSpeed(5000);
