@@ -8,14 +8,17 @@ class Animation {
   public speed: number; // in ms
   private deltatime: number = 0;
   private currentIndex: number = 0;
+  public currentFrames: string[] | null;
   private loop: Array<THREE.Texture> = [];
 
   constructor(material: THREE.MeshBasicMaterial) {
     this.speed = 100;
     this.material = material;
+    this.currentFrames = null;
     this.textureLoader = new THREE.TextureLoader();
     this.material.map = this.textureLoader.load("./default.png");
   }
+
   private loadTexture = (src: string): Promise<THREE.Texture> => {
     return new Promise((resolve, reject) => {
       this.textureLoader.load(
@@ -37,6 +40,7 @@ class Animation {
   };
 
   public set = async (animData: AnimationType) => {
+    this.currentFrames = animData;
     const loop = [];
 
     if (animData && animData.length > 0) {

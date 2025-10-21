@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useStore } from "./store/globalStore";
+import { useStore } from "../store/globalStore";
 import FlipNumbers from "react-flip-numbers";
 const Score = () => {
   const score = useStore((s) => s.score);
@@ -7,7 +7,6 @@ const Score = () => {
   const cafeineLvl = useStore((s) => s.caffeineLvl);
   useEffect(() => {
     const timer = setInterval(() => {
-      // console.log(cafeineLvl * 100);
       setScore(score + 1 * Math.max(Math.round(cafeineLvl * 0.12), 0));
     }, 100);
     return () => clearInterval(timer);
@@ -20,12 +19,13 @@ const Score = () => {
         height={40}
         width={30}
         color="white"
+        numberClassName="custom-shadow"
         background="transparent"
         play
         perspective={500}
         numbers={score.toString()}
       />
-      <span className="text-base">PTS</span>
+      <span className="text-base custom-shadow translate-y-1">PTS</span>
     </div>
   );
 };

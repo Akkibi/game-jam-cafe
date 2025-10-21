@@ -1,6 +1,6 @@
 // import { useEffect } from "react";
 import ThreeManager from "./three/threeScene";
-import UiElements from "./uiElements";
+import UiElements from "./components/uiElements";
 // import { GameControls } from "./classes/Controls";
 
 function App() {
