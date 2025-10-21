@@ -3,6 +3,7 @@ import { Visualizer } from "./visualizer";
 import { CollisionWatcher } from "./collisions";
 import * as THREE from "three/webgpu";
 import { GameControls } from "../classes/Controls";
+import { useStore } from "../store/globalStore";
 
 export interface Vec2Type {
   x: number;
@@ -21,10 +22,13 @@ export interface RangeType {
 
 const threeRange = { x: { min: -3.4, max: 3.4 }, y: { min: -1.9, max: 1.9 } };
 const matterRange = {
-  x: { min: 0, max: window.innerWidth },
+  x: { min: 0, max: window.innerHeight * 1.77 },
   y: { min: 0, max: window.innerHeight },
 };
-const amplitude = { x: window.innerWidth / 6.8, y: window.innerHeight / 3.8 };
+const amplitude = {
+  x: (window.innerHeight * 1.77) / 6.8,
+  y: window.innerHeight / 3.8,
+};
 export function mapRange(
   value: number,
   inMin: number,
@@ -58,7 +62,8 @@ export class PhysicsEngine {
     this.gamecontrols = GameControls.getInstance();
     this.gamecontrols.keyHandlerSetup();
     this.engine = Matter.Engine.create();
-    this.player = Matter.Bodies.rectangle(150, 0, 60, 100, {
+    const scale = window.innerHeight * 0.05;
+    this.player = Matter.Bodies.circle(150, 0, scale * 0.5, {
       restitution: 0,
       friction: 0.05,
     });
@@ -127,10 +132,23 @@ export class PhysicsEngine {
     }
 
     const newVelocityX = Math.min(
-      Math.max(bodyVelocity.x + speed.x * (isCurrentTouch ? 1.6 : 1), -5),
+      Math.max(
+        bodyVelocity.x +
+          speed.x *
+            (isCurrentTouch ? 1.6 : 1) *
+            (0.8 + useStore.getState().caffeineLvl * 0.005),
+        -5,
+      ),
       5,
     );
     Matter.Body.setVelocity(this.player, { x: newVelocityX, y: newVelocityY });
+    const isTooHigh = this.player.position.y < 0;
+    if (
+      (isTooHigh && this.player.position.x < 50) ||
+      (isTooHigh && this.player.position.x > window.innerWidth - 50)
+    ) {
+      Matter.Body.setVelocity(this.player, { x: 0, y: 5 });
+    }
     Matter.Body.setAngularSpeed(this.player, 0);
   }
 }

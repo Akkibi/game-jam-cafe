@@ -66,7 +66,8 @@ export class CameraManager {
       7 - characterDistanceFromCenter * 0.5,
     ).lerp(this.targetPosition, 0.8);
     lerpCamera.z = 7 - characterDistanceFromCenter * 0.5;
-    this.camera.position.lerp(lerpCamera, 0.001 * deltatime);
+    // this.camera.position.lerp(lerpCamera, 0.001 * deltatime);
+    this.camera.position.lerp(lerpCamera, 0.5);
 
     this.camera.lookAt(
       new THREE.Vector3(0, -0.1, 0).lerp(this.targetPosition, 0.5),

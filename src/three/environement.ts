@@ -1,6 +1,6 @@
-import * as THREE from 'three/webgpu';
-import { loadGLTFModel } from '../utils/loadGLTFModel';
-import { PhysicsEngine } from '../matter/physics';
+import * as THREE from "three/webgpu";
+import { loadGLTFModel } from "../utils/loadGLTFModel";
+import { PhysicsEngine } from "../matter/physics";
 
 export class Environement {
   private static instance: Environement;
@@ -13,10 +13,10 @@ export class Environement {
     this.instanceGroup = new THREE.Group();
     this.scene.add(this.instanceGroup);
     this.physicsEngine = PhysicsEngine.getInstance();
-    loadGLTFModel( this.instanceGroup, '/assets/bounds/bounds.glb');
+    loadGLTFModel(this.instanceGroup, "/assets/bounds/bounds.glb");
 
     const wall1Position = new THREE.Vector3(-3.4, 0, 0);
-    const wall1Scale = new THREE.Vector3(0.1, 6, 0);
+    const wall1Scale = new THREE.Vector3(0.1, 10, 0);
     const wall2Position = new THREE.Vector3(3.4, 0, 0);
     // const wall3Position = new THREE.Vector3(0, 1.9, 0);
     // const wall3Scale = new THREE.Vector3(4.1, 0.11, 0);

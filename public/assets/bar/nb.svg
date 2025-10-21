@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_26" data-name="Calque 26" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 469.79 42.03">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #a9c7ea;
+        stroke: #1d1d1b;
+        stroke-miterlimit: 10;
+        stroke-width: 3px;
+      }
+
+      .cls-2 {
+        fill: #f2f2f2;
+        font-family: ChildstoneDemo-Regular, 'Childstone Demo';
+        font-size: 18px;
+      }
+    </style>
+  </defs>
+  <line class="cls-1" x1="187.49" y1="35.42" x2="187.49" y2="24.71"/>
+  <line class="cls-1" x1="278.34" y1="35.42" x2="278.34" y2="24.71"/>
+  <line class="cls-1" x1="369.49" y1="35.42" x2="369.49" y2="24.71"/>
+  <text class="cls-2" transform="translate(50.44 24.12)"><tspan x="0" y="0">x0,5</tspan></text>
+  <text class="cls-2" transform="translate(127.14 24.12)"><tspan x="0" y="0">x1</tspan></text>
+  <text class="cls-2" transform="translate(217.89 24.12)"><tspan x="0" y="0">x2</tspan></text>
+  <text class="cls-2" transform="translate(310.8 24.12)"><tspan x="0" y="0">x5</tspan></text>
+  <text class="cls-2" transform="translate(390.68 24.12)"><tspan x="0" y="0">x10</tspan></text>
+</svg>
