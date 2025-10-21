@@ -5,6 +5,7 @@ import type { BaseSceneElement } from "./BaseSceneElement";
 
 export class GameBlock {
 	private id: number;
+	public location: number;
 	private addDelay: number;
 	public stagger: number;
 	public blockElements: GamePlatform[] = [];
@@ -16,6 +17,7 @@ export class GameBlock {
 
 	constructor(
 		id: number,
+		location: number,
 		addDelay: number,
 		stagger: number,
 		platforms: GamePlatform[],
@@ -23,6 +25,7 @@ export class GameBlock {
 		scene: THREE.Scene
 	) {
 		this.id = id;
+		this.location = location;
 		this.addDelay = addDelay;
 		this.stagger = stagger;
 		this.blockElements = platforms;
@@ -91,5 +94,8 @@ export class GameBlock {
 			this.activeElements.forEach((ae) => {
 				ae.elem.update(time);
 			});
+
+		if (!this.activeElements.find((ae) => ae.elem.isActive === true))
+			this.isActive = false;
 	}
 }

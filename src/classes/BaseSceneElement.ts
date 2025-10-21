@@ -13,7 +13,7 @@ export class BaseSceneElement {
 	protected direction: Vector3;
 	public lifeSpan: number | null;
 	private timestampAdded: number = 0;
-	protected mesh: Three.Mesh;
+	protected group: Three.Group;
 	private object: Matter.Body | null = null;
 	private blinkInterval: number | null = null;
 	private removalTimeout: number | null = null;
@@ -25,7 +25,7 @@ export class BaseSceneElement {
 		position: Vector3,
 		size: Vector3,
 		lifeSpan: number | null,
-		mesh: Three.Mesh
+		group: Three.Group
 	) {
 		this.id = id;
 		this.scene = scene;
@@ -35,14 +35,14 @@ export class BaseSceneElement {
 		this.lifeSpan = lifeSpan;
 		this.isMoving = false;
 		this.direction = new Vector3();
-		this.mesh = mesh;
+		this.group = group;
 		this.isActive = false;
 
-		this.mesh.position.copy(this.position);
+		this.group.position.copy(this.position);
 	}
 
 	public addToScene() {
-		this.scene.add(this.mesh);
+		this.scene.add(this.group);
 		this.object = this.physics.addObject(this.position, this.size);
 
 		// if (this.lifeSpan)
@@ -61,7 +61,7 @@ export class BaseSceneElement {
 
 		this.blinkInterval = window.setInterval(() => {
 			isVisible = !isVisible;
-			this.mesh.visible = isVisible;
+			this.group.visible = isVisible;
 		}, blinkSpeed);
 	}
 
@@ -70,7 +70,7 @@ export class BaseSceneElement {
 			clearInterval(this.blinkInterval);
 			this.blinkInterval = null;
 		}
-		this.mesh.visible = true;
+		this.group.visible = true;
 	}
 
 	public removeFromScene() {
@@ -82,7 +82,7 @@ export class BaseSceneElement {
 			this.removalTimeout = null;
 		}
 
-		this.scene.remove(this.mesh);
+		this.scene.remove(this.group);
 		if (this.object) this.physics.removeObject(this.object);
 
 		this.isActive = false;

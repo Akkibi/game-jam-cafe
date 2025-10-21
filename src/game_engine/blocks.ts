@@ -97,7 +97,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "c",
+				type: "cg",
 			},
 		],
 	},

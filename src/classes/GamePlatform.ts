@@ -2,6 +2,7 @@ import * as THREE from "three/webgpu";
 import { Vector3 } from "three";
 import { BaseSceneElement } from "./BaseSceneElement";
 import type { PhysicsEngine } from "../matter/physics";
+import { loadGLTFModel } from "../utils/loadGLTFModel";
 
 export class GamePlatform extends BaseSceneElement {
 	constructor(
@@ -16,32 +17,39 @@ export class GamePlatform extends BaseSceneElement {
 		console.log("plateform type", type);
 
 		// Define colors for each platform type
-		let color: number;
+		const plateformGroup = new THREE.Group();
 		switch (type) {
 			case "c":
-				color = 0x000000; // Black - Coffee platform
+				loadGLTFModel(
+					plateformGroup,
+					"/assets/models/plateformemeule.glb",
+					0
+				);
 				break;
 			case "v":
-				color = 0xff0000; // Red - Steam platform
+				loadGLTFModel(plateformGroup, "/assets/models/tuyau.glb", 0);
+				loadGLTFModel(plateformGroup, "/assets/models/sucre.glb", 0);
 				break;
 			case "cg":
-				color = 0x00ff00; // Green - Coffee Grinder
+				loadGLTFModel(
+					plateformGroup,
+					"/assets/models/plateformemeule.glb",
+					0
+				);
+				loadGLTFModel(plateformGroup, "/assets/models/meule.glb", 0);
 				break;
-			case "l":
-				color = 0x0000ff; // Blue - Line/waterfall
-				break;
+			// case "l":
+			// 	color = 0x0000ff; // Blue - Line/waterfall
+			// 	break;
 			default:
-				color = 0xffffff; // White - Unknown type
+				loadGLTFModel(
+					plateformGroup,
+					"/assets/models/plateformemeule.glb",
+					0
+				);
 				break;
 		}
 
-		const plateformMesh = new THREE.Mesh(
-			new THREE.BoxGeometry(size.x, size.y, size.z),
-			new THREE.MeshBasicMaterial({
-				color: color,
-			})
-		);
-
-		super(id, scene, physics, position, size, lifeSpan, plateformMesh);
+		super(id, scene, physics, position, size, lifeSpan, plateformGroup);
 	}
 }

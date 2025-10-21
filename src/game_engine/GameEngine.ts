@@ -41,6 +41,7 @@ export class GameEngine {
 			this.blocks.push(
 				new GameBlock(
 					b.id,
+					b.location,
 					b.addDelay,
 					b.stagger,
 					plateforms,
@@ -62,15 +63,28 @@ export class GameEngine {
 		});
 	}
 
+    // private getNextBlock(oldBlock: GameBlock): GameBlock {
+
+    // }
+
 	public update(time: number) {
 		if (this.activeBlocks.length === 0) {
-			console.log("addBlock");
+			// console.log("addBlock");
 			// Add the first 4 blocks
 			this.addBlocks();
 		}
 
+
+
 		this.activeBlocks.forEach((ab) => {
 			if (ab) ab.block.update(time);
+
+            // if (!ab.block.isActive) {
+            //     const newBlock = this.getNextBlock(ab.block);
+
+            //     this.activeBlocks.splice(ab.id);
+            //     this.activeBlocks.push({block: newBlock, id: newBlock.id})
+            // }
 		});
 	}
 }
