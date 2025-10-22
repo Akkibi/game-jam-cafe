@@ -17,7 +17,7 @@ export class GameControls {
 	private constructor() {
 		this.moveSpeed = window.innerHeight * 0.0006;
 		this.jumpSpeed = -this.moveSpeed * 20; // Ensure jump is an upward force
-		console.log("GameControls initialized");
+		// console.log("GameControls initialized");
 
 		// Map Keyboard Keys to Axis Machine Buttons from group 1
 		Axis.registerKeys("q", "a", 1); // keyboard key "q" to button "a" from group 1
@@ -122,7 +122,7 @@ export class GameControls {
 
 	// Handles button releases (keyboard or mapped gamepad buttons)
 	public handleInputKeyup(e: { key: string; id: number }) {
-		console.log("Keyup event:", e.key, "Source ID:", e.id);
+		// console.log("Keyup event:", e.key, "Source ID:", e.id);
 
 		switch (e.key) {
 			case "a": // Left

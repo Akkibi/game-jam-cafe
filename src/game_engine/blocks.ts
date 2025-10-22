@@ -7,13 +7,13 @@ type BaseSceneElementType = {
 };
 
 type PlateformType = BaseSceneElementType & {
-	type: "" | "c" | "v" | "cg";
+	type: "p" | "pc" | "pv" | "pcg";
 	isMoving?: boolean;
 };
 
 type WaterfallType = BaseSceneElementType & {
 	length: number;
-	type: "c" | "l";
+	type: "wc" | "wl";
 };
 
 type Block = {
@@ -24,12 +24,13 @@ type Block = {
 	blockElements: (PlateformType | WaterfallType)[];
 };
 
-const BLOCK_STAGGER = 2;
-const PLATEFORM_LIFESPAN = 10;
+const BLOCK_STAGGER = 0; // s
+const BLOCK_DELAY = 0; // ms
+
+const PLATEFORM_LIFESPAN = null;
 const PLATFORM_WIDTH = 0.8;
 const PLATFORM_HEIGHT = 0.1;
 const PLATFORM_DEPTH = 1.9;
-const BLOCK_DELAY = 3000;
 
 export const Blocks: Block[] = [
 	// ========== PHASE 1 ==========
@@ -47,8 +48,8 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: 0,
-				type: "",
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "p",
 			},
 			{
 				position: new Vector3(-2, 0.5, 0),
@@ -58,7 +59,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "v",
+				type: "pv",
 			},
 			{
 				position: new Vector3(-0.5, 0.2, 0),
@@ -68,7 +69,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "c",
+				type: "pc",
 			},
 		],
 	},
@@ -87,7 +88,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "",
+				type: "p",
 			},
 			{
 				position: new Vector3(2, 0.2, 0),
@@ -97,7 +98,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "cg",
+				type: "pcg",
 			},
 		],
 	},
@@ -116,7 +117,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "c",
+				type: "pc",
 			},
 			{
 				position: new Vector3(-0.2, -1.5, 0),
@@ -126,7 +127,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "v",
+				type: "pv",
 			},
 			{
 				position: new Vector3(-1.2, -0.5, 0),
@@ -136,7 +137,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "",
+				type: "p",
 			},
 		],
 	},
@@ -155,7 +156,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "",
+				type: "p",
 			},
 			{
 				position: new Vector3(2.4, -0.5, 0),
@@ -165,7 +166,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "v",
+				type: "pv",
 			},
 			{
 				position: new Vector3(1.5, -1.3, 0),
@@ -175,10 +176,15 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "c",
+				type: "pc",
 			},
 		],
 	},
+
+	/********************/
+	/*      PHASE 2     */
+	/********************/
+
 	// Phase 2 - Bloc 1
 	{
 		addDelay: BLOCK_DELAY,
@@ -187,24 +193,131 @@ export const Blocks: Block[] = [
 		location: 0,
 		blockElements: [
 			{
-				position: new Vector3(-2, 0.5, 0),
+				position: new Vector3(-2.5, 1.2, 0),
 				size: new Vector3(
 					PLATFORM_WIDTH,
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "cg",
+				type: "pcg",
 			},
 			{
-				position: new Vector3(-1, 2, 0),
+				position: new Vector3(-1.4, 0.4, 0),
 				size: new Vector3(
 					PLATFORM_WIDTH,
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
-				type: "",
+				type: "p",
+			},
+			{
+				position: new Vector3(-0.5, 1, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "pv",
+			},
+		],
+	},
+	// Phase 2 - Bloc 2
+	{
+		addDelay: BLOCK_DELAY,
+		stagger: BLOCK_STAGGER,
+		id: 5,
+		location: 1,
+		blockElements: [
+			{
+				position: new Vector3(1.2, 1, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "p",
+			},
+			{
+				position: new Vector3(2, 0.3, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "pcg",
+			},
+		],
+	},
+	// Phase 2 - Bloc 3
+	{
+		addDelay: BLOCK_DELAY,
+		stagger: BLOCK_STAGGER,
+		id: 6,
+		location: 2,
+		blockElements: [
+			{
+				position: new Vector3(-2.3, -0.5, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "p",
+			},
+			{
+				position: new Vector3(-1.4, -1.2, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "pv",
+			},
+		],
+	},
+	// Phase 2 - Bloc 4
+	{
+		addDelay: BLOCK_DELAY,
+		stagger: BLOCK_STAGGER,
+		id: 7,
+		location: 3,
+		blockElements: [
+			{
+				position: new Vector3(0.3, -0.8, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "pcg",
+			},
+			{
+				position: new Vector3(1.5, -1.1, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "p",
+			},
+			{
+				position: new Vector3(2.8, -0.5, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "pv",
 			},
 		],
 	},

@@ -1,11 +1,13 @@
 import * as Three from "three";
 import { Vector3 } from "three";
 import { PhysicsEngine } from "../matter/physics";
+import type { SeedManager } from "../three/seedManager";
 
 export class BaseSceneElement {
 	public id: number = -1;
 	protected scene: Three.Scene;
 	protected physics: PhysicsEngine;
+	protected seedManager: SeedManager;
 	public position: Vector3;
 	public size: Vector3;
 	public isActive: boolean;
@@ -22,6 +24,7 @@ export class BaseSceneElement {
 		id: number,
 		scene: Three.Scene,
 		physics: PhysicsEngine,
+		seedManager: SeedManager,
 		position: Vector3,
 		size: Vector3,
 		lifeSpan: number | null,
@@ -30,6 +33,7 @@ export class BaseSceneElement {
 		this.id = id;
 		this.scene = scene;
 		this.physics = physics;
+		this.seedManager = seedManager;
 		this.position = position;
 		this.size = size;
 		this.lifeSpan = lifeSpan;
@@ -41,9 +45,18 @@ export class BaseSceneElement {
 		this.group.position.copy(this.position);
 	}
 
+	protected addSeed() {
+		const seedPosition = new Three.Vector3();
+
+		seedPosition.copy(this.position);
+		seedPosition.add(new Vector3(0, 0.3, 0));
+		this.seedManager.addSeed(seedPosition);
+	}
+
 	public addToScene() {
 		this.scene.add(this.group);
 		this.object = this.physics.addObject(this.position, this.size);
+		this.timestampAdded = 0;
 
 		// if (this.lifeSpan)
 		// 	this.removalTimeout = window.setTimeout(() => {

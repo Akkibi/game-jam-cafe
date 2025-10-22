@@ -2,40 +2,55 @@ import type { PhysicsEngine } from "../matter/physics";
 import * as THREE from "three/webgpu";
 import { GameBlock } from "../classes/GameBlock";
 import { Blocks } from "./blocks";
-import { GamePlatform } from "../classes/GamePlatform";
+import { SeedManager } from "../three/seedManager";
+import { createGamePlatform } from "../classes/platforms/createGamePlatform";
 
 export class GameEngine {
 	private static _instance: GameEngine;
 	private physics: PhysicsEngine;
+	private seedManager: SeedManager;
 	private scene: THREE.Scene;
 	private blocks: GameBlock[] = [];
 	public activeBlocks: { block: GameBlock; id: number }[] = [];
+	private usedBlockIds: Set<number> = new Set();
+	private endlessPhaseBlocks: GameBlock[] = []; // Store blocks for endless phase
+	private isEndlessPhase: boolean = false;
 
-	constructor(physics: PhysicsEngine, scene: THREE.Scene) {
+	constructor(
+		physics: PhysicsEngine,
+		seedManager: SeedManager,
+		scene: THREE.Scene
+	) {
 		this.physics = physics;
+		this.seedManager = seedManager;
 		this.scene = scene;
 
 		this.createBlocks();
 	}
 
-	static getInstance(physics: PhysicsEngine, scene: THREE.Scene): GameEngine {
-		if (!this._instance) this._instance = new GameEngine(physics, scene);
+	static getInstance(
+		physics: PhysicsEngine,
+		seedManager: SeedManager,
+		scene: THREE.Scene
+	): GameEngine {
+		if (!this._instance)
+			this._instance = new GameEngine(physics, seedManager, scene);
 		return this._instance;
 	}
 
 	private createBlocks() {
 		Blocks.forEach((b) => {
-			const plateforms = b.blockElements.map(
-				(p) =>
-					new GamePlatform(
-						-1,
-						this.scene,
-						p.position,
-						this.physics,
-						p.size,
-						p.lifeSpan,
-						p.type
-					)
+			const plateforms = b.blockElements.map((p) =>
+				createGamePlatform(
+					-1,
+					this.scene,
+					p.position,
+					this.physics,
+					this.seedManager,
+					p.size,
+					p.lifeSpan,
+					p.type
+				)
 			);
 
 			this.blocks.push(
@@ -50,66 +65,123 @@ export class GameEngine {
 				)
 			);
 		});
-		// console.log("this.blocks", this.blocks);
+		console.log("this.blocks", this.blocks);
 	}
 
 	private addBlocks() {
 		this.blocks.forEach((b, i) => {
 			if (i < 4) {
-				setTimeout(() => {
-					b.isActive = true;
-					this.activeBlocks.push({ block: b, id: b.id });
-				}, b.addDelay * i);
+				console.log("activeBlocks", this.activeBlocks, b.location);
+				if (
+					!this.activeBlocks.find(
+						(ab) => b.location === ab.block.location
+					)
+				) {
+					if (i === 0) {
+						this.activeBlocks.push({ block: b, id: b.id });
+						b.isActive = true;
+						this.usedBlockIds.add(b.id);
+					} else
+						setTimeout(() => {
+							this.activeBlocks.push({ block: b, id: b.id });
+							b.isActive = true;
+							this.usedBlockIds.add(b.id);
+						}, b.addDelay * i);
+				}
 			}
 		});
 	}
 
-	private getNextBlock(oldBlock: GameBlock): GameBlock {
-		// console.log("getNextBlock", this.blocks);
-		let nextBlock = this.blocks.find(
-			(b) => b.location === oldBlock.location
-		);
+	private getNextBlock(oldBlock: GameBlock): GameBlock | undefined {
+		// If we're in endless phase, cycle through endlessPhaseBlocks
+		if (this.isEndlessPhase) {
+			const availableBlocks = this.endlessPhaseBlocks.filter(
+				(b) => b.location === oldBlock.location
+			);
 
-		// If there aren't others blocks with the same location we are in the last phase
-		// so choose one of the last 4
-		if (!nextBlock) {
-			nextBlock = this.blocks[Math.floor(Math.random() * 4)];
+			console.log("availableBlocks", availableBlocks);
+
+			if (availableBlocks.length > 0) {
+				// Randomly select from available blocks with same location
+				const nextBlock =
+					availableBlocks[
+						Math.floor(Math.random() * availableBlocks.length)
+					];
+				console.log("Endless phase - newBlock", nextBlock);
+				return nextBlock;
+			}
+			return undefined;
 		}
 
-		console.log("newBlock", nextBlock);
+		// Normal phase: find unused block with same location
+		const nextBlock = this.blocks.find(
+			(b) =>
+				b.location === oldBlock.location && !this.usedBlockIds.has(b.id)
+		);
 
+		// If no unused blocks found, we've reached the endless phase
+		if (!nextBlock) {
+			console.log("Entering endless phase");
+			this.isEndlessPhase = true;
+
+			// Store the last 8 blocks for endless cycling
+			// These are the blocks that are currently active
+			this.endlessPhaseBlocks = this.blocks;
+
+			console.log("Endless Phase Blocks:", this.endlessPhaseBlocks);
+
+			// Now try to get a block from endless phase
+			return this.getNextBlock(oldBlock);
+		}
+
+		if (nextBlock) {
+			this.usedBlockIds.add(nextBlock.id);
+		}
+
+		console.log("Normal phase - newBlock", nextBlock);
 		return nextBlock;
 	}
 
 	public update(time: number) {
 		if (this.activeBlocks.length === 0) {
-			// console.log("addBlock");
-			// Add the first 4 blocks
 			this.addBlocks();
 		}
-		this.activeBlocks.forEach((ab) => {
-			if (ab) ab.block.update(time);
 
-			if (!ab.block.isActive) {
-				// console.log(
-				// 	`block ${ab.block.id} is unactive`,
-				// 	this.activeBlocks
-				// );
-				if (this.blocks.length > 4) {
-					this.blocks.splice(ab.id, 1);
+		// Use a reverse loop to safely remove items while iterating
+		for (let i = this.activeBlocks.length - 1; i >= 0; i--) {
+			const ab = this.activeBlocks[i];
+			if (ab) {
+				ab.block.update(time);
+
+				if (!ab.block.isActive) {
+					console.log(
+						`block ${ab.block.id} is unactive`,
+						this.activeBlocks
+					);
+					// if (this.blocks.length > 4) {
+
+					// Remove from activeBlocks
+
+					// Get and activate next block
 					const newBlock = this.getNextBlock(ab.block);
-					this.activeBlocks.splice(ab.id, 1);
 					if (newBlock) {
+						console.log(
+							`newBlock with id ${newBlock.id} and location ${newBlock.location} activated`
+						);
+						// this.blocks.splice(ab.id, 1);
+						this.activeBlocks.splice(i, 1);
+						newBlock.hasAddedObjects = false;
 						newBlock.isActive = true;
 						this.activeBlocks.push({
 							block: newBlock,
 							id: newBlock.id,
 						});
-					}
-				}
 
-				// The last 4 blocks doesn't have to be deleted for the game to be endless
+						console.log("activeBlocks", this.activeBlocks);
+					}
+					// }
+				}
 			}
-		});
+		}
 	}
 }
