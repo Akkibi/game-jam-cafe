@@ -3,7 +3,7 @@ import { Vector3 } from "three";
 import { PhysicsEngine } from "../matter/physics";
 
 export class BaseSceneElement {
-	private id: number = -1;
+	public id: number = -1;
 	protected scene: Three.Scene;
 	protected physics: PhysicsEngine;
 	public position: Vector3;
@@ -54,8 +54,8 @@ export class BaseSceneElement {
 	}
 
 	private startBlinking() {
-		console.log("Removing plateform.");
 		if (this.blinkInterval != null) return;
+		console.log("Removing plateform.");
 		let isVisible = true;
 		const blinkSpeed = 150; // milliseconds between blinks
 

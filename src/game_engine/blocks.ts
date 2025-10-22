@@ -47,7 +47,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: 0,
 				type: "",
 			},
 			{
@@ -176,6 +176,35 @@ export const Blocks: Block[] = [
 				),
 				lifeSpan: PLATEFORM_LIFESPAN,
 				type: "c",
+			},
+		],
+	},
+	// Phase 2 - Bloc 1
+	{
+		addDelay: BLOCK_DELAY,
+		stagger: BLOCK_STAGGER,
+		id: 4,
+		location: 0,
+		blockElements: [
+			{
+				position: new Vector3(-2, 0.5, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "cg",
+			},
+			{
+				position: new Vector3(-1, 2, 0),
+				size: new Vector3(
+					PLATFORM_WIDTH,
+					PLATFORM_HEIGHT,
+					PLATFORM_DEPTH
+				),
+				lifeSpan: PLATEFORM_LIFESPAN,
+				type: "",
 			},
 		],
 	},

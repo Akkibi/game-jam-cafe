@@ -14,8 +14,6 @@ export class GamePlatform extends BaseSceneElement {
 		lifeSpan: number | null,
 		type: string = "c"
 	) {
-		console.log("plateform type", type);
-
 		// Define colors for each platform type
 		const plateformGroup = new THREE.Group();
 		switch (type) {

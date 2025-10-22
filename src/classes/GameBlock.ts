@@ -4,16 +4,17 @@ import type { PhysicsEngine } from "../matter/physics";
 import type { BaseSceneElement } from "./BaseSceneElement";
 
 export class GameBlock {
-	private id: number;
+	public id: number;
 	public location: number;
-	private addDelay: number;
+	public addDelay: number;
 	public stagger: number;
 	public blockElements: GamePlatform[] = [];
-	private physics: PhysicsEngine;
-	private scene: THREE.Scene;
+	public physics: PhysicsEngine;
+	public scene: THREE.Scene;
 	public isActive: boolean = false;
 	public activeElements: { elem: BaseSceneElement; id: number }[] = [];
-	private tmpLastObjAdded: number = 0;
+	private hasAddedObjects: boolean = false;
+	private allElementsFullyAdded: boolean = false; // NEW FLAG
 
 	constructor(
 		id: number,
@@ -37,65 +38,66 @@ export class GameBlock {
 		return this.blockElements;
 	}
 
-	public setBlockActive(): void {
-		setTimeout(() => {
-			this.isActive = true;
-		}, this.addDelay * this.id);
-	}
-
-	// private addNextObject() {
-	// 	if (!this.blockElements || this.blockElements.length === 0) {
-	// 		console.error(`The block ${this.id} is empty.`);
-	// 		return;
-	// 	}
-	// 	if (this.activeElement == null) {
-	// 		this.blockElements[0].addToScene();
-	// 		this.activeElement = {
-	// 			elem: this.blockElements[0],
-	// 			id: 0,
-	// 		};
-	// 	} else if (this.blockElements.length > this.activeElement.id + 1) {
-	// 		this.activeElement.elem =
-	// 			this.blockElements[this.activeElement.id + 1];
-	// 	} else {
-	// 		this.isActive = false;
-	// 	}
-	// }
-
 	private addObjects() {
+		if (this.hasAddedObjects) return;
+		this.hasAddedObjects = true;
+
 		console.log(`addObjects of block ${this.id}`);
+
 		this.blockElements.forEach((e, i) => {
-			console.log("i", i);
+			const delay = this.stagger * i * 1000;
+
 			if (i === 0) {
 				console.log(`addElement ${i} of block ${this.id}`);
 				e.addToScene();
 				this.activeElements.push({ elem: e, id: i });
 			} else {
-				setTimeout(
-					() => {
-						console.log(`addElement ${i} of block ${this.id}`);
-						e.addToScene();
-						this.activeElements.push({ elem: e, id: i });
-					},
-					this.stagger * i * 1000
-				);
+				setTimeout(() => {
+					console.log(
+						`addElement ${i} of block ${this.id} after ${delay}ms`
+					);
+					e.addToScene();
+					this.activeElements.push({ elem: e, id: i });
+
+					// Mark as fully added when last element is added
+					if (i === this.blockElements.length - 1) {
+						this.allElementsFullyAdded = true;
+					}
+				}, delay);
 			}
 		});
+
+		// If no stagger (all added immediately), mark as fully added
+		if (this.stagger === 0 || this.blockElements.length === 1) {
+			this.allElementsFullyAdded = true;
+		}
 	}
 
 	public update(time: number) {
 		if (!this.isActive) return;
-		if (this.tmpLastObjAdded === 0) this.tmpLastObjAdded = time;
 
-		// const timeElapsed = time - this.tmpLastObjAdded;
+		// Add objects only once when block becomes active
+		if (!this.hasAddedObjects) {
+			this.addObjects();
+		}
 
-		if (this.activeElements.length === 0) this.addObjects();
-		else
-			this.activeElements.forEach((ae) => {
-				ae.elem.update(time);
-			});
+		// Update all active elements
+		this.activeElements.forEach((ae) => {
+			ae.elem.update(time);
+		});
 
-		if (!this.activeElements.find((ae) => ae.elem.isActive === true))
-			this.isActive = false;
+		// Only check for completion AFTER all elements are fully added
+		if (this.allElementsFullyAdded) {
+			const allInactive = this.activeElements.every(
+				(ae) => !ae.elem.isActive
+			);
+
+			if (allInactive && this.activeElements.length > 0) {
+				console.log(
+					`Block ${this.id} completed - all elements inactive`
+				);
+				this.isActive = false;
+			}
+		}
 	}
 }
