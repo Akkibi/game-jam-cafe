@@ -11,13 +11,13 @@ import { GameEngine } from "../game_engine/GameEngine";
 
 export class SceneManager {
 	private static instance: SceneManager;
-	private canvas: HTMLDivElement | null;
+	public canvas: HTMLDivElement | null;
 	private scene: THREE.Scene;
 	private gameEngine: GameEngine;
 
 	private renderer: THREE.WebGPURenderer;
 	private camera: CameraManager;
-	private env: Environement;
+	public env: Environement;
 	private stats: Stats;
 	private physicsEngine: PhysicsEngine;
 	private player: Player;
