@@ -4,7 +4,7 @@ import * as THREE from "three/webgpu";
 export async function loadGLTFModel(
 	group: THREE.Group,
 	url: string,
-	positionCorrection?: number
+	positionCorrection?: THREE.Vector3
 ): Promise<THREE.Group> {
 	const loader = new GLTFLoader();
 	return new Promise((resolve, reject) => {
@@ -12,10 +12,9 @@ export async function loadGLTFModel(
 			url,
 			(gltf) => {
 				const model = gltf.scene.children;
-				if (model[0] && positionCorrection != null)
-					model.forEach((m) =>
-						m.position.multiplyScalar(positionCorrection)
-					);
+				if (model[0] && positionCorrection != null) {
+					model.forEach((m) => m.position.add(positionCorrection));
+				}
 				group.add(...model);
 				resolve(group);
 			},

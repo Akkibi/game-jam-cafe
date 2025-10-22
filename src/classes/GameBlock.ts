@@ -1,5 +1,4 @@
 import * as THREE from "three/webgpu";
-import type { GamePlatform } from "./GamePlatform";
 import type { PhysicsEngine } from "../matter/physics";
 import type { BaseSceneElement } from "./BaseSceneElement";
 
@@ -8,12 +7,13 @@ export class GameBlock {
 	public location: number;
 	public addDelay: number;
 	public stagger: number;
-	public blockElements: GamePlatform[] = [];
+	public blockElements: BaseSceneElement[] = [];
 	public physics: PhysicsEngine;
+
 	public scene: THREE.Scene;
 	public isActive: boolean = false;
 	public activeElements: { elem: BaseSceneElement; id: number }[] = [];
-	private hasAddedObjects: boolean = false;
+	public hasAddedObjects: boolean = false;
 	private allElementsFullyAdded: boolean = false; // NEW FLAG
 
 	constructor(
@@ -21,7 +21,7 @@ export class GameBlock {
 		location: number,
 		addDelay: number,
 		stagger: number,
-		platforms: GamePlatform[],
+		platforms: BaseSceneElement[],
 		physics: PhysicsEngine,
 		scene: THREE.Scene
 	) {
@@ -31,10 +31,11 @@ export class GameBlock {
 		this.stagger = stagger;
 		this.blockElements = platforms;
 		this.physics = physics;
+		// this.seedManager = seedManager;
 		this.scene = scene;
 	}
 
-	public getPlatforms(): GamePlatform[] {
+	public getPlatforms(): BaseSceneElement[] {
 		return this.blockElements;
 	}
 
@@ -48,14 +49,14 @@ export class GameBlock {
 			const delay = this.stagger * i * 1000;
 
 			if (i === 0) {
-				console.log(`addElement ${i} of block ${this.id}`);
+				// console.log(`addElement ${i} of block ${this.id}`);
 				e.addToScene();
 				this.activeElements.push({ elem: e, id: i });
 			} else {
 				setTimeout(() => {
-					console.log(
-						`addElement ${i} of block ${this.id} after ${delay}ms`
-					);
+					// console.log(
+					// 	`addElement ${i} of block ${this.id} after ${delay}ms`
+					// );
 					e.addToScene();
 					this.activeElements.push({ elem: e, id: i });
 
@@ -63,7 +64,7 @@ export class GameBlock {
 					if (i === this.blockElements.length - 1) {
 						this.allElementsFullyAdded = true;
 					}
-				}, delay);
+				}, delay * Math.random());
 			}
 		});
 

@@ -24,27 +24,35 @@ export class SceneManager {
   private seedManager: SeedManager;
   // private fallingManager: FallingManager;
 
-  private constructor(canvas: HTMLDivElement) {
-    // stats
-    this.physicsEngine = PhysicsEngine.getInstance();
-    this.stats = new Stats();
-    document.body.appendChild(this.stats.dom);
-    this.scene = new THREE.Scene();
-    this.gameEngine = GameEngine.getInstance(this.physicsEngine, this.scene);
-    this.player = Player.getInstance(
-      this.scene,
-      this.physicsEngine.getPlayer(),
-    );
-    this.canvas = canvas;
-    // this.water = Water.getInstance(this.scene);
-    this.renderer = new THREE.WebGPURenderer();
-    this.renderer.init();
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.camera = CameraManager.getInstance(this.scene);
-    this.env = Environement.getInstance(this.scene);
-    this.seedManager = SeedManager.getInstance(this.player, this.scene);
-    // ambian light
+	private constructor(canvas: HTMLDivElement) {
+		// stats
+		this.physicsEngine = PhysicsEngine.getInstance();
+		this.stats = new Stats();
+		document.body.appendChild(this.stats.dom);
+		this.scene = new THREE.Scene();
+		this.player = Player.getInstance(
+			this.scene,
+			this.physicsEngine.getPlayer()
+		);
+		this.seedManager = SeedManager.getInstance(this.player, this.scene);
+		this.gameEngine = GameEngine.getInstance(
+			this.physicsEngine,
+			this.seedManager,
+			this.scene
+		);
+		// this.scene.background = new THREE.Color(0x111121);
+		this.canvas = canvas;
+		// this.water = Water.getInstance(this.scene);
+		this.renderer = new THREE.WebGPURenderer();
+		this.renderer.init();
+		this.renderer.shadowMap.enabled = true;
+		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		this.camera = CameraManager.getInstance(this.scene);
+		this.env = Environement.getInstance(this.scene);
+		// ambian light
+		const ambientLight = new THREE.AmbientLight(0x9090c0);
+		this.scene.add(ambientLight);
+		// sun light
 
     gsap.ticker.add((time, deltatime) => this.animate(time, deltatime));
     window.addEventListener("resize", this.resize.bind(this));
