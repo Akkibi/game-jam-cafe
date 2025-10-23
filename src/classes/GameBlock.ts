@@ -43,7 +43,7 @@ export class GameBlock {
 	}
 
 	private scheduleElementActivations(currentTime: number) {
-		console.log(`Scheduling elements for block ${this.id}`);
+		// console.log(`Scheduling elements for block ${this.id}`);
 
 		this.blockElements.forEach((_e, i) => {
 			if (i === 0) {
@@ -85,7 +85,7 @@ export class GameBlock {
 		if (this.hasAddedObjects) return;
 		this.hasAddedObjects = true;
 
-		console.log(`addObjects of block ${this.id}`);
+		// console.log(`addObjects of block ${this.id}`);
 
 		// Schedule all element activations
 		this.scheduleElementActivations(currentTime);

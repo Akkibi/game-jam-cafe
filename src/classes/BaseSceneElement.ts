@@ -3,12 +3,14 @@ import { Vector3 } from "three";
 import { PhysicsEngine } from "../matter/physics";
 import type { SeedManager } from "../three/seedManager";
 import gsap from "gsap";
+import type { SoundManager } from "../sounds/soundManager";
 
 export class BaseSceneElement {
 	public id: number = -1;
 	protected scene: Three.Scene;
 	protected physics: PhysicsEngine;
 	protected seedManager: SeedManager;
+	protected soundManager: SoundManager;
 	public position: Vector3;
 	public size: Vector3;
 	public isActive: boolean;
@@ -27,6 +29,7 @@ export class BaseSceneElement {
 		scene: Three.Scene,
 		physics: PhysicsEngine,
 		seedManager: SeedManager,
+		soundManager: SoundManager,
 		position: Vector3,
 		size: Vector3,
 		lifeSpan: number | null,
@@ -36,6 +39,7 @@ export class BaseSceneElement {
 		this.scene = scene;
 		this.physics = physics;
 		this.seedManager = seedManager;
+		this.soundManager = soundManager;
 		this.position = position;
 		this.size = size;
 		this.lifeSpan = lifeSpan;
@@ -50,7 +54,7 @@ export class BaseSceneElement {
 	}
 
 	protected addSeed() {
-		console.log("addSeed");
+		// console.log("addSeed");
 		const seedPosition = new Three.Vector3();
 
 		seedPosition.copy(this.position);

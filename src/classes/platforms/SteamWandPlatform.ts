@@ -6,6 +6,8 @@ import type { SeedManager } from "../../three/seedManager";
 import { loadGLTFModel } from "../../utils/loadGLTFModel";
 import gsap from "gsap";
 import Matter from "matter-js";
+import type { SoundManager } from "../../sounds/soundManager";
+import { SOUNDS } from "../../sounds/sounds";
 
 enum AnimationState {
 	IDLE,
@@ -32,6 +34,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 		position: Vector3,
 		physics: PhysicsEngine,
 		seedManager: SeedManager,
+		soundManager: SoundManager,
 		size: Vector3,
 		lifeSpan: number | null,
 		platformGroup: THREE.Group
@@ -41,6 +44,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 			scene,
 			physics,
 			seedManager,
+			soundManager,
 			position,
 			size,
 			lifeSpan,
@@ -300,6 +304,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 
 		// // Start trembling after both steams complete (at 80% like normal platforms)
 		if (progress > 0.8 && this.animationState === AnimationState.IDLE) {
+			this.soundManager.play(SOUNDS.STEAM);
 			this.startAnimating();
 		}
 

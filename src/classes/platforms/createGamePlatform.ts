@@ -7,6 +7,7 @@ import { SteamWandPlatform } from "./SteamWandPlatform";
 import { CoffeeGrinderPlatform } from "./CoffeeGrinderPlatform";
 import { SimplePlatformCoffee } from "./SimplePlatformCoffee";
 import { SimplePlatform } from "./SimplePlatform";
+import type { SoundManager } from "../../sounds/soundManager";
 
 export function createGamePlatform(
 	id: number,
@@ -14,6 +15,7 @@ export function createGamePlatform(
 	position: Vector3,
 	physics: PhysicsEngine,
 	seedManager: SeedManager,
+	soundManager: SoundManager,
 	size: Vector3,
 	lifeSpan: number | null,
 	type: string = "pc"
@@ -28,6 +30,7 @@ export function createGamePlatform(
 				position,
 				physics,
 				seedManager,
+				soundManager,
 				size,
 				lifeSpan,
 				new THREE.Group()
@@ -40,6 +43,8 @@ export function createGamePlatform(
 				position,
 				physics,
 				seedManager,
+				soundManager,
+
 				size,
 				lifeSpan,
 				new THREE.Group()
@@ -52,6 +57,8 @@ export function createGamePlatform(
 				position,
 				physics,
 				seedManager,
+				soundManager,
+
 				size,
 				lifeSpan,
 				new THREE.Group()
@@ -64,6 +71,8 @@ export function createGamePlatform(
 				position,
 				physics,
 				seedManager,
+				soundManager,
+
 				size,
 				lifeSpan,
 				new THREE.Group()

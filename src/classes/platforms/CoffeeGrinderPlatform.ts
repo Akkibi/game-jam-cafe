@@ -7,6 +7,8 @@ import { loadGLTFModel } from "../../utils/loadGLTFModel";
 import gsap from "gsap";
 import type { Seed } from "../../three/seed";
 import Matter from "matter-js";
+import type { SoundManager } from "../../sounds/soundManager";
+import { SOUNDS } from "../../sounds/sounds";
 
 enum AnimationState {
 	IDLE,
@@ -29,6 +31,7 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 		position: Vector3,
 		physics: PhysicsEngine,
 		seedManager: SeedManager,
+		soundManager: SoundManager,
 		size: Vector3,
 		lifeSpan: number | null,
 		platformGroup: THREE.Group
@@ -38,6 +41,7 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 			scene,
 			physics,
 			seedManager,
+			soundManager,
 			position,
 			size,
 			lifeSpan,
@@ -91,6 +95,8 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 
 		// Create timeline
 		this.timeline = gsap.timeline();
+
+		this.soundManager.play(SOUNDS.GRINDER);
 
 		// Phase 1: Just rotation (2 seconds)
 		if (this.grinder_head) {

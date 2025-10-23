@@ -29,7 +29,7 @@ export class SeedManager {
 	public addSeed(position: THREE.Vector3) {
 		const seed = new Seed(position, this.seeds, this.scene);
 		this.seeds.push(seed);
-		console.log("seeds: ", this.seeds);
+		// console.log("seeds: ", this.seeds);
 		return seed;
 	}
 

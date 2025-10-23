@@ -4,11 +4,13 @@ import { GameBlock } from "../classes/GameBlock";
 import { Blocks } from "./blocks";
 import { SeedManager } from "../three/seedManager";
 import { createGamePlatform } from "../classes/platforms/createGamePlatform";
+import type { SoundManager } from "../sounds/soundManager";
 
 export class GameEngine {
 	private static _instance: GameEngine;
 	private physics: PhysicsEngine;
 	private seedManager: SeedManager;
+	private soundManager: SoundManager;
 	private scene: THREE.Scene;
 	public activeBlocks: { block: GameBlock; id: number }[] = [];
 	private usedBlockIds: Set<number> = new Set();
@@ -19,20 +21,28 @@ export class GameEngine {
 	constructor(
 		physics: PhysicsEngine,
 		seedManager: SeedManager,
+		soundManager: SoundManager,
 		scene: THREE.Scene
 	) {
 		this.physics = physics;
 		this.seedManager = seedManager;
+		this.soundManager = soundManager;
 		this.scene = scene;
 	}
 
 	static getInstance(
 		physics: PhysicsEngine,
 		seedManager: SeedManager,
+		soundManager: SoundManager,
 		scene: THREE.Scene
 	): GameEngine {
 		if (!this._instance)
-			this._instance = new GameEngine(physics, seedManager, scene);
+			this._instance = new GameEngine(
+				physics,
+				seedManager,
+				soundManager,
+				scene
+			);
 		return this._instance;
 	}
 
@@ -44,6 +54,7 @@ export class GameEngine {
 				p.position,
 				this.physics,
 				this.seedManager,
+                this.soundManager,
 				p.size,
 				p.lifeSpan,
 				p.type
