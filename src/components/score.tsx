@@ -16,16 +16,16 @@ const Score = () => {
   return (
     <div className="absolute h-fit bottom-0 right-0 p-5 flex flex-row justify-end items-end">
       <FlipNumbers
-        height={40}
-        width={30}
+        height={70}
+        width={50}
         color="white"
         numberClassName="custom-shadow"
         background="transparent"
         play
-        perspective={500}
+        perspective={1000}
         numbers={score.toString()}
       />
-      <span className="text-base custom-shadow translate-y-1 text-white">
+      <span className="text-xl custom-shadow translate-y-1 text-white">
         PTS
       </span>
     </div>

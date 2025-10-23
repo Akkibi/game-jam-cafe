@@ -10,6 +10,8 @@ import {
 } from "../static";
 import { GameControls } from "../classes/Controls";
 import { CollisionWatcher } from "../matter/collisions";
+import { useStore } from "../store/globalStore";
+import { eventEmitter } from "../utils/eventEmitter";
 
 const physicsScale = 0.5;
 // const physicsTransform = new THREE.Vector2(-window.innerWidth/2, -window.innerHeight/2);
@@ -93,10 +95,23 @@ export class Player {
   public update(deltatime: number): void {
     const body = this.body;
     if (body.position.y > window.innerHeight * 1.5) {
+      // Matter.Body.setPosition(body, {
+      //   x: body.position.x,
+      //   y: -window.innerHeight * 0.5,
+      // });
       Matter.Body.setPosition(body, {
         x: body.position.x,
-        y: -window.innerHeight * 0.5,
+        y: window.innerHeight * 1.5,
       });
+
+      // set end in store
+      if (useStore.getState().caffeineLvl > 30000) {
+        useStore.setState({ isGameOver: true });
+        useStore.setState({ isPaused: true });
+      } else {
+        eventEmitter.trigger("restart");
+        useStore.setState({ isPaused: true });
+      }
     }
     const newPos = mapCoords(body.position, false);
     this.object.position.set(newPos.x, newPos.y + 0.14, 0);

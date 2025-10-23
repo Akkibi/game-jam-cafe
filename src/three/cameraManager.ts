@@ -80,7 +80,7 @@ export class CameraManager {
     );
 
     // console.log(mapCoords(this.physicsEngine.getPlayer().position, false));
-    const cameraShakeAmount = Math.max(useStore.getState().caffeineLvl - 50, 0);
+    const cameraShakeAmount = Math.max(useStore.getState().caffeineLvl - 70, 0);
     const cameraShakeValue = Math.sin(time * 20) * 0.1;
     this.camera.rotation.z =
       Math.PI + cameraShakeValue * cameraShakeAmount * 0.002;
