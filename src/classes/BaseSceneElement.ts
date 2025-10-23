@@ -63,7 +63,7 @@ export class BaseSceneElement {
 		this.timestampAdded = 0;
 		this.isActive = true;
 
-		console.log("addToScene - Element with id: ", this.id, " activated");
+		// console.log("addToScene - Element with id: ", this.id, " activated");
 
 		gsap.to(this.group.position, {
 			y: this.position.y,
@@ -78,7 +78,7 @@ export class BaseSceneElement {
 		});
 	}
 
-	private startTrembling() {
+	public startTrembling() {
 		if (this.trembleTween) return;
 
 		this.originalPosition.copy(this.group.position);
@@ -111,7 +111,7 @@ export class BaseSceneElement {
 	}
 
 	public removeFromScene() {
-		console.log("BaseSceneRemoveFrom");
+		// console.log("BaseSceneRemoveFrom");
 		if (!this.isActive) return;
 		this.stopTrembling();
 
@@ -129,11 +129,11 @@ export class BaseSceneElement {
 			},
 		});
 
-		console.log("Plateform removed.");
+		// console.log("Plateform removed.");
 	}
 
 	public reset(): void {
-		console.log("BaseSceneReset");
+		// console.log("BaseSceneReset");
 		this.isActive = false;
 		this.timestampAdded = 0;
 		this.isMoving = false;
@@ -159,7 +159,7 @@ export class BaseSceneElement {
 
 		this.group.visible = true;
 
-		console.log(`BaseSceneElement with id: ${this.id} has been reset.`);
+		// console.log(`BaseSceneElement with id: ${this.id} has been reset.`);
 	}
 
 	public update(time: number) {

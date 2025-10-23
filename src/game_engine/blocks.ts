@@ -24,12 +24,15 @@ type Block = {
 	blockElements: (PlateformType | WaterfallType)[];
 };
 
-const BLOCK_STAGGER = 2; // s
-const BLOCK_DELAY = 2000; // ms
+const BLOCK_STAGGER = 1; // s
+const BLOCK_DELAY = 3; // s
 
-const PLATEFORM_LIFESPAN = 10;
+const PLATEFORM_LIFESPAN = 15;
+const PLATEFORM_LIFESPAN_PHASE_1 = PLATEFORM_LIFESPAN;
+const PLATEFORM_LIFESPAN_PHASE_2 = PLATEFORM_LIFESPAN * 0.5;
+
 const PLATFORM_WIDTH = 0.8;
-const PLATFORM_HEIGHT = 0.1;
+const PLATFORM_HEIGHT = 0.2;
 const PLATFORM_DEPTH = 1.9;
 
 export const Blocks: Block[] = [
@@ -48,7 +51,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "p",
 			},
 			{
@@ -58,7 +61,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "pv",
 			},
 			{
@@ -68,7 +71,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "pc",
 			},
 		],
@@ -87,7 +90,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "p",
 			},
 			{
@@ -116,7 +119,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "pc",
 			},
 			{
@@ -126,7 +129,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "pv",
 			},
 			{
@@ -136,7 +139,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "p",
 			},
 		],
@@ -155,7 +158,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "p",
 			},
 			{
@@ -165,7 +168,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "pv",
 			},
 			{
@@ -175,7 +178,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "pc",
 			},
 		],
@@ -199,7 +202,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "pcg",
 			},
 			{
@@ -209,7 +212,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "p",
 			},
 			{
@@ -219,7 +222,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "pv",
 			},
 		],
@@ -238,7 +241,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "p",
 			},
 			{
@@ -248,7 +251,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "pcg",
 			},
 		],
@@ -267,7 +270,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "p",
 			},
 			{
@@ -277,7 +280,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "pv",
 			},
 		],
@@ -296,7 +299,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "pcg",
 			},
 			{
@@ -306,7 +309,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "p",
 			},
 			{
@@ -316,7 +319,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
 				type: "pv",
 			},
 		],

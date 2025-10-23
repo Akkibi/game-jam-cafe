@@ -10,7 +10,7 @@ export class CameraManager {
 
 	private constructor(scene: THREE.Scene) {
 		this.camera = new THREE.PerspectiveCamera(
-			30,
+			40,
 			window.innerWidth / window.innerHeight,
 			0.1,
 			1000
@@ -18,7 +18,7 @@ export class CameraManager {
 		this.cameraGroup = new THREE.Group();
 		this.cameraGroup.position.set(0, 0, 0);
 		scene.add(this.cameraGroup);
-		this.camera.position.set(0, 0, 11);
+		this.camera.position.set(0, 0, 7);
 		this.targetPosition = new THREE.Vector3(0, 0, 0);
 		this.cameraGroup.add(this.camera);
 
@@ -66,12 +66,12 @@ export class CameraManager {
 			7 - characterDistanceFromCenter * 0.5
 		).lerp(this.targetPosition, 0.8);
 		lerpCamera.z = 7 - characterDistanceFromCenter * 0.5;
-		// this.camera.position.lerp(lerpCamera, 0.001 * deltatime);
-		// this.camera.position.lerp(lerpCamera, 0.5);
+		this.camera.position.lerp(lerpCamera, 0.001 * deltatime);
+		this.camera.position.lerp(lerpCamera, 0.5);
 
-		// this.camera.lookAt(
-		//   new THREE.Vector3(0, -0.1, 0).lerp(this.targetPosition, 0.5),
-		// );
+		this.camera.lookAt(
+		  new THREE.Vector3(0, -0.1, 0).lerp(this.targetPosition, 0.5),
+		);
 
 		// console.log(mapCoords(this.physicsEngine.getPlayer().position, false));
 	}

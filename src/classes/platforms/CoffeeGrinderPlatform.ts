@@ -52,18 +52,14 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 			platformGroup,
 			"/assets/models/grinder_platform.glb"
 		);
-		await loadGLTFModel(
-			platformGroup,
-			"/assets/models/grinder.glb",
-			new Vector3(0.1, -18.5, -0.2)
-		);
+		await loadGLTFModel(platformGroup, "/assets/models/grinder.glb");
 
 		this.modelsLoaded = true;
 		this.storeGriderObjects();
 	}
 
 	public addToScene(): void {
-		console.log("addToScene", this.id);
+		// console.log("addToScene", this.id);
 		const onComplete = () => (this.seed = this.addSeed());
 		super.addToScene(onComplete);
 	}
@@ -110,8 +106,6 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 		}
 
 		if (this.grinder_full && this.grinder_head) {
-			console.log("this.grinder_full", this.grinder_full.position.y);
-
 			this.timeline.to(
 				this.grinder_full.position,
 				{
@@ -123,14 +117,12 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 						const headSize = new Vector3(0.7, 0.7, 1.9);
 
 						headPosition.y += 0.7;
-						console.log("addObject", headPosition);
 						this.physicObject = this.physics.addObject(
 							headPosition,
 							headSize,
 							40
 						);
 						if (this.seed) {
-							console.log("removeFromScene - Destroy seed");
 							this.seed.destroy();
 							this.seed = null;
 						}
