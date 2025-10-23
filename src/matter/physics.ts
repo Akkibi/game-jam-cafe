@@ -4,6 +4,7 @@ import { CollisionWatcher } from "./collisions";
 import * as THREE from "three/webgpu";
 import { GameControls } from "../classes/Controls";
 import { useStore } from "../store/globalStore";
+import { eventEmitter } from "../utils/eventEmitter";
 
 export interface Vec2Type {
   x: number;
@@ -63,7 +64,7 @@ export class PhysicsEngine {
     this.gamecontrols.keyHandlerSetup();
     this.engine = Matter.Engine.create();
     const scale = window.innerHeight * 0.05;
-    this.player = Matter.Bodies.circle(20, 0, scale * 0.5, {
+    this.player = Matter.Bodies.circle(20, -50, scale * 0.5, {
       restitution: 0,
       friction: 0.05,
     });
@@ -77,6 +78,14 @@ export class PhysicsEngine {
       this.player,
       this.engine,
     );
+
+    eventEmitter.on("restart", () => this.restart.bind(this));
+  }
+
+  private restart() {
+    console.log("restart");
+    Matter.Body.setPosition(this.player, { x: 20, y: -50 });
+    Matter.Body.setVelocity(this.player, { x: 0, y: 0 });
   }
 
   static getInstance(): PhysicsEngine {
@@ -139,7 +148,7 @@ export class PhysicsEngine {
     const isCurrentTouch = this.collisionWatcher.getCollisions().length > 0;
     if (this.collisionWatcher.getCollisions().length > 0) {
       this.lastTouch = Date.now();
-      console.log("speed Touch", this.collisionWatcher.getCollisions());
+      // console.log("speed Touch", this.collisionWatcher.getCollisions());
     }
     const isTouch = isCurrentTouch ? true : this.lastTouch > Date.now() - 100;
 
@@ -166,7 +175,7 @@ export class PhysicsEngine {
       x: newVelocityX,
       y: newVelocityY,
     });
-    const isTooHigh = this.player.position.y < 0;
+    const isTooHigh = this.player.position.y < -50;
     if (
       (isTooHigh && this.player.position.x < 50) ||
       (isTooHigh && this.player.position.x > matterRange.x.max - 50)

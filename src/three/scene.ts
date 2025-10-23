@@ -95,14 +95,14 @@ export class SceneManager {
   }
 
   private animate(time: number, deltatime: number) {
-    if (useStore.getState().isPaused) return;
+    this.renderer.render(this.scene, this.camera.getCamera());
+    if (useStore.getState().isPaused && time > 0.1) return;
     const customDeltatime = useStore.getState().isSlowed
       ? deltatime * 0.25
       : deltatime * 1;
     this.stats.begin();
     this.physicsEngine.update(customDeltatime * 1.5);
     this.camera.update(time, customDeltatime);
-    this.renderer.render(this.scene, this.camera.getCamera());
     // this.water.update(time);
 
     this.gameEngine.update(time);

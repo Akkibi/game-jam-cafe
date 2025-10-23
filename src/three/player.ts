@@ -99,18 +99,18 @@ export class Player {
       //   x: body.position.x,
       //   y: -window.innerHeight * 0.5,
       // });
-      Matter.Body.setPosition(body, {
-        x: body.position.x,
-        y: window.innerHeight * 1.5,
-      });
+      // Matter.Body.setPosition(body, {
+      //   x: body.position.x,
+      //   y: window.innerHeight * 1.25,
+      // });
 
       // set end in store
       if (useStore.getState().caffeineLvl > 30000) {
         useStore.setState({ isGameOver: true });
         useStore.setState({ isPaused: true });
       } else {
-        eventEmitter.trigger("restart");
-        useStore.setState({ isPaused: true });
+        eventEmitter.trigger("restart", []);
+        useStore.setState({ isSlowed: true });
       }
     }
     const newPos = mapCoords(body.position, false);
