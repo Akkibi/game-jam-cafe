@@ -125,7 +125,7 @@ export class PhysicsEngine {
     let newVelocityY = bodyVelocity.y;
 
     if (bodyVelocity.y > 0 && !isTouch) {
-      newVelocityY = Math.min(bodyVelocity.y + 0.05 * deltaTime, 25);
+      newVelocityY = Math.min(bodyVelocity.y + 0.05 * deltaTime, 20);
     }
     if (speed.y && isTouch) {
       newVelocityY = speed.y * 1.25;

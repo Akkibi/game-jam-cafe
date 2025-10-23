@@ -31,3 +31,5 @@ export const characterIdleFrames = [
 ];
 
 export const characterFallingFrames = ["/assets/sprites/fall.webp"];
+
+export const characterEatingFrames = ["/assets/sprites/eating.webp"];
