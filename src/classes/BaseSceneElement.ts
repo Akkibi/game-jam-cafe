@@ -69,12 +69,13 @@ export class BaseSceneElement {
 			y: this.position.y,
 			ease: "back.out",
 			duration: 2,
-			onComplete: () => {
-				this.object = this.physics.addObject(this.position, this.size);
-				if (onComplete) {
-					onComplete();
-				}
-			},
+		});
+
+		gsap.delayedCall(1.7, () => {
+			this.object = this.physics.addObject(this.position, this.size);
+			if (onComplete) {
+				onComplete();
+			}
 		});
 	}
 
