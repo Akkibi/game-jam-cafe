@@ -32,7 +32,10 @@ export class Seed {
   }
 
   public destroy() {
-    this.seeds.splice(this.seeds.indexOf(this), 1);
-    this.scene.remove(this.group);
+    const index = this.seeds.indexOf(this);
+    if (index !== -1) {
+      this.seeds.splice(index, 1);
+      this.scene.remove(this.group);
+    }
   }
 }
