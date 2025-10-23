@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+// import { useEffect, useRef } from "react";
 
 const MultBanner = ({ caffeineLvl }: { caffeineLvl: number }) => {
   // const ref = useRef<HTMLDivElement>(null);
