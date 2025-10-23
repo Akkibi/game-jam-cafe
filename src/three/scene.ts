@@ -34,6 +34,7 @@ export class SceneManager {
     this.player = Player.getInstance(
       this.scene,
       this.physicsEngine.getPlayer(),
+      this.physicsEngine.engine,
     );
     this.seedManager = SeedManager.getInstance(this.player, this.scene);
     this.gameEngine = GameEngine.getInstance(

@@ -1,54 +1,57 @@
-import { Detector, Body, Collision } from "matter-js";
+import Matter, { Engine, Body } from "matter-js";
 
 export class CollisionWatcher {
   private static instance: CollisionWatcher;
-  private detector: Matter.Detector;
   private character: Body;
-  private watchedBodies: Body[];
-  private collisions: Body[];
+  private currentCollisions: Set<Body>; // Use a Set for efficient add/remove and uniqueness
 
-  private constructor(character: Body) {
+  private constructor(character: Body, engine: Engine) {
     this.character = character;
-    this.watchedBodies = [];
-    this.collisions = [];
-    this.detector = Detector.create();
-    // Add the character and watched bodies to the detector
-    Detector.setBodies(this.detector, [this.character, ...this.watchedBodies]);
+    this.currentCollisions = new Set();
+
+    Matter.Events.on(engine, "collisionStart", (event) => {
+      event.pairs.forEach((pair) => {
+        const { bodyA, bodyB } = pair;
+        if (bodyA === this.character) {
+          this.currentCollisions.add(bodyB);
+        } else if (bodyB === this.character) {
+          this.currentCollisions.add(bodyA);
+        }
+      });
+    });
+
+    Matter.Events.on(engine, "collisionEnd", (event) => {
+      event.pairs.forEach((pair) => {
+        const { bodyA, bodyB } = pair;
+        if (bodyA === this.character) {
+          this.currentCollisions.delete(bodyB);
+        } else if (bodyB === this.character) {
+          this.currentCollisions.delete(bodyA);
+        }
+      });
+    });
+
+    // You might also use 'collisionActive' if you need to know what's *currently* touching
+    // But for jump detection, collisionStart/End is often sufficient to know if you're grounded.
   }
 
-  static getInstance(character: Body): CollisionWatcher {
+  static getInstance(character: Body, engine: Engine): CollisionWatcher {
     if (!CollisionWatcher.instance) {
-      CollisionWatcher.instance = new CollisionWatcher(character);
+      CollisionWatcher.instance = new CollisionWatcher(character, engine);
     }
     return CollisionWatcher.instance;
   }
 
-  public addBodies(bodies: Body[]): void {
-    this.watchedBodies.push(...bodies);
-    // Update the detector with the new bodies
-    Detector.setBodies(this.detector, [this.character, ...this.watchedBodies]);
-  }
-
-  private updateCollisions(character: Body, bodies: Body[], detector: Detector): void {
-    this.collisions = []; // Clear previous collisions
-
-    // Update the detector's pairs. This is crucial for detecting new collisions.
-    // Matter.js Detector works by updating its internal list of potential collision pairs.
-    Detector.setBodies(detector, [character, ...bodies]);
-    const collisions: Collision[] = Detector.collisions(detector);
-
-    for (const collision of collisions) {
-      // Check if the character is involved in the collision
-      if (collision.bodyA === character && bodies.includes(collision.bodyB)) {
-        this.collisions.push(collision.bodyB);
-      } else if (collision.bodyB === character && bodies.includes(collision.bodyA)) {
-        this.collisions.push(collision.bodyA);
-      }
-    }
-  }
+  // With this event-driven approach, you don't need addBodies or updateCollisions
+  // as all bodies in the engine are automatically considered for collisions.
 
   public getCollisions(): Body[] {
-    this.updateCollisions(this.character, this.watchedBodies, this.detector);
-    return this.collisions;
+    return Array.from(this.currentCollisions);
   }
 }
+
+// Usage:
+// const collisionWatcher = CollisionWatcher.getInstance(playerBody, engine);
+// if (collisionWatcher.getCollisions().length > 0) {
+//   // Character is touching something, can jump
+// }

@@ -1,14 +1,14 @@
 import { useGSAP } from "@gsap/react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
+import { useStore } from "../store/globalStore";
 
 const Start = () => {
   const openTimelineRef = useRef<gsap.core.Timeline>(gsap.timeline());
-  const closeAnimation = useRef<gsap.core.Timeline>(gsap.timeline());
   const oneRef = useRef<HTMLDivElement>(null);
   const twoRef = useRef<HTMLDivElement>(null);
   const threeRef = useRef<HTMLDivElement>(null);
-
+  // const setIsPaused = useStore((state) => setIsPaused(state));
   // useEffect(() => {
   //   // set isOpen false after 10 seconds
   //   setTimeout(() => {
@@ -23,84 +23,54 @@ const Start = () => {
       const three = threeRef.current;
       if (!one || !two || !three) return;
 
-      gsap.set(one, { scale: 0.5, opacity: 0 });
-      gsap.set(two, { scale: 0.5, opacity: 0 });
-      gsap.set(three, { scale: 0.5, opacity: 0 });
-
       openTimelineRef.current = gsap
-        .timeline({ paused: true, delay: 1 })
-        .fromTo(
-          one,
-          {
-            scale: 0.5,
-            opacity: 0,
+        .timeline({
+          paused: true,
+          delay: 1,
+          onComplete: () => {
+            useStore.setState({ isPaused: false });
+            console.log("complete");
           },
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 0.75,
-            ease: "expo.out",
-          },
-          "0",
-        )
-        .to(
-          one,
-          {
-            scale: 0.5,
-            opacity: 0,
-            duration: 0.25,
-            ease: "expo.in",
-          },
-          "<",
-        )
-        .fromTo(
-          two,
-          {
-            scale: 0.5,
-            opacity: 0,
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 0.75,
-            ease: "expo.out",
-          },
-          ">",
-        )
-        .to(
-          two,
-          {
-            scale: 0.5,
-            opacity: 0,
-            duration: 0.25,
-            ease: "expo.in",
-          },
-          "<",
-        )
-        .fromTo(
-          three,
-          {
-            scale: 0.5,
-            opacity: 0,
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 0.75,
-            ease: "expo.out",
-          },
-          ">",
-        )
-        .to(
-          three,
-          {
-            scale: 0.5,
-            opacity: 0,
-            duration: 0.25,
-            ease: "expo.in",
-          },
-          "<",
-        );
+        })
+        .set(one, { scale: 0.5, opacity: 0 })
+        .set(two, { scale: 0.5, opacity: 0 })
+        .set(three, { scale: 0.5, opacity: 0 })
+        .to(one, {
+          scale: 1,
+          opacity: 1,
+          duration: 0.75,
+          ease: "expo.out",
+        })
+        .to(one, {
+          scale: 0.5,
+          opacity: 0,
+          duration: 0.5,
+          ease: "expo.in",
+        })
+        .to(two, {
+          scale: 1,
+          opacity: 1,
+          duration: 0.75,
+          ease: "expo.out",
+        })
+        .to(two, {
+          scale: 0.5,
+          opacity: 0,
+          duration: 0.5,
+          ease: "expo.in",
+        })
+        .to(three, {
+          scale: 1,
+          opacity: 1,
+          duration: 0.75,
+          ease: "expo.out",
+        })
+        .to(three, {
+          scale: 0.5,
+          opacity: 0,
+          duration: 0.5,
+          ease: "expo.in",
+        });
       openTimelineRef.current.progress(0).play();
     },
     {
@@ -111,15 +81,15 @@ const Start = () => {
   return (
     <div className="absolute inset-0 z-50">
       <div
-        className="h-[50vh] w-[50vh] bg-[url(/assets/mult/x2/bg2-blue.svg)] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="h-[50vh] w-[50vh] bg-[url(/assets/mult/x2/bg2-blue.svg)] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
         ref={oneRef}
       ></div>
       <div
-        className="h-[50vh] w-[50vh] bg-[url(/assets/mult/x4/bg2-green.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="h-[50vh] w-[50vh] bg-[url(/assets/mult/x4/bg2-green.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
         ref={twoRef}
       ></div>
       <div
-        className="h-[50vh] w-[50vh] bg-[url(/assets/mult/x6/bg2-yellow.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="h-[50vh] w-[50vh] bg-[url(/assets/mult/x6/bg2-yellow.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
         ref={threeRef}
       ></div>
     </div>

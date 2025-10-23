@@ -64,7 +64,7 @@ const Controls = () => {
   }, [isOpen]);
   return (
     <div
-      className="absolute bottom-0 left-5 h-[20vh] w-[20vh] bg-[url(/controles.svg)] z-50 bg-no-repeat"
+      className="absolute bottom-0 left-5 h-[40vh] w-[40vh] bg-[url(/controles.svg)] z-50 bg-no-repeat"
       ref={popupRef}
     ></div>
   );

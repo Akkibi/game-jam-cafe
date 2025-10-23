@@ -9,7 +9,7 @@ export class GameControls {
     i: false, // For jump
     a: false, // For left
     x: false, // For right
-    s: false, // For down (though not used in your current logic)
+    s: false, // For down
   };
   private moveSpeed: number;
   private jumpSpeed: number;
@@ -59,13 +59,10 @@ export class GameControls {
   public getSpeed = (): Vec2Type => {
     const speed = { x: this.gamepadSpeed.x, y: this.gamepadSpeed.y };
 
-    // Reset vertical speed only if it was from a jump.
-    // This makes `keysPressed['i']` act as a trigger, not a constant force.
-    if (this.keysPressed[""])
-      if (this.keysPressed["i"]) {
-        this.keysPressed["i"] = false; // Consume the jump
-        this.gamepadSpeed.y = 0; // Reset after applying the initial jump force
-      }
+    if (this.keysPressed["i"]) {
+      this.keysPressed["i"] = false; // Consume the jump
+      this.gamepadSpeed.y = 0; // Reset after applying the initial jump force
+    }
 
     return speed;
   };

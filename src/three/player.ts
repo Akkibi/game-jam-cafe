@@ -1,4 +1,4 @@
-import Matter from "matter-js";
+import Matter, { Engine } from "matter-js";
 import * as THREE from "three/webgpu";
 import { mapCoords } from "../matter/physics";
 import Animation from "../utils/animationManager";
@@ -33,25 +33,31 @@ export class Player {
   private collisionWatcher: CollisionWatcher;
   private states: animationstates;
   private eatingDelta: number;
+  private engine: Engine;
 
-  public static getInstance(scene: THREE.Scene, body: Matter.Body): Player {
+  public static getInstance(
+    scene: THREE.Scene,
+    body: Matter.Body,
+    engine: Engine,
+  ): Player {
     if (!Player._instance) {
-      Player._instance = new Player(scene, body);
+      Player._instance = new Player(scene, body, engine);
     }
     return Player._instance;
   }
 
-  constructor(scene: THREE.Scene, body: Matter.Body) {
+  private constructor(scene: THREE.Scene, body: Matter.Body, engine: Engine) {
     this.states = {
       falling: false,
       running: false,
       eating: false,
     };
+    this.engine = engine;
     this.eatingDelta = 0;
     this.scene = scene;
     this.isRunning = false;
     this.isFalling = false;
-    this.collisionWatcher = CollisionWatcher.getInstance(body);
+    this.collisionWatcher = CollisionWatcher.getInstance(body, this.engine);
     this.isright = false;
     this.body = body;
     this.controls = GameControls.getInstance();

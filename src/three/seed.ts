@@ -28,7 +28,7 @@ export class Seed {
   public update(time: number) {
     this.group.position.y =
       this.position.y + Math.sin(time + this.random) * 0.1;
-    this.group.rotation.z = Math.sin(time + this.random) * 0.1;
+    this.group.rotation.y = Math.sin(time * 2 + this.random) * 0.5;
   }
 
   public destroy() {
