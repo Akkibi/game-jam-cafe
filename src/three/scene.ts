@@ -141,13 +141,8 @@ export class SceneManager {
         ? deltatime * 0.25
         : deltatime * 1;
     this.stats.begin();
-<<<<<<< Updated upstream
-    this.physicsEngine.update(deltatime * 1.5);
-    this.camera.update(time, deltatime);
-=======
     this.physicsEngine.update(customDeltatime * 1.5);
     this.camera.update(time, customDeltatime);
->>>>>>> Stashed changes
     this.renderer.render(this.scene, this.camera.getCamera());
     // this.water.update(time);
 

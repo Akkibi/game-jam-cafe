@@ -1,21 +1,20 @@
 import { useGSAP } from "@gsap/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 const Start = () => {
-  const [isOpen, setIsOpen] = useState(true);
   const openTimelineRef = useRef<gsap.core.Timeline>(gsap.timeline());
   const closeAnimation = useRef<gsap.core.Timeline>(gsap.timeline());
   const oneRef = useRef<HTMLDivElement>(null);
   const twoRef = useRef<HTMLDivElement>(null);
   const threeRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // set isOpen false after 10 seconds
-    setTimeout(() => {
-      setIsOpen(false);
-    }, 10000);
-  }, []);
+  // useEffect(() => {
+  //   // set isOpen false after 10 seconds
+  //   setTimeout(() => {
+  //     setIsOpen(false);
+  //   }, 10000);
+  // }, []);
 
   useGSAP(
     () => {
@@ -24,95 +23,90 @@ const Start = () => {
       const three = threeRef.current;
       if (!one || !two || !three) return;
 
-      gsap.set(one, { scale: "0", opacity: 0 });
-      gsap.set(two, { scale: "0", opacity: 0 });
-      gsap.set(three, { scale: "0", opacity: 0 });
+      gsap.set(one, { scale: 0.5, opacity: 0 });
+      gsap.set(two, { scale: 0.5, opacity: 0 });
+      gsap.set(three, { scale: 0.5, opacity: 0 });
 
       openTimelineRef.current = gsap
         .timeline({ paused: true, delay: 1 })
         .fromTo(
           one,
           {
-            scale: "0",
+            scale: 0.5,
             opacity: 0,
           },
           {
-            scale: "1",
+            scale: 1,
             opacity: 1,
             duration: 0.75,
             ease: "expo.out",
           },
+          "0",
         )
         .to(
           one,
           {
-            scale: "0",
+            scale: 0.5,
             opacity: 0,
             duration: 0.25,
-            ease: "expo.out",
+            ease: "expo.in",
           },
           "<",
         )
         .fromTo(
           two,
           {
-            scale: "0",
+            scale: 0.5,
             opacity: 0,
           },
           {
-            scale: "1",
+            scale: 1,
             opacity: 1,
             duration: 0.75,
             ease: "expo.out",
           },
+          ">",
         )
         .to(
           two,
           {
-            scale: "0",
+            scale: 0.5,
             opacity: 0,
             duration: 0.25,
-            ease: "expo.out",
+            ease: "expo.in",
           },
           "<",
         )
         .fromTo(
           three,
           {
-            scale: "0",
+            scale: 0.5,
             opacity: 0,
           },
           {
-            scale: "1",
+            scale: 1,
             opacity: 1,
             duration: 0.75,
             ease: "expo.out",
           },
+          ">",
         )
         .to(
           three,
           {
-            scale: "0",
+            scale: 0.5,
             opacity: 0,
             duration: 0.25,
-            ease: "expo.out",
+            ease: "expo.in",
           },
           "<",
         );
-      openTimelineRef.current.progress(0);
+      openTimelineRef.current.progress(0).play();
     },
     {
       dependencies: [oneRef.current, twoRef.current, threeRef.current],
     },
   );
-
-  useEffect(() => {
-    if (isOpen) {
-      openTimelineRef.current?.play(0);
-    } else {
-      closeAnimation.current?.play(0);
-    }
-  }, [isOpen]);
 
   return (
     <div className="absolute inset-0 z-50">
