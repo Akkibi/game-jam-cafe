@@ -1,6 +1,8 @@
 import { create } from "zustand";
 
 type Store = {
+  isPaused: boolean;
+  isSlowed: boolean;
   score: number;
   setScore: (n: number) => void;
   game_status:
@@ -29,6 +31,10 @@ type Store = {
 
 export const useStore = create<Store>((set) => ({
   score: 0,
+  isPaused: true,
+  isSlowed: true,
+  setIsPaused: (n: boolean) => set(() => ({ isPaused: n })),
+  setIsSlowed: (n: boolean) => set(() => ({ isSlowed: n })),
   setScore: (n) => set(() => ({ score: n })),
   game_status: "tutorial",
   caffeineLvl: 50,

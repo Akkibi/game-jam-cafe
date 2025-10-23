@@ -7,6 +7,7 @@ import { PhysicsEngine } from "../matter/physics";
 import { Player } from "./player";
 import { SeedManager } from "./seedManager";
 import { GameEngine } from "../game_engine/GameEngine";
+import { useStore } from "../store/globalStore";
 // import { FallingManager } from "./fallingManager";
 
 export class SceneManager {
@@ -134,14 +135,24 @@ export class SceneManager {
   }
 
   private animate(time: number, deltatime: number) {
+    const customDeltatime = useStore.getState().isPaused
+      ? 0
+      : useStore.getState().isSlowed
+        ? deltatime * 0.25
+        : deltatime * 1;
     this.stats.begin();
+<<<<<<< Updated upstream
     this.physicsEngine.update(deltatime * 1.5);
     this.camera.update(time, deltatime);
+=======
+    this.physicsEngine.update(customDeltatime * 1.5);
+    this.camera.update(time, customDeltatime);
+>>>>>>> Stashed changes
     this.renderer.render(this.scene, this.camera.getCamera());
     // this.water.update(time);
 
     this.gameEngine.update(time);
-    this.player.update(deltatime);
+    this.player.update(customDeltatime);
     // this.fallingManager.update();
     this.seedManager.update(time);
     this.stats.end();

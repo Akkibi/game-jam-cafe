@@ -25,7 +25,9 @@ const Score = () => {
         perspective={500}
         numbers={score.toString()}
       />
-      <span className="text-base custom-shadow translate-y-1">PTS</span>
+      <span className="text-base custom-shadow translate-y-1 text-white">
+        PTS
+      </span>
     </div>
   );
 };
