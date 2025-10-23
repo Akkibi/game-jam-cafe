@@ -27,16 +27,16 @@ export class SeedManager {
 	}
 
 	public addSeed(position: THREE.Vector3) {
-		console.log("addSeed");
 		const seed = new Seed(position, this.seeds, this.scene);
 		this.seeds.push(seed);
+		console.log("seeds: ", this.seeds);
 		return seed;
 	}
 
 	public update(time: number) {
 		this.seeds.forEach((seed) => seed.update(time));
 		this.seeds.forEach((seed) => {
-			if (seed.position.distanceTo(this.player.getPosition()) < 0.1) {
+			if (seed.position.distanceTo(this.player.getPosition()) < 0.3) {
 				seed.destroy();
 				if (useStore.getState().caffeineLvl + 20 >= 100) {
 					useStore.setState({ caffeineLvl: 100 });

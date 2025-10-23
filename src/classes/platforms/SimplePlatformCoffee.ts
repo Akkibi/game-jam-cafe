@@ -4,8 +4,11 @@ import * as THREE from "three/webgpu";
 import type { PhysicsEngine } from "../../matter/physics";
 import type { SeedManager } from "../../three/seedManager";
 import { loadGLTFModel } from "../../utils/loadGLTFModel";
+import type { Seed } from "../../three/seed";
 
 export class SimplePlatformCoffee extends BaseSceneElement {
+	private seed: Seed | null = null;
+
 	constructor(
 		id: number,
 		scene: THREE.Scene,
@@ -31,7 +34,17 @@ export class SimplePlatformCoffee extends BaseSceneElement {
 	}
 
 	public addToScene(): void {
-		super.addToScene();
-		this.addSeed();
+		const onComplete = () => {
+			this.seed = this.addSeed();
+		};
+
+		super.addToScene(onComplete);
+	}
+
+	public removeFromScene(): void {
+		this.seed?.destroy();
+		this.seed = null;
+
+		super.removeFromScene();
 	}
 }

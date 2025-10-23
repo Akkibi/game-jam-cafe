@@ -3,36 +3,36 @@ import { loadGLTFModel } from "../utils/loadGLTFModel";
 import { PhysicsEngine } from "../matter/physics";
 
 export class Environement {
-  private static instance: Environement;
-  private scene: THREE.Scene;
-  private instanceGroup: THREE.Group;
-  private physicsEngine: PhysicsEngine;
+	private static instance: Environement;
+	private scene: THREE.Scene;
+	private instanceGroup: THREE.Group;
+	private physicsEngine: PhysicsEngine;
 
-  private constructor(scene: THREE.Scene) {
-    this.scene = scene;
-    this.instanceGroup = new THREE.Group();
-    this.scene.add(this.instanceGroup);
-    this.physicsEngine = PhysicsEngine.getInstance();
-    loadGLTFModel(this.instanceGroup, "/assets/bounds/bounds.glb");
+	private constructor(scene: THREE.Scene) {
+		this.scene = scene;
+		this.instanceGroup = new THREE.Group();
+		this.scene.add(this.instanceGroup);
+		this.physicsEngine = PhysicsEngine.getInstance();
+		loadGLTFModel(this.instanceGroup, "/assets/bounds/bounds.glb");
 
-    const wall1Position = new THREE.Vector3(-3.4, 0, 0);
-    const wall1Scale = new THREE.Vector3(0.1, 10, 0);
-    const wall2Position = new THREE.Vector3(3.4, 0, 0);
-    // const wall3Position = new THREE.Vector3(0, 1.9, 0);
-    // const wall3Scale = new THREE.Vector3(4.1, 0.11, 0);
-    this.physicsEngine.addObject(wall1Position, wall1Scale);
-    this.physicsEngine.addObject(wall2Position, wall1Scale);
-    // this.physicsEngine.addObject(wall3Position, wall3Scale);
+		const wall1Position = new THREE.Vector3(-3.4, 0, 0);
+		const wall1Scale = new THREE.Vector3(0.1, 10, 0);
+		const wall2Position = new THREE.Vector3(3.4, 0, 0);
+		// const wall3Position = new THREE.Vector3(0, 1.9, 0);
+		// const wall3Scale = new THREE.Vector3(4.1, 0.11, 0);
+		this.physicsEngine.addObject(wall1Position, wall1Scale);
+		this.physicsEngine.addObject(wall2Position, wall1Scale);
+		// this.physicsEngine.addObject(wall3Position, wall3Scale);
 
-    const boxPosition = new THREE.Vector3(0, -1, 0);
-    const boxScale = new THREE.Vector3(0.1, 0.1, 0.1);
-    this.physicsEngine.addObject(boxPosition, boxScale, true);
-  }
+		const boxPosition = new THREE.Vector3(0, -1, 0);
+		const boxScale = new THREE.Vector3(0.1, 0.1, 0.1);
+		this.physicsEngine.addObject(boxPosition, boxScale, 0, true);
+	}
 
-  public static getInstance(scene: THREE.Scene): Environement {
-    if (!Environement.instance) {
-      Environement.instance = new Environement(scene);
-    }
-    return Environement.instance;
-  }
+	public static getInstance(scene: THREE.Scene): Environement {
+		if (!Environement.instance) {
+			Environement.instance = new Environement(scene);
+		}
+		return Environement.instance;
+	}
 }

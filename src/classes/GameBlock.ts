@@ -74,6 +74,15 @@ export class GameBlock {
 		}
 	}
 
+	public reset(): void {
+		this.isActive = false;
+		this.hasAddedObjects = false;
+		this.allElementsFullyAdded = false;
+		this.activeElements = [];
+
+		this.blockElements.forEach((be) => be.reset());
+	}
+
 	public update(time: number) {
 		if (!this.isActive) return;
 

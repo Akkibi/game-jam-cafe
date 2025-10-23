@@ -64,14 +64,15 @@ export class GameEngine {
 					this.scene
 				)
 			);
+
+			console.log(this.blocks);
 		});
-		console.log("this.blocks", this.blocks);
 	}
 
 	private addBlocks() {
 		this.blocks.forEach((b, i) => {
 			if (i < 4) {
-				console.log("activeBlocks", this.activeBlocks, b.location);
+				// console.log("activeBlocks", this.activeBlocks, b.location);
 				if (
 					!this.activeBlocks.find(
 						(ab) => b.location === ab.block.location
@@ -99,7 +100,7 @@ export class GameEngine {
 				(b) => b.location === oldBlock.location
 			);
 
-			console.log("availableBlocks", availableBlocks);
+			// console.log("availableBlocks", availableBlocks);
 
 			if (availableBlocks.length > 0) {
 				// Randomly select from available blocks with same location
@@ -121,14 +122,13 @@ export class GameEngine {
 
 		// If no unused blocks found, we've reached the endless phase
 		if (!nextBlock) {
-			console.log("Entering endless phase");
 			this.isEndlessPhase = true;
 
 			// Store the last 8 blocks for endless cycling
 			// These are the blocks that are currently active
 			this.endlessPhaseBlocks = this.blocks;
 
-			console.log("Endless Phase Blocks:", this.endlessPhaseBlocks);
+			console.log("endlessPhaseBlocks", this.endlessPhaseBlocks);
 
 			// Now try to get a block from endless phase
 			return this.getNextBlock(oldBlock);
@@ -138,7 +138,7 @@ export class GameEngine {
 			this.usedBlockIds.add(nextBlock.id);
 		}
 
-		console.log("Normal phase - newBlock", nextBlock);
+		// console.log("Normal phase - newBlock", nextBlock);
 		return nextBlock;
 	}
 
@@ -154,15 +154,13 @@ export class GameEngine {
 				ab.block.update(time);
 
 				if (!ab.block.isActive) {
-					console.log(
-						`block ${ab.block.id} is unactive`,
-						this.activeBlocks
-					);
+					// console.log(
+					// 	`block ${ab.block.id} is unactive`,
+					// 	this.activeBlocks
+					// );
 					// if (this.blocks.length > 4) {
 
 					// Remove from activeBlocks
-
-					// Get and activate next block
 					const newBlock = this.getNextBlock(ab.block);
 					if (newBlock) {
 						console.log(
@@ -170,14 +168,12 @@ export class GameEngine {
 						);
 						// this.blocks.splice(ab.id, 1);
 						this.activeBlocks.splice(i, 1);
-						newBlock.hasAddedObjects = false;
+						newBlock.reset();
 						newBlock.isActive = true;
 						this.activeBlocks.push({
 							block: newBlock,
 							id: newBlock.id,
 						});
-
-						console.log("activeBlocks", this.activeBlocks);
 					}
 					// }
 				}
