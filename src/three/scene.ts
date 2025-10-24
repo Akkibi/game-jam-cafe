@@ -95,6 +95,11 @@ export class SceneManager {
   }
 
   public restart = () => {
+    if (useStore.getState().score > 30000) {
+      useStore.setState({ isPaused: true });
+      useStore.setState({ isGameOver: true });
+      return;
+    }
     this.physicsEngine.restart();
     this.seedManager.restart();
     useStore.setState({
@@ -108,7 +113,8 @@ export class SceneManager {
 
   private animate(time: number, deltatime: number) {
     this.renderer.render(this.scene, this.camera.getCamera());
-    if (useStore.getState().isPaused && time > 0.1) return;
+    this.camera.update(time, deltatime);
+    if (useStore.getState().isPaused && time > 0.2) return;
     const customDeltatime = useStore.getState().isSlowed
       ? deltatime * 0.25
       : deltatime * 1;
@@ -121,12 +127,7 @@ export class SceneManager {
     const body = this.player.update(customDeltatime);
 
     if (body.position.y > window.innerHeight * 1.5) {
-      if (useStore.getState().caffeineLvl > 30000) {
-        useStore.setState({ isGameOver: true });
-        useStore.setState({ isPaused: true });
-      } else {
-        this.restart();
-      }
+      this.restart();
     }
     this.seedManager.update(time);
     this.stats.end();

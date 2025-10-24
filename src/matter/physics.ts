@@ -166,7 +166,7 @@ export class PhysicsEngine {
         bodyVelocity.x +
           speed.x *
             (isCurrentTouch ? 2 : 1) *
-            (0.8 + useStore.getState().caffeineLvl * 0.005),
+            (0.8 + useStore.getState().caffeineLvl * 0.02),
         -5,
       ),
       5,
