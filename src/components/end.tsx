@@ -36,7 +36,7 @@ const End = () => {
 	useEffect(() => {
 		if (isEndAnimationPlaying) {
 			SoundManager.getInstance().stopAll();
-			console.log("isEndAnimationPlaying", isEndAnimationPlaying);
+			// console.log("isEndAnimationPlaying", isEndAnimationPlaying);
 			// useStore.setState({ isRestarting: false });
 			// useStore.setState({ isGameOver: true });
 		}
@@ -44,7 +44,7 @@ const End = () => {
 		const videoEnd = document.getElementById("videoEnd");
 
 		const onEnded = () => {
-			console.log("onended");
+			// console.log("onended");
 			window.parent.postMessage({
 				type: "elevator-command",
 				action: "backToElevator",

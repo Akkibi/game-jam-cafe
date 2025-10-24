@@ -169,7 +169,7 @@ export class GameEngine {
 			activeBlocks: [],
 		});
 
-		console.log("GameEngine restarted.");
+		// console.log("GameEngine restarted.");
 	}
 
 	public update(time: number) {

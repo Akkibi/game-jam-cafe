@@ -22,7 +22,7 @@ export class SeedManager {
 	}
 
 	public restart() {
-		console.log("seeds before restart: ", this.seeds.length);
+		// console.log("seeds before restart: ", this.seeds.length);
 		// Iterate backwards to safely remove from scene
 		while (this.seeds.length > 0) {
 			const seed = this.seeds.pop(); // Remove from array
@@ -30,7 +30,7 @@ export class SeedManager {
 				this.scene.remove(seed.group);
 			}
 		}
-		console.log("seeds after restart: ", this.seeds.length);
+		// console.log("seeds after restart: ", this.seeds.length);
 	}
 
 	public static getInstance(player: Player, scene: THREE.Scene): SeedManager {

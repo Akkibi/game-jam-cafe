@@ -99,8 +99,20 @@ export class PhysicsEngine {
 	public restart() {
 		Matter.Composite.clear(this.engine.world, false);
 		Matter.World.add(this.engine.world, this.player);
+		const wall1Position = new THREE.Vector3(-3.4, 0, 0);
+		const wall1Scale = new THREE.Vector3(0.1, 10, 0);
+		const wall2Position = new THREE.Vector3(3.4, 0, 0);
+		// const wall3Position = new THREE.Vector3(0, 1.9, 0);
+		// const wall3Scale = new THREE.Vector3(4.1, 0.11, 0);
+		this.addObject(wall1Position, wall1Scale);
+		this.addObject(wall2Position, wall1Scale);
+		// this.addObject(wall3Position, wall3Scale);
 
-		console.log("restart");
+		const boxPosition = new THREE.Vector3(0, -1, 0);
+		const boxScale = new THREE.Vector3(0.1, 0.1, 0.1);
+		this.addObject(boxPosition, boxScale, 0, true);
+
+		// console.log("restart");
 		Matter.Body.setPosition(this.player, { x: 20, y: -50 });
 		Matter.Body.setVelocity(this.player, { x: 0, y: 0 });
 	}

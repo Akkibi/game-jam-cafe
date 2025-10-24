@@ -22,7 +22,7 @@ const Start = () => {
           paused: true,
           onComplete: () => {
             useStore.setState({ isPaused: false });
-            console.log("complete");
+            // console.log("complete");
           },
         })
         .set(one, { scale: 0.5, opacity: 0 })

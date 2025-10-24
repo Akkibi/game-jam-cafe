@@ -83,7 +83,7 @@ export class SoundManager {
         console.error(`Failed to load sound "${config.id}":`, error);
       },
       onload: () => {
-        console.log(`Sound "${config.id}" loaded successfully`);
+        // console.log(`Sound "${config.id}" loaded successfully`);
       },
     });
 
