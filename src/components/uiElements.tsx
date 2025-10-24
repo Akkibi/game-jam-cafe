@@ -1,4 +1,5 @@
 import Controls from "./controls";
+import EndButtons from "./endButtons";
 import MultBar from "./multBar";
 import Score from "./score";
 import Start from "./start";
@@ -10,6 +11,7 @@ const UiElements = () => {
       <MultBar />
       <Start />
       <Controls />
+      <EndButtons />
     </>
   );
 };
