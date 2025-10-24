@@ -24,12 +24,12 @@ type Block = {
 	blockElements: (PlateformType | WaterfallType)[];
 };
 
-const BLOCK_STAGGER = 1; // s
-const BLOCK_DELAY = 3; // s
+const BLOCK_STAGGER = 2; // s
+const BLOCK_DELAY = 5; // s
 
-const PLATEFORM_LIFESPAN = 15;
+const PLATEFORM_LIFESPAN = 20;
 const PLATEFORM_LIFESPAN_PHASE_1 = PLATEFORM_LIFESPAN;
-const PLATEFORM_LIFESPAN_PHASE_2 = PLATEFORM_LIFESPAN * 0.5;
+const PLATEFORM_LIFESPAN_PHASE_2 = PLATEFORM_LIFESPAN * 0.8;
 
 const PLATFORM_WIDTH = 0.8;
 const PLATFORM_HEIGHT = 0.2;
@@ -74,7 +74,7 @@ export const Blocks: Block[] = [
 		location: 1,
 		blockElements: [
 			{
-				position: new Vector3(0.5, 1, 0),
+				position: new Vector3(0, 1, 0),
 				size: new Vector3(
 					PLATFORM_WIDTH,
 					PLATFORM_HEIGHT,
@@ -90,7 +90,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: 10,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
 				type: "p",
 			},
 		],
@@ -120,7 +120,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: "p",
 			},
 		],
 	},
@@ -363,7 +363,7 @@ export const Blocks: Block[] = [
 					PLATFORM_DEPTH
 				),
 				lifeSpan: 10,
-				type: "pc",
+				type: "pcg",
 			},
 		],
 	},
@@ -555,7 +555,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
 				type: "pcg",
 			},
 			{
@@ -565,7 +565,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
 				type: "pv",
 			},
 		],
@@ -584,7 +584,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
 				type: "pcg",
 			},
 		],
@@ -603,7 +603,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
 				type: "pv",
 			},
 		],
@@ -622,7 +622,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
 				type: "pcg",
 			},
 			{
@@ -632,7 +632,7 @@ export const Blocks: Block[] = [
 					PLATFORM_HEIGHT,
 					PLATFORM_DEPTH
 				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
 				type: "pv",
 			},
 		],

@@ -140,15 +140,15 @@ export class SteamWandPlatform extends BaseSceneElement {
 			if (this.steamCount === 2) {
 				// Phase 2: Create physics object to push character
 				this.timeline.add(() => {
-					const headPosition = new Vector3().copy(this.position);
-					const headSize = new Vector3(0.7, 0.7, 1.9);
+					// const headPosition = new Vector3().copy(this.position);
+					// const headSize = new Vector3(0.7, 0.7, 1.9);
 
-					headPosition.y += 0.7;
-					this.physicObject = this.physics.addObject(
-						headPosition,
-						headSize,
-						40
-					);
+					// headPosition.y += 0.7;
+					// this.physicObject = this.physics.addObject(
+					// 	headPosition,
+					// 	headSize,
+					// 	40
+					// );
 				}, 0.3);
 
 				// Phase 3: Push physics object upward

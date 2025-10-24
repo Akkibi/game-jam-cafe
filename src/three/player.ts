@@ -10,6 +10,9 @@ import {
 } from "../static";
 import { GameControls } from "../classes/Controls";
 import { CollisionWatcher } from "../matter/collisions";
+import { useStore } from "../store/globalStore";
+import { SoundManager } from "../sounds/soundManager";
+import { SOUNDS } from "../sounds/sounds";
 
 const physicsScale = 0.5;
 // const physicsTransform = new THREE.Vector2(-window.innerWidth/2, -window.innerHeight/2);
@@ -89,6 +92,22 @@ export class Player {
 	}
 
 	public eat() {
+		const caffeineLvl = useStore.getState().caffeineLvl;
+
+		if (Math.random() < 0.5) {
+			if (caffeineLvl >= 20 && caffeineLvl < 40) {
+				SoundManager.getInstance().play(SOUNDS.X2, { volume: 0.4 });
+			} else if (caffeineLvl >= 40 && caffeineLvl < 60) {
+				SoundManager.getInstance().play(SOUNDS.X4, { volume: 0.4 });
+			} else if (caffeineLvl >= 60 && caffeineLvl < 80) {
+				SoundManager.getInstance().play(SOUNDS.X6, { volume: 0.4 });
+			} else if (caffeineLvl >= 80 && caffeineLvl < 100) {
+				SoundManager.getInstance().play(SOUNDS.X8, { volume: 0.4 });
+			} else {
+				SoundManager.getInstance().play(SOUNDS.X10_1, { volume: 0.4 });
+			}
+		}
+
 		this.eatingDelta = 0;
 		this.states.eating = true;
 	}

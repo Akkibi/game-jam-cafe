@@ -50,13 +50,13 @@ export const soundConfigs = [
 		id: SOUNDS.COFFEE,
 		src: ["/sounds/machine/coffee/coffee.wav"],
 		volume: 0.6,
-		pool: 2,
+		pool: 1,
 	},
 	{
 		id: SOUNDS.GRINDER,
 		src: ["/sounds/machine/grinder/grinder.mp3"],
 		volume: 0.3,
-		pool: 2,
+		pool: 1,
 	},
 	{
 		id: SOUNDS.STEAM,
@@ -276,9 +276,9 @@ export const soundConfigs = [
 /**
  * Get a random douleur (pain) sound, with a 50% chance of no sound.
  */
-export function getRandomDouleurSound(): string | null {
+export function getRandomDouleurSound(): string {
 	if (Math.random() < 0.5) {
-		return null;
+		return "";
 	}
 	const douleurs = [
 		SOUNDS.VOICE_DOULEUR_1,

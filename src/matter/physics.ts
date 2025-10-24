@@ -72,35 +72,38 @@ export class PhysicsEngine {
 	private gamecontrols: GameControls;
 	private lastTouch: number;
 
-  private constructor() {
-    this.lastTouch = 0;
-    this.gamecontrols = GameControls.getInstance();
-    this.gamecontrols.keyHandlerSetup();
-    this.engine = Matter.Engine.create();
-    const scale = window.innerHeight * 0.05;
-    this.player = Matter.Bodies.circle(20, -50, scale * 0.5, {
-      restitution: 0,
-      friction: 0.05,
-    });
-    this.player.inertia = Infinity;
-    // Matter.Body.setAngularVelocity(this.player, 0);
+	private constructor() {
+		this.lastTouch = 0;
+		this.gamecontrols = GameControls.getInstance();
+		this.gamecontrols.keyHandlerSetup();
+		this.engine = Matter.Engine.create();
+		const scale = window.innerHeight * 0.05;
+		this.player = Matter.Bodies.circle(20, -50, scale * 0.5, {
+			restitution: 0,
+			friction: 0.05,
+		});
+		this.player.inertia = Infinity;
+		// Matter.Body.setAngularVelocity(this.player, 0);
 
-    const colliders = [this.player];
-    Matter.World.add(this.engine.world, colliders);
-    this.visualizer = Visualizer.getInstance(this.engine);
-    this.collisionWatcher = CollisionWatcher.getInstance(
-      this.player,
-      this.engine,
-    );
+		const colliders = [this.player];
+		Matter.World.add(this.engine.world, colliders);
+		this.visualizer = Visualizer.getInstance(this.engine);
+		this.collisionWatcher = CollisionWatcher.getInstance(
+			this.player,
+			this.engine
+		);
 
-    eventEmitter.on("restart", () => this.restart.bind(this));
-  }
+		eventEmitter.on("restart", () => this.restart.bind(this));
+	}
 
-  public restart() {
-    console.log("restart");
-    Matter.Body.setPosition(this.player, { x: 20, y: -50 });
-    Matter.Body.setVelocity(this.player, { x: 0, y: 0 });
-  }
+	public restart() {
+		Matter.Composite.clear(this.engine.world, false);
+		Matter.World.add(this.engine.world, this.player);
+
+		console.log("restart");
+		Matter.Body.setPosition(this.player, { x: 20, y: -50 });
+		Matter.Body.setVelocity(this.player, { x: 0, y: 0 });
+	}
 
 	static getInstance(): PhysicsEngine {
 		if (!this._instance) this._instance = new PhysicsEngine();
@@ -162,14 +165,16 @@ export class PhysicsEngine {
 		Matter.Engine.update(this.engine, deltaTime);
 		this.visualizer.update();
 
-    const speed = this.gamecontrols.getSpeed();
-    const bodyVelocity = Matter.Body.getVelocity(this.player);
-    const isCurrentTouch = this.collisionWatcher.getCollisions().length > 0;
-    if (this.collisionWatcher.getCollisions().length > 0) {
-      this.lastTouch = Date.now();
-      // console.log("speed Touch", this.collisionWatcher.getCollisions());
-    }
-    const isTouch = isCurrentTouch ? true : this.lastTouch > Date.now() - 100;
+		const speed = this.gamecontrols.getSpeed();
+		const bodyVelocity = Matter.Body.getVelocity(this.player);
+		const isCurrentTouch = this.collisionWatcher.getCollisions().length > 0;
+		if (this.collisionWatcher.getCollisions().length > 0) {
+			this.lastTouch = Date.now();
+			// console.log("speed Touch", this.collisionWatcher.getCollisions());
+		}
+		const isTouch = isCurrentTouch
+			? true
+			: this.lastTouch > Date.now() - 100;
 
 		let newVelocityY = bodyVelocity.y;
 
@@ -178,33 +183,35 @@ export class PhysicsEngine {
 		}
 		if (speed.y < 0 && isTouch) {
 			newVelocityY = speed.y * 1.25;
-			SoundManager.getInstance().play(getRandomSautSound());
+			SoundManager.getInstance().play(getRandomSautSound(), {
+				volume: 0.2,
+			});
 		}
 
-    const newVelocityX = Math.min(
-      Math.max(
-        bodyVelocity.x +
-          speed.x *
-            (isCurrentTouch ? 2 : 1) *
-            (0.8 + useStore.getState().caffeineLvl * 0.02),
-        -5,
-      ),
-      5,
-    );
-    Matter.Body.setVelocity(this.player, {
-      x: newVelocityX,
-      y: newVelocityY,
-    });
-    const isTooHigh = this.player.position.y < -50;
-    if (
-      (isTooHigh && this.player.position.x < 50) ||
-      (isTooHigh && this.player.position.x > matterRange.x.max - 50)
-    ) {
-      Matter.Body.setVelocity(this.player, {
-        x: this.player.velocity.x,
-        y: 1,
-      });
-    }
-    Matter.Body.setAngularSpeed(this.player, 0);
-  }
+		const newVelocityX = Math.min(
+			Math.max(
+				bodyVelocity.x +
+					speed.x *
+						(isCurrentTouch ? 2 : 1) *
+						(0.8 + useStore.getState().caffeineLvl * 0.02),
+				-5
+			),
+			5
+		);
+		Matter.Body.setVelocity(this.player, {
+			x: newVelocityX,
+			y: newVelocityY,
+		});
+		const isTooHigh = this.player.position.y < -50;
+		if (
+			(isTooHigh && this.player.position.x < 50) ||
+			(isTooHigh && this.player.position.x > matterRange.x.max - 50)
+		) {
+			Matter.Body.setVelocity(this.player, {
+				x: this.player.velocity.x,
+				y: 1,
+			});
+		}
+		Matter.Body.setAngularSpeed(this.player, 0);
+	}
 }

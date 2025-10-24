@@ -5,6 +5,7 @@ import { Blocks } from "./blocks";
 import { SeedManager } from "../three/seedManager";
 import { createGamePlatform } from "../classes/platforms/createGamePlatform";
 import type { SoundManager } from "../sounds/soundManager";
+import { useStore } from "../store/globalStore";
 
 export class GameEngine {
 	private static _instance: GameEngine;
@@ -54,7 +55,7 @@ export class GameEngine {
 				p.position,
 				this.physics,
 				this.seedManager,
-                this.soundManager,
+				this.soundManager,
 				p.size,
 				p.lifeSpan,
 				p.type
@@ -145,6 +146,32 @@ export class GameEngine {
 		return nextBlockData;
 	}
 
+	public restart() {
+		// 1. Clean up and remove all currently active blocks
+		// This involves destroying their physical bodies and removing them from the scene.
+		for (const ab of this.activeBlocks) {
+			// We assume the GameBlock class has a `destroy` method
+			// to properly clean up its resources (platforms, etc.).
+			ab.block.reset();
+		} 
+
+		// 2. Clear all active block tracking arrays and maps
+		this.activeBlocks = [];
+		this.blockActivationTimes.clear();
+		this.usedBlockIds.clear();
+
+		// 3. Reset game state variables
+		this.isEndlessPhase = false;
+		this.initialTime = null; // This is crucial for the `update` loop to re-initialize the game
+
+		// 4. Update the global store to reflect the cleared state
+		useStore.setState({
+			activeBlocks: [],
+		});
+
+		console.log("GameEngine restarted.");
+	}
+
 	public update(time: number) {
 		// Initialize start time on first update
 		if (this.initialTime === null) {
@@ -184,5 +211,11 @@ export class GameEngine {
 				}
 			}
 		}
+		useStore.setState({
+			activeBlocks: this.activeBlocks.map((ab) => ({
+				id: ab.id,
+				location: ab.block.location,
+			})),
+		});
 	}
 }
