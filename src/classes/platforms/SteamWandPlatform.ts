@@ -304,7 +304,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 
 		// // Start trembling after both steams complete (at 80% like normal platforms)
 		if (progress > 0.8 && this.animationState === AnimationState.IDLE) {
-			this.soundManager.play(SOUNDS.STEAM);
+			this.soundManager.play(SOUNDS.STEAM, {volume: 0.2});
 			this.startAnimating();
 		}
 

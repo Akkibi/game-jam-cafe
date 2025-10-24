@@ -9,7 +9,7 @@ const Score = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       if (isPaused) return;
-      setScore(score + 1 * Math.max(Math.round(cafeineLvl * 0.12), 0));
+      setScore(score + Math.max(Math.round(cafeineLvl * 0.3), 0));
     }, 100);
     return () => clearInterval(timer);
   }, [score, setScore, cafeineLvl, isPaused]);
