@@ -4,7 +4,6 @@ import { CollisionWatcher } from './collisions';
 import * as THREE from 'three/webgpu';
 import { GameControls } from '../classes/Controls';
 import { useStore } from '../store/globalStore';
-import { eventEmitter } from '../utils/eventEmitter';
 import { SoundManager } from '../sounds/soundManager';
 import { getRandomSautSound } from '../sounds/sounds';
 
@@ -77,8 +76,6 @@ export class PhysicsEngine {
 		Matter.World.add(this.engine.world, colliders);
 		this.visualizer = Visualizer.getInstance(this.engine);
 		this.collisionWatcher = CollisionWatcher.getInstance(this.player, this.engine);
-
-		eventEmitter.on('restart', () => this.restart.bind(this));
 	}
 
 	public restart() {
