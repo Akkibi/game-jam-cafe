@@ -1,21 +1,15 @@
 import * as THREE from 'three/webgpu';
 import { Vector3 } from 'three';
-import type { PhysicsEngine } from '../../matter/physics';
-import type { SeedManager } from '../../three/seedManager';
 import type { BaseSceneElement } from '../BaseSceneElement';
 import { SteamWandPlatform } from './SteamWandPlatform';
 import { CoffeeGrinderPlatform } from './CoffeeGrinderPlatform';
 import { SimplePlatformCoffee } from './SimplePlatformCoffee';
 import { SimplePlatform } from './SimplePlatform';
-import type { SoundManager } from '../../sounds/soundManager';
 
 export function createGamePlatform(
 	id: number,
 	scene: THREE.Scene,
 	position: Vector3,
-	physics: PhysicsEngine,
-	seedManager: SeedManager,
-	soundManager: SoundManager,
 	size: Vector3,
 	lifeSpan: number | null,
 	type: string = 'pc',
@@ -28,9 +22,6 @@ export function createGamePlatform(
 				id,
 				scene,
 				position,
-				physics,
-				seedManager,
-				soundManager,
 				size,
 				lifeSpan,
 				new THREE.Group(),
@@ -41,10 +32,6 @@ export function createGamePlatform(
 				id,
 				scene,
 				position,
-				physics,
-				seedManager,
-				soundManager,
-
 				size,
 				lifeSpan,
 				new THREE.Group(),
@@ -55,10 +42,6 @@ export function createGamePlatform(
 				id,
 				scene,
 				position,
-				physics,
-				seedManager,
-				soundManager,
-
 				size,
 				lifeSpan,
 				new THREE.Group(),
@@ -69,10 +52,6 @@ export function createGamePlatform(
 				id,
 				scene,
 				position,
-				physics,
-				seedManager,
-				soundManager,
-
 				size,
 				lifeSpan,
 				new THREE.Group(),

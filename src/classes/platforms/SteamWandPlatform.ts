@@ -1,12 +1,11 @@
 import { Vector3 } from 'three';
 import { BaseSceneElement } from '../BaseSceneElement';
 import * as THREE from 'three/webgpu';
-import type { PhysicsEngine } from '../../matter/physics';
-import type { SeedManager } from '../../three/seedManager';
+import { PhysicsEngine } from '../../matter/physics';
 import { loadGLTFModel } from '../../utils/loadGLTFModel';
 import gsap from 'gsap';
 import Matter from 'matter-js';
-import type { SoundManager } from '../../sounds/soundManager';
+import { SoundManager } from '../../sounds/soundManager';
 import { SOUNDS } from '../../sounds/sounds';
 
 enum AnimationState {
@@ -32,24 +31,11 @@ export class SteamWandPlatform extends BaseSceneElement {
 		id: number,
 		scene: THREE.Scene,
 		position: Vector3,
-		physics: PhysicsEngine,
-		seedManager: SeedManager,
-		soundManager: SoundManager,
 		size: Vector3,
 		lifeSpan: number | null,
 		platformGroup: THREE.Group,
 	) {
-		super(
-			id,
-			scene,
-			physics,
-			seedManager,
-			soundManager,
-			position,
-			size,
-			lifeSpan,
-			platformGroup,
-		);
+		super(id, scene, position, size, lifeSpan, platformGroup);
 
 		this.loadModels(platformGroup);
 		this.createSteamPlane(platformGroup);
@@ -232,7 +218,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 			this.timeline = null;
 		}
 
-		if (this.physicObject) this.physics.removeObject(this.physicObject);
+		if (this.physicObject) PhysicsEngine.getInstance().removeObject(this.physicObject);
 
 		// Remove steam plane from scene
 		if (this.steamPlane) {
@@ -289,7 +275,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 
 		// // Start trembling after both steams complete (at 80% like normal platforms)
 		if (progress > 0.8 && this.animationState === AnimationState.IDLE) {
-			this.soundManager.play(SOUNDS.STEAM, { volume: 0.2 });
+			SoundManager.getInstance().play(SOUNDS.STEAM, { volume: 0.2 });
 			this.startAnimating();
 		}
 

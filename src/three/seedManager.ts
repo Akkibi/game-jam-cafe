@@ -12,12 +12,11 @@ import { getRandomMangerSound } from '../sounds/sounds';
 export class SeedManager {
 	private static instance: SeedManager;
 	private seeds: Seed[];
-	private player: Player;
+	private player: Player | null = null;
 	private scene: THREE.Scene;
 
-	constructor(player: Player, scene: THREE.Scene) {
+	constructor(scene: THREE.Scene) {
 		this.seeds = [];
-		this.player = player;
 		this.scene = scene;
 	}
 
@@ -33,9 +32,13 @@ export class SeedManager {
 		// console.log("seeds after restart: ", this.seeds.length);
 	}
 
-	public static getInstance(player: Player, scene: THREE.Scene): SeedManager {
+	public setPlayer(player: Player) {
+		this.player = player;
+	}
+
+	public static getInstance(scene: THREE.Scene): SeedManager {
 		if (!SeedManager.instance) {
-			SeedManager.instance = new SeedManager(player, scene);
+			SeedManager.instance = new SeedManager(scene);
 		}
 		return SeedManager.instance;
 	}
@@ -50,7 +53,8 @@ export class SeedManager {
 	public update(time: number) {
 		this.seeds.forEach((seed) => seed.update(time));
 		this.seeds.forEach((seed) => {
-			if (seed.position.distanceTo(this.player.getPosition()) < 0.3) {
+			if (!this.player) return;
+			if (seed.position.distanceTo(this.player.getPosition() || new THREE.Vector3()) < 0.3) {
 				seed.destroy();
 				if (useStore.getState().caffeineLvl + 20 >= 100) {
 					useStore.setState({ caffeineLvl: 100 });

@@ -1,16 +1,12 @@
 import * as Three from 'three';
 import { Vector3 } from 'three';
-import { PhysicsEngine } from '../matter/physics';
-import type { SeedManager } from '../three/seedManager';
+import { SeedManager } from '../three/seedManager';
 import gsap from 'gsap';
-import type { SoundManager } from '../sounds/soundManager';
+import { PhysicsEngine } from '../matter/physics';
 
 export class BaseSceneElement {
 	public id: number = -1;
 	protected scene: Three.Scene;
-	protected physics: PhysicsEngine;
-	protected seedManager: SeedManager;
-	protected soundManager: SoundManager;
 	public position: Vector3;
 	public size: Vector3;
 	public isActive: boolean;
@@ -27,9 +23,6 @@ export class BaseSceneElement {
 	constructor(
 		id: number,
 		scene: Three.Scene,
-		physics: PhysicsEngine,
-		seedManager: SeedManager,
-		soundManager: SoundManager,
 		position: Vector3,
 		size: Vector3,
 		lifeSpan: number | null,
@@ -37,9 +30,6 @@ export class BaseSceneElement {
 	) {
 		this.id = id;
 		this.scene = scene;
-		this.physics = physics;
-		this.seedManager = seedManager;
-		this.soundManager = soundManager;
 		this.position = position;
 		this.size = size;
 		this.lifeSpan = lifeSpan;
@@ -54,12 +44,11 @@ export class BaseSceneElement {
 	}
 
 	protected addSeed() {
-		// console.log("addSeed");
 		const seedPosition = new Three.Vector3();
 
 		seedPosition.copy(this.position);
 		seedPosition.add(new Vector3(0, 0.3, 0));
-		return this.seedManager.addSeed(seedPosition);
+		return SeedManager.getInstance(this.scene).addSeed(seedPosition);
 	}
 
 	public addToScene(onComplete?: () => void) {
@@ -76,7 +65,7 @@ export class BaseSceneElement {
 		});
 
 		gsap.delayedCall(1.5, () => {
-			this.object = this.physics.addObject(this.position, this.size);
+			this.object = PhysicsEngine.getInstance().addObject(this.position, this.size);
 			if (onComplete) {
 				onComplete();
 			}
@@ -122,7 +111,7 @@ export class BaseSceneElement {
 			duration: 2,
 			onStart: () => {
 				this.isRemoving = true;
-				if (this.object) this.physics.removeObject(this.object);
+				if (this.object) PhysicsEngine.getInstance().removeObject(this.object);
 			},
 			onComplete: () => {
 				this.scene.remove(this.group);
@@ -146,7 +135,7 @@ export class BaseSceneElement {
 		this.stopTrembling();
 
 		if (this.object) {
-			this.physics.removeObject(this.object);
+			PhysicsEngine.getInstance().removeObject(this.object);
 			this.object = null;
 		}
 

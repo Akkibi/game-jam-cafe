@@ -1,13 +1,12 @@
 import { Vector3 } from 'three';
 import { BaseSceneElement } from '../BaseSceneElement';
 import * as THREE from 'three/webgpu';
-import type { PhysicsEngine } from '../../matter/physics';
-import type { SeedManager } from '../../three/seedManager';
+import { PhysicsEngine } from '../../matter/physics';
 import { loadGLTFModel } from '../../utils/loadGLTFModel';
 import gsap from 'gsap';
 import type { Seed } from '../../three/seed';
 import Matter from 'matter-js';
-import type { SoundManager } from '../../sounds/soundManager';
+import { SoundManager } from '../../sounds/soundManager';
 import { SOUNDS } from '../../sounds/sounds';
 
 enum AnimationState {
@@ -30,24 +29,11 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 		id: number,
 		scene: THREE.Scene,
 		position: Vector3,
-		physics: PhysicsEngine,
-		seedManager: SeedManager,
-		soundManager: SoundManager,
 		size: Vector3,
 		lifeSpan: number | null,
 		platformGroup: THREE.Group,
 	) {
-		super(
-			id,
-			scene,
-			physics,
-			seedManager,
-			soundManager,
-			position,
-			size,
-			lifeSpan,
-			platformGroup,
-		);
+		super(id, scene, position, size, lifeSpan, platformGroup);
 
 		this.loadModels(platformGroup);
 	}
@@ -101,7 +87,7 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 		// Create timeline
 		this.timeline = gsap.timeline();
 
-		this.soundManager.play(SOUNDS.GRINDER, { volume: 0.1 });
+		SoundManager.getInstance().play(SOUNDS.GRINDER, { volume: 0.1 });
 
 		// Phase 1: Just rotation (2 seconds)
 		if (this.grinder_head) {
@@ -178,7 +164,7 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 			this.group.position.x = this.position.x;
 		}
 
-		if (this.physicObject) this.physics.removeObject(this.physicObject);
+		if (this.physicObject) PhysicsEngine.getInstance().removeObject(this.physicObject);
 
 		super.removeFromScene();
 	}
