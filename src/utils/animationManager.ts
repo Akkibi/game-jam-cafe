@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 type AnimationType = string[] | null;
 
@@ -16,7 +16,7 @@ class Animation {
     this.material = material;
     this.currentFrames = null;
     this.textureLoader = new THREE.TextureLoader();
-    this.material.map = this.textureLoader.load("./default.png");
+    this.material.map = this.textureLoader.load('./default.png');
   }
 
   private loadTexture = (src: string): Promise<THREE.Texture> => {

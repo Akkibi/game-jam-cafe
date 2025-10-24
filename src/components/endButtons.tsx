@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef } from "react";
-import { useStore } from "../store/globalStore";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import FlipNumbers from "react-flip-numbers";
+import { useEffect, useMemo, useRef } from 'react';
+import { useStore } from '../store/globalStore';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import FlipNumbers from 'react-flip-numbers';
 
 const EndButtons = () => {
   const openTimelineRef = useRef<gsap.core.Timeline>(gsap.timeline());
@@ -30,7 +30,7 @@ const EndButtons = () => {
 
       gsap.set(elems, {
         opacity: 0,
-        y: "100%",
+        y: '100%',
       });
 
       openTimelineRef.current = gsap
@@ -40,10 +40,10 @@ const EndButtons = () => {
         })
         .to(elems, {
           duration: 4,
-          ease: "expo.out",
+          ease: 'expo.out',
           opacity: 1,
           delay: 1,
-          y: "-50%",
+          y: '-50%',
         });
 
       closeTimelineRef.current = gsap
@@ -53,9 +53,9 @@ const EndButtons = () => {
         })
         .to(elems, {
           duration: 1,
-          ease: "back.in",
+          ease: 'back.in',
           opacity: 0,
-          y: "100%",
+          y: '100%',
         });
     },
     {

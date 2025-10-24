@@ -1,6 +1,6 @@
-import { useGSAP } from "@gsap/react";
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
+import { useGSAP } from '@gsap/react';
+import { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
 
 const Controls = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -20,32 +20,32 @@ const Controls = () => {
       const popup = popupRef.current;
       if (!popup) return;
 
-      gsap.set(popup, { y: "100%", opacity: 0 });
+      gsap.set(popup, { y: '100%', opacity: 0 });
 
       closeAnimation.current = gsap.timeline({ paused: true }).fromTo(
         popup,
         {
-          y: "0%",
+          y: '0%',
           opacity: 1,
         },
         {
-          y: "100",
+          y: '100',
           opacity: 0,
           duration: 0.5,
-          ease: "power1.inOut",
+          ease: 'power1.inOut',
         },
       );
       openTimelineRef.current = gsap.timeline({ paused: true }).fromTo(
         popup,
         {
-          y: "100%",
+          y: '100%',
           opacity: 0,
         },
         {
-          y: "0",
+          y: '0',
           opacity: 1,
           duration: 0.5,
-          ease: "power1.inOut",
+          ease: 'power1.inOut',
         },
       );
       openTimelineRef.current.progress(0);

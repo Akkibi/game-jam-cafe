@@ -13,7 +13,7 @@ const ThreeManager = () => {
     sceneManager.current = SceneManager.getInstance(canvas);
   }, []);
 
-  return <div ref={canvasRef} id='threeContainer'></div>;
+  return <div ref={canvasRef} id="threeContainer"></div>;
 };
 
 export default ThreeManager;

@@ -4,8 +4,8 @@ import fragmentFloorShader from './shaders/water-floor.frag';
 import fragmentFallShader from './shaders/water-fall.frag';
 import vertexFallShader from './shaders/water-fall.vert';
 import vertexFloorShader from './shaders/water-floor.vert';
-  // singleton class that imports a water mesh from a gltf file
-  // imports frag and vert shaders from shaders folder
+// singleton class that imports a water mesh from a gltf file
+// imports frag and vert shaders from shaders folder
 export class Water {
   private static instance: Water;
   private waterFallMaterial: THREE.ShaderMaterial | null = null;
@@ -57,7 +57,7 @@ export class Water {
           },
         });
         (child as THREE.Mesh).material = this.waterFloorMaterial;
-      } else {
+      } else {
         (child as THREE.Mesh).material = new THREE.MeshStandardMaterial({
           color: 0xaa5500,
         });

@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react";
-import { useStore } from "./store/globalStore";
+import { useEffect, useRef } from 'react';
+import { useStore } from './store/globalStore';
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 
 const MultBar = () => {
   const caffeineLvl = useStore((s) => s.caffeineLvl);
@@ -22,28 +22,28 @@ const MultBar = () => {
       waveing.current = gsap.timeline({ paused: false }).fromTo(
         wave,
         {
-          backgroundPositionY: "0%",
+          backgroundPositionY: '0%',
         },
         {
-          backgroundPositionY: "100%",
+          backgroundPositionY: '100%',
           repeat: -1,
           repeatDelay: 0.5,
           duration: 10,
-          ease: "none",
+          ease: 'none',
         },
       );
 
       waveing2.current = gsap.timeline({ paused: false }).fromTo(
         wave2,
         {
-          backgroundPositionY: "100%",
+          backgroundPositionY: '100%',
         },
         {
-          backgroundPositionY: "0%",
+          backgroundPositionY: '0%',
           repeat: -1,
           repeatDelay: 0.5,
           duration: 10,
-          ease: "none",
+          ease: 'none',
         },
       );
     },
@@ -86,8 +86,8 @@ const MultBar = () => {
               className="absolute top-0 bottom-0 left-full w-[7vh] bg-[url('/assets/bar/coffee.svg')] bg-no-repeat bg-cover"
               ref={wave2Ref}
               style={{
-                backgroundPositionX: "100%",
-                backgroundSize: "20vh",
+                backgroundPositionX: '100%',
+                backgroundSize: '20vh',
               }}
             ></div>
           </div>
@@ -98,8 +98,8 @@ const MultBar = () => {
             <div
               className="absolute top-0 bottom-0 left-full w-[6vh] bg-[url('/assets/bar/coffee.svg')] bg-no-repeat"
               style={{
-                backgroundPositionX: "100%",
-                backgroundSize: "20vh",
+                backgroundPositionX: '100%',
+                backgroundSize: '20vh',
               }}
               ref={waveRef}
             ></div>

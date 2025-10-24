@@ -1,4 +1,4 @@
-import { Howl, Howler } from "howler";
+import { Howl, Howler } from 'howler';
 
 interface SoundConfig {
   id: string;
@@ -52,7 +52,7 @@ export class SoundManager {
    */
   public init(soundConfigs: SoundConfig[]): void {
     if (this.isInitialized) {
-      console.warn("SoundManager already initialized");
+      console.warn('SoundManager already initialized');
       return;
     }
 
@@ -121,9 +121,7 @@ export class SoundManager {
     }
 
     // Play the sound (with sprite if specified)
-    const instanceId = options?.sprite
-      ? howl.play(options.sprite)
-      : howl.play();
+    const instanceId = options?.sprite ? howl.play(options.sprite) : howl.play();
 
     // Add to active sounds
     this.activeSounds.push({
@@ -134,12 +132,12 @@ export class SoundManager {
 
     // Set up onend callback
     if (options?.onend) {
-      howl.once("end", options.onend, instanceId);
+      howl.once('end', options.onend, instanceId);
     }
 
     // Clean up from active sounds when done
     howl.once(
-      "end",
+      'end',
       () => {
         this.removeActiveSound(soundId, instanceId);
       },
@@ -240,9 +238,7 @@ export class SoundManager {
       howl.stop();
       this.removeAllActiveSound(soundId);
       // Remove all scheduled stops for this sound
-      this.scheduledStops = this.scheduledStops.filter(
-        (s) => s.soundId !== soundId,
-      );
+      this.scheduledStops = this.scheduledStops.filter((s) => s.soundId !== soundId);
     }
   }
 
@@ -391,9 +387,7 @@ export class SoundManager {
       this.sounds.delete(soundId);
       this.removeAllActiveSound(soundId);
       // Remove scheduled stops for this sound
-      this.scheduledStops = this.scheduledStops.filter(
-        (s) => s.soundId !== soundId,
-      );
+      this.scheduledStops = this.scheduledStops.filter((s) => s.soundId !== soundId);
     }
   }
 
@@ -436,8 +430,7 @@ export class SoundManager {
 
       // Handle fade out
       if (scheduled.fadeOut && !scheduled.fadeStarted) {
-        const fadeStartTime =
-          scheduled.stopTime - (scheduled.fadeOutDuration ?? 500);
+        const fadeStartTime = scheduled.stopTime - (scheduled.fadeOutDuration ?? 500);
         if (time >= fadeStartTime) {
           howl.fade(
             scheduled.originalVolume ?? 1.0,

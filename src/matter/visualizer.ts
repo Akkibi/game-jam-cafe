@@ -1,5 +1,5 @@
-import Matter from "matter-js";
-import { useStore } from "../store/globalStore";
+import Matter from 'matter-js';
+import { useStore } from '../store/globalStore';
 
 export class Visualizer {
   private static instance: Visualizer;
@@ -19,14 +19,14 @@ export class Visualizer {
     this.width = width;
     this.height = height;
     this.setupCanvas();
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "$") {
+    document.addEventListener('keydown', (event) => {
+      if (event.key === '$') {
         this.toggle();
       }
-      if (event.key === "p") {
+      if (event.key === 'p') {
         useStore.setState({ isPaused: !useStore.getState().isPaused });
       }
-      if (event.key === "r") {
+      if (event.key === 'r') {
         useStore.setState({ score: useStore.getState().score + 30000 });
       }
     });
@@ -40,15 +40,15 @@ export class Visualizer {
   }
 
   private setupCanvas(): void {
-    this.canvas = document.createElement("canvas");
+    this.canvas = document.createElement('canvas');
     this.canvas.width = this.width;
     this.canvas.height = this.height;
-    this.canvas.style.position = "fixed";
-    this.canvas.style.top = "50%";
-    this.canvas.style.left = "50%";
-    this.canvas.style.border = "1px solid #888";
-    this.canvas.style.display = "none";
-    this.canvas.style.transform = "scale(0.25) translate(-50%, -50%)";
+    this.canvas.style.position = 'fixed';
+    this.canvas.style.top = '50%';
+    this.canvas.style.left = '50%';
+    this.canvas.style.border = '1px solid #888';
+    this.canvas.style.display = 'none';
+    this.canvas.style.transform = 'scale(0.25) translate(-50%, -50%)';
     document.body.appendChild(this.canvas);
 
     this.render = Matter.Render.create({
@@ -58,7 +58,7 @@ export class Visualizer {
         width: this.width,
         height: this.height,
         wireframes: true,
-        background: "#000000",
+        background: '#000000',
       },
     });
 
@@ -68,7 +68,7 @@ export class Visualizer {
   toggle(): void {
     if (!this.canvas) return;
     this.visible = !this.visible;
-    this.canvas.style.display = this.visible ? "block" : "none";
+    this.canvas.style.display = this.visible ? 'block' : 'none';
   }
 
   update(): void {

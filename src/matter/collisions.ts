@@ -1,4 +1,4 @@
-import Matter, { Engine, Body } from "matter-js";
+import Matter, { Engine, Body } from 'matter-js';
 
 export class CollisionWatcher {
   private static instance: CollisionWatcher;
@@ -9,7 +9,7 @@ export class CollisionWatcher {
     this.character = character;
     this.currentCollisions = new Set();
 
-    Matter.Events.on(engine, "collisionStart", (event) => {
+    Matter.Events.on(engine, 'collisionStart', (event) => {
       event.pairs.forEach((pair) => {
         const { bodyA, bodyB } = pair;
         if (bodyA === this.character) {
@@ -20,7 +20,7 @@ export class CollisionWatcher {
       });
     });
 
-    Matter.Events.on(engine, "collisionEnd", (event) => {
+    Matter.Events.on(engine, 'collisionEnd', (event) => {
       event.pairs.forEach((pair) => {
         const { bodyA, bodyB } = pair;
         if (bodyA === this.character) {

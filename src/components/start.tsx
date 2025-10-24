@@ -1,7 +1,7 @@
-import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
-import gsap from "gsap";
-import { useStore } from "../store/globalStore";
+import { useGSAP } from '@gsap/react';
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { useStore } from '../store/globalStore';
 
 const Start = () => {
   const openTimelineRef = useRef<gsap.core.Timeline>(gsap.timeline());
@@ -33,37 +33,37 @@ const Start = () => {
           opacity: 1,
           duration: 0.75,
           delay: 1.25,
-          ease: "expo.out",
+          ease: 'expo.out',
         })
         .to(one, {
           scale: 0.5,
           opacity: 0,
           duration: 0.5,
-          ease: "expo.in",
+          ease: 'expo.in',
         })
         .to(two, {
           scale: 1,
           opacity: 1,
           duration: 0.75,
-          ease: "expo.out",
+          ease: 'expo.out',
         })
         .to(two, {
           scale: 0.5,
           opacity: 0,
           duration: 0.5,
-          ease: "expo.in",
+          ease: 'expo.in',
         })
         .to(three, {
           scale: 1,
           opacity: 1,
           duration: 0.75,
-          ease: "expo.out",
+          ease: 'expo.out',
         })
         .to(three, {
           scale: 0.5,
           opacity: 0,
           duration: 0.5,
-          ease: "expo.in",
+          ease: 'expo.in',
         });
       openTimelineRef.current
         .progress(0)
@@ -73,12 +73,7 @@ const Start = () => {
         });
     },
     {
-      dependencies: [
-        oneRef.current,
-        twoRef.current,
-        threeRef.current,
-        isRestarting,
-      ],
+      dependencies: [oneRef.current, twoRef.current, threeRef.current, isRestarting],
     },
   );
 

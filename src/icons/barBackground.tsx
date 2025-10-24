@@ -1,12 +1,6 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-const BarBackground = ({
-  color,
-  className,
-}: {
-  color: string;
-  className?: string;
-}): ReactNode => {
+const BarBackground = ({ color, className }: { color: string; className?: string }): ReactNode => {
   return (
     <svg
       className={className}
