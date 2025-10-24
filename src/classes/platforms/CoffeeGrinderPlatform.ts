@@ -96,7 +96,7 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 		// Create timeline
 		this.timeline = gsap.timeline();
 
-		this.soundManager.play(SOUNDS.GRINDER);
+		this.soundManager.playForDuration(SOUNDS.GRINDER, 3, { volume: 0.1 });
 
 		// Phase 1: Just rotation (2 seconds)
 		if (this.grinder_head) {

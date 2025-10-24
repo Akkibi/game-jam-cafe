@@ -55,13 +55,13 @@ export const soundConfigs = [
 	{
 		id: SOUNDS.GRINDER,
 		src: ["/sounds/machine/grinder/grinder.mp3"],
-		volume: 0.7,
+		volume: 0.3,
 		pool: 2,
 	},
 	{
 		id: SOUNDS.STEAM,
-		src: ["/sounds/librairie/steam/steam.mp3"],
-		volume: 0.5,
+		src: ["/sounds/machine/steam/steam.mp3"],
+		volume: 0.2,
 		pool: 2,
 	},
 
@@ -208,19 +208,19 @@ export const soundConfigs = [
 		id: SOUNDS.VOICE_SAUT_1,
 		src: ["/sounds/voice_mathieu/sauts/saut1.mp3"],
 		volume: 0.7,
-		pool: 3,
+		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_SAUT_2,
 		src: ["/sounds/voice_mathieu/sauts/saut2.mp3"],
 		volume: 0.7,
-		pool: 3,
+		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_SAUT_3,
 		src: ["/sounds/voice_mathieu/sauts/saut3.mp3"],
 		volume: 0.7,
-		pool: 3,
+		pool: 1,
 	},
 
 	// === MULTIPLIERS ===
@@ -265,7 +265,7 @@ export const soundConfigs = [
 	{
 		id: SOUNDS.SOUNDTRACK,
 		src: ["/sounds/soundtrack.mp3"],
-		volume: 0.3,
+		volume: 0.1,
 		loop: true,
 		pool: 1,
 	},
@@ -274,9 +274,12 @@ export const soundConfigs = [
 // === HELPER FUNCTIONS FOR RANDOM SOUND SELECTION ===
 
 /**
- * Get a random douleur (pain) sound
+ * Get a random douleur (pain) sound, with a 50% chance of no sound.
  */
-export function getRandomDouleurSound(): string {
+export function getRandomDouleurSound(): string | null {
+	if (Math.random() < 0.5) {
+		return null;
+	}
 	const douleurs = [
 		SOUNDS.VOICE_DOULEUR_1,
 		SOUNDS.VOICE_DOULEUR_2,
@@ -290,9 +293,12 @@ export function getRandomDouleurSound(): string {
 }
 
 /**
- * Get a random echec (failure) sound
+ * Get a random echec (failure) sound, with a 50% chance of no sound.
  */
 export function getRandomEchecSound(): string {
+	if (Math.random() < 0.5) {
+		return "";
+	}
 	const echecs = [
 		SOUNDS.VOICE_ECHEC_1,
 		SOUNDS.VOICE_ECHEC_2,
@@ -304,9 +310,12 @@ export function getRandomEchecSound(): string {
 }
 
 /**
- * Get a random saut (jump) sound
+ * Get a random saut (jump) sound, with a 50% chance of no sound.
  */
 export function getRandomSautSound(): string {
+	if (Math.random() < 0.5) {
+		return "";
+	}
 	const sauts = [
 		SOUNDS.VOICE_SAUT_1,
 		SOUNDS.VOICE_SAUT_2,
@@ -316,9 +325,12 @@ export function getRandomSautSound(): string {
 }
 
 /**
- * Get a random manger (eating) sound
+ * Get a random manger (eating) sound, with a 50% chance of no sound.
  */
 export function getRandomMangerSound(): string {
+	if (Math.random() < 0.5) {
+		return "";
+	}
 	const manger = [
 		SOUNDS.VOICE_MANGER_1,
 		SOUNDS.VOICE_MANGER_2,

@@ -55,7 +55,7 @@ export const Blocks: Block[] = [
 				type: "p",
 			},
 			{
-				position: new Vector3(-0.9, 0.2, 0),
+				position: new Vector3(-1.5, 0.4, 0),
 				size: new Vector3(
 					PLATFORM_WIDTH,
 					PLATFORM_HEIGHT,
@@ -113,7 +113,7 @@ export const Blocks: Block[] = [
 				type: "pc",
 			},
 			{
-				position: new Vector3(-1.2, -0.5, 0),
+				position: new Vector3(-0.8, -0.5, 0),
 				size: new Vector3(
 					PLATFORM_WIDTH,
 					PLATFORM_HEIGHT,
