@@ -32,7 +32,7 @@ type Store = {
 
 export const useStore = create<Store>((set) => ({
   isRestarting: true,
-  score: 0,
+  score: 30000,
   isPaused: true,
   isSlowed: false,
   setIsPaused: (n: boolean) => set(() => ({ isPaused: n })),

@@ -9,8 +9,10 @@ export class CameraManager {
 	private cameraGroup: THREE.Group;
 	private physicsEngine: PhysicsEngine;
 	private targetPosition: THREE.Vector3;
+	private cameraLookAtBuffer: THREE.Vector3;
 
 	private constructor(scene: THREE.Scene) {
+		this.cameraLookAtBuffer = new THREE.Vector3(0, 0, 0);
 		this.camera = new THREE.PerspectiveCamera(
 			40,
 			window.innerWidth / window.innerHeight,
@@ -47,6 +49,16 @@ export class CameraManager {
 	}
 
 	public update(time: number, deltatime: number): void {
+		if (useStore.getState().isGameOver) {
+			const targetLookAt = new THREE.Vector3(0, -3.5, 0);
+			const targetPos = new THREE.Vector3(0, -4, 7);
+
+			this.cameraHandler.lookAt(
+				this.cameraLookAtBuffer.lerp(targetLookAt, 0.001 * deltatime)
+			);
+			this.cameraHandler.position.lerp(targetPos, 0.001 * deltatime);
+			return;
+		}
 		// this.cameraHandler.position.x = Math.sin(time * 0.1) * 0.5;
 		// this.cameraHandler.position.y = Math.cos(time * 0.1 + 500) * 0.5 + 0.5;
 		// this.cameraHandler.position.z = 5
@@ -75,13 +87,16 @@ export class CameraManager {
 		// this.cameraHandler.position.lerp(lerpCamera, 0.001 * deltatime);
 		this.cameraHandler.position.lerp(lerpCamera, 0.5);
 
-		this.cameraHandler.lookAt(
-			new THREE.Vector3(0, -0.1, 0).lerp(this.targetPosition, 0.5)
+		this.cameraLookAtBuffer = new THREE.Vector3(0, -0.1, 0).lerp(
+			this.targetPosition,
+			0.5
 		);
+
+		this.cameraHandler.lookAt(this.cameraLookAtBuffer);
 
 		// console.log(mapCoords(this.physicsEngine.getPlayer().position, false));
 		const cameraShakeAmount = Math.max(
-			useStore.getState().caffeineLvl - 100,
+			useStore.getState().caffeineLvl - 70,
 			0
 		);
 		const cameraShakeValue = Math.sin(time * 20) * 0.1;
