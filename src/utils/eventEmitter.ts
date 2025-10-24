@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
-/* @ts-nocheck */
-
 interface Name {
   original: string;
   value: string;
@@ -17,110 +13,150 @@ export class EventEmitter {
   }
 
   on(_names: string, callback: Function) {
-    if (typeof _names === 'undefined' || _names === '') {
-      console.warn('wrong names');
+    // Errors
+    if (typeof _names === "undefined" || _names === "") {
+      console.warn("wrong names");
       return false;
     }
 
-    if (typeof callback === 'undefined') {
-      console.warn('wrong callback');
+    if (typeof callback === "undefined") {
+      console.warn("wrong callback");
       return false;
     }
 
+    // Resolve names
     const names = this.resolveNames(_names);
 
+    // Each name
     names.forEach((_name) => {
+      // Resolve name
       const name = this.resolveName(_name);
 
+      // Create namespace if not exist
       if (!(this.callbacks[name.namespace] instanceof Object))
         this.callbacks[name.namespace] = {};
 
+      // Create callback if not exist
       if (!(this.callbacks[name.namespace][name.value] instanceof Array))
         this.callbacks[name.namespace][name.value] = [];
 
+      // Add callback
       this.callbacks[name.namespace][name.value].push(callback);
     });
 
     return this;
   }
 
-  off(_names: string, callbackToRemove?: Function) {
-    if (typeof _names === 'undefined' || _names === '') {
-      console.warn('wrong name');
+  off(_names: string) {
+    // Errors
+    if (typeof _names === "undefined" || _names === "") {
+      console.warn("wrong name");
       return false;
     }
 
+    // Resolve names
     const names = this.resolveNames(_names);
 
+    // Each name
     names.forEach((_name) => {
+      // Resolve name
       const name = this.resolveName(_name);
 
-      const namespaces =
-        name.namespace === 'base'
-          ? Object.keys(this.callbacks)
-          : [name.namespace];
+      // Remove namespace
+      if (name.namespace !== "base" && name.value === "") {
+        delete this.callbacks[name.namespace];
+      }
 
-      namespaces.forEach((namespace) => {
-        const eventCallbacks = this.callbacks[namespace]?.[name.value];
+      // Remove specific callback in namespace
+      else {
+        // Default
+        if (name.namespace === "base") {
+          // Try to remove from each namespace
+          for (const namespace in this.callbacks) {
+            if (
+              this.callbacks[namespace] instanceof Object &&
+              this.callbacks[namespace][name.value] instanceof Array
+            ) {
+              delete this.callbacks[namespace][name.value];
 
-        if (!Array.isArray(eventCallbacks)) return;
-
-        if (callbackToRemove) {
-          // Filter out the specific callback
-          this.callbacks[namespace][name.value] = eventCallbacks.filter(
-            (cb) => cb !== callbackToRemove
-          );
-
-          // Remove event if empty
-          if (this.callbacks[namespace][name.value].length === 0) {
-            delete this.callbacks[namespace][name.value];
+              // Remove namespace if empty
+              if (Object.keys(this.callbacks[namespace]).length === 0)
+                delete this.callbacks[namespace];
+            }
           }
-        } else {
-          // Remove all callbacks for that event
-          delete this.callbacks[namespace][name.value];
         }
 
-        // Clean up namespace if empty
-        if (Object.keys(this.callbacks[namespace]).length === 0) {
-          delete this.callbacks[namespace];
+        // Specified namespace
+        else if (
+          this.callbacks[name.namespace] instanceof Object &&
+          this.callbacks[name.namespace][name.value] instanceof Array
+        ) {
+          delete this.callbacks[name.namespace][name.value];
+
+          // Remove namespace if empty
+          if (Object.keys(this.callbacks[name.namespace]).length === 0)
+            delete this.callbacks[name.namespace];
         }
-      });
+      }
     });
 
     return this;
   }
 
   trigger(_name: string, _args?: any[]) {
-    if (typeof _name === 'undefined' || _name === '') {
-      console.warn('wrong name');
+    // Errors
+    if (typeof _name === "undefined" || _name === "") {
+      console.warn("wrong name");
       return false;
     }
 
     let finalResult: any = null;
     let result = null;
+
+    // Default args
     const args = !(_args instanceof Array) ? [] : _args;
+
+    // Resolve names (should on have one event)
     const nameArray = this.resolveNames(_name);
+
+    // Resolve name
     const name = this.resolveName(nameArray[0]);
 
-    if (name.namespace === 'base') {
+    // Default namespace
+    if (name.namespace === "base") {
+      // Try to find callback in each namespace
       for (const namespace in this.callbacks) {
-        const cbList = this.callbacks[namespace]?.[name.value];
-        if (Array.isArray(cbList)) {
-          cbList.forEach((callback: Function) => {
-            result = callback.apply(this, args);
-            if (typeof finalResult === 'undefined') {
-              finalResult = result;
-            }
-          });
+        if (
+          this.callbacks[namespace] instanceof Object &&
+          this.callbacks[namespace][name.value] instanceof Array
+        ) {
+          this.callbacks[namespace][name.value].forEach(
+            (callback: Function) => {
+              result = callback.apply(this, args);
+
+              if (typeof finalResult === "undefined") {
+                finalResult = result;
+              }
+            },
+          );
         }
       }
-    } else {
-      const cbList = this.callbacks[name.namespace]?.[name.value];
-      if (!Array.isArray(cbList)) return this;
-      cbList.forEach((callback: Function) => {
-        result = callback.apply(this, args);
-        if (typeof finalResult === 'undefined') finalResult = result;
-      });
+    }
+
+    // Specified namespace
+    else if (this.callbacks[name.namespace] instanceof Object) {
+      if (name.value === "") {
+        console.warn("wrong name");
+        return this;
+      }
+
+      this.callbacks[name.namespace][name.value].forEach(
+        (callback: Function) => {
+          result = callback.apply(this, args);
+
+          if (typeof finalResult === "undefined") finalResult = result;
+        },
+      );
     }
 
     return finalResult;
@@ -128,21 +164,23 @@ export class EventEmitter {
 
   resolveNames(_names: string) {
     let names: string | string[] = _names;
-    names = names.replace(/[^a-zA-Z0-9 ,/.]/g, '');
-    names = names.replace(/[,/]+/g, ' ');
-    names = names.split(' ');
+    names = names.replace(/[^a-zA-Z0-9 ,/.]/g, "");
+    names = names.replace(/[,/]+/g, " ");
+    names = names.split(" ");
+
     return names;
   }
 
   resolveName(name: string) {
     const newName: Partial<Name> = {};
-    const parts = name.split('.');
+    const parts = name.split(".");
 
     newName.original = name;
     newName.value = parts[0];
-    newName.namespace = 'base';
+    newName.namespace = "base"; // Base namespace
 
-    if (parts.length > 1 && parts[1] !== '') {
+    // Specified namespace
+    if (parts.length > 1 && parts[1] !== "") {
       newName.namespace = parts[1];
     }
 

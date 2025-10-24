@@ -94,6 +94,18 @@ export class SceneManager {
     canvas.appendChild(this.renderer.domElement);
   }
 
+  public restart = () => {
+    this.physicsEngine.restart();
+    this.seedManager.restart();
+    useStore.setState({
+      caffeineLvl: 50,
+      game_status: "intro",
+      isPaused: true,
+      score: 0,
+      isRestarting: true,
+    });
+  };
+
   private animate(time: number, deltatime: number) {
     this.renderer.render(this.scene, this.camera.getCamera());
     if (useStore.getState().isPaused && time > 0.1) return;
@@ -106,8 +118,16 @@ export class SceneManager {
     // this.water.update(time);
 
     this.gameEngine.update(time);
-    this.player.update(customDeltatime);
-    // this.fallingManager.update();
+    const body = this.player.update(customDeltatime);
+
+    if (body.position.y > window.innerHeight * 1.5) {
+      if (useStore.getState().caffeineLvl > 30000) {
+        useStore.setState({ isGameOver: true });
+        useStore.setState({ isPaused: true });
+      } else {
+        this.restart();
+      }
+    }
     this.seedManager.update(time);
     this.stats.end();
   }

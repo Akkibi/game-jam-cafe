@@ -82,7 +82,7 @@ export class PhysicsEngine {
     eventEmitter.on("restart", () => this.restart.bind(this));
   }
 
-  private restart() {
+  public restart() {
     console.log("restart");
     Matter.Body.setPosition(this.player, { x: 20, y: -50 });
     Matter.Body.setVelocity(this.player, { x: 0, y: 0 });

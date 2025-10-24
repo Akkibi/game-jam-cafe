@@ -8,20 +8,14 @@ const Start = () => {
   const oneRef = useRef<HTMLDivElement>(null);
   const twoRef = useRef<HTMLDivElement>(null);
   const threeRef = useRef<HTMLDivElement>(null);
-  // const setIsPaused = useStore((state) => setIsPaused(state));
-  // useEffect(() => {
-  //   // set isOpen false after 10 seconds
-  //   setTimeout(() => {
-  //     setIsOpen(false);
-  //   }, 10000);
-  // }, []);
+  const isRestarting = useStore((s) => s.isRestarting);
 
   useGSAP(
     () => {
       const one = oneRef.current;
       const two = twoRef.current;
       const three = threeRef.current;
-      if (!one || !two || !three) return;
+      if (!one || !two || !three || !isRestarting) return;
 
       openTimelineRef.current = gsap
         .timeline({
@@ -71,25 +65,35 @@ const Start = () => {
           duration: 0.5,
           ease: "expo.in",
         });
-      openTimelineRef.current.progress(0).play();
+      openTimelineRef.current
+        .progress(0)
+        .play()
+        .then(() => {
+          useStore.setState({ isRestarting: false });
+        });
     },
     {
-      dependencies: [oneRef.current, twoRef.current, threeRef.current],
+      dependencies: [
+        oneRef.current,
+        twoRef.current,
+        threeRef.current,
+        isRestarting,
+      ],
     },
   );
 
   return (
     <div className="absolute inset-0 z-50">
       <div
-        className="h-[50vh] w-[50vh] bg-[url(/assets/mult/x2/bg2-blue.svg)] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
+        className="h-[50vh] w-[50vh] bg-[url(/assets/3.svg)] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
         ref={oneRef}
       ></div>
       <div
-        className="h-[50vh] w-[50vh] bg-[url(/assets/mult/x4/bg2-green.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
+        className="h-[50vh] w-[50vh] bg-[url(/assets/2.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
         ref={twoRef}
       ></div>
       <div
-        className="h-[50vh] w-[50vh] bg-[url(/assets/mult/x6/bg2-yellow.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
+        className="h-[50vh] w-[50vh] bg-[url(/assets/1.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
         ref={threeRef}
       ></div>
     </div>
