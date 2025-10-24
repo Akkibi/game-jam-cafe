@@ -113,7 +113,7 @@ export class SceneManager {
       ? deltatime * 0.25
       : deltatime * 1;
     this.stats.begin();
-    this.physicsEngine.update(customDeltatime * 1.5);
+    this.physicsEngine.update(customDeltatime * 1.25);
     this.camera.update(time, customDeltatime);
     // this.water.update(time);
 
