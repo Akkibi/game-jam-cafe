@@ -20,7 +20,6 @@ const Start = () => {
       openTimelineRef.current = gsap
         .timeline({
           paused: true,
-          delay: 1,
           onComplete: () => {
             useStore.setState({ isPaused: false });
             console.log("complete");
@@ -33,6 +32,7 @@ const Start = () => {
           scale: 1,
           opacity: 1,
           duration: 0.75,
+          delay: 1.25,
           ease: "expo.out",
         })
         .to(one, {

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useStore } from "../store/globalStore";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -11,10 +11,15 @@ const EndButtons = () => {
   const elemsRef = useRef<HTMLDivElement>(null);
 
   const isGameOver = useStore((state) => state.isGameOver);
-  const isRestartButtonSelected = useStore(
-    (state) => state.isRestartButtonSelected,
-  );
   const score = useStore((state) => state.score);
+
+  const restartButton = useStore((state) => state.restartButton);
+  const nextButton = useStore((state) => state.nextButton);
+
+  const visualScore = useMemo(() => {
+    if (isGameOver) return score;
+    return 0;
+  }, [score, isGameOver]);
 
   useGSAP(
     () => {
@@ -31,20 +36,23 @@ const EndButtons = () => {
       openTimelineRef.current = gsap
         .timeline({
           paused: true,
+          overwrite: true,
         })
         .to(elems, {
-          duration: 2,
+          duration: 4,
           ease: "expo.out",
           opacity: 1,
+          delay: 1,
           y: "-50%",
         });
 
       closeTimelineRef.current = gsap
         .timeline({
           paused: true,
+          overwrite: true,
         })
         .to(elems, {
-          duration: 0.5,
+          duration: 1,
           ease: "back.in",
           opacity: 0,
           y: "100%",
@@ -58,9 +66,11 @@ const EndButtons = () => {
 
   useEffect(() => {
     if (isGameOver) {
-      openTimelineRef.current?.progress(0).play();
+      closeTimelineRef.current?.pause();
+      openTimelineRef.current?.play();
     } else {
-      closeTimelineRef.current?.progress(0).play();
+      openTimelineRef.current?.pause();
+      closeTimelineRef.current?.play();
     }
   }, [isGameOver]);
 
@@ -70,7 +80,7 @@ const EndButtons = () => {
         className="w-fit flex flex-col gap-20 top-1/2 left-1/2 -translate-x-1/2 absolute"
         ref={elemsRef}
       >
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full justify-center items-center h-fit">
           <FlipNumbers
             height={140}
             width={100}
@@ -78,20 +88,22 @@ const EndButtons = () => {
             numberClassName="custom-shadow"
             background="transparent"
             play
-            perspective={1000}
-            numbers={score.toString()}
+            perspective={1500}
+            numbers={visualScore.toString()}
+            duration={6}
+            delay={1}
           />
-          <p>POINTS !!</p>
+          <p className="absolute left-full">POINTS</p>
         </div>
         <div className="w-[50vh] h-[20vh] relative">
-          {isRestartButtonSelected ? (
-            <div className="absolute inset-0 bg-[url(/assets/end/restart.svg)] bg-no-repeat bg-center bg-contain"></div>
-          ) : (
+          {restartButton ? (
             <div className="absolute inset-0 bg-[url(/assets/end/restart-on.svg)] bg-no-repeat bg-center bg-contain"></div>
+          ) : (
+            <div className="absolute inset-0 bg-[url(/assets/end/restart.svg)] bg-no-repeat bg-center bg-contain"></div>
           )}
         </div>
         <div className="w-[50vh] h-[10vh] relative">
-          {isRestartButtonSelected ? (
+          {nextButton ? (
             <div className="absolute inset-0 bg-[url(/assets/end/next-on.svg)] bg-no-repeat bg-center bg-contain"></div>
           ) : (
             <div className="absolute inset-0 bg-[url(/assets/end/next.svg)] bg-no-repeat bg-center bg-contain"></div>

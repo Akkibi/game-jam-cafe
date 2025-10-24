@@ -28,13 +28,15 @@ type Store = {
   setPlayerSmashed: (n: boolean) => void;
   isGameOver: boolean;
   isRestarting: boolean;
-  isRestartButtonSelected: boolean;
   isEndAnimationPlaying: boolean;
+  restartButton: boolean;
+  nextButton: boolean;
 };
 
 export const useStore = create<Store>((set) => ({
+  restartButton: false,
+  nextButton: false,
   isEndAnimationPlaying: false,
-  isRestartButtonSelected: true,
   isRestarting: true,
   score: 0,
   isPaused: true,
