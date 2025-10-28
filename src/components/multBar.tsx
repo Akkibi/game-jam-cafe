@@ -4,6 +4,7 @@ import { useStore } from "../store/globalStore";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import BarBackground from "../icons/barBackground";
+import MultBanner from "./multBanner";
 
 const MultBar = () => {
   const caffeineLvl = useStore((s) => s.caffeineLvl);
@@ -95,6 +96,7 @@ const MultBar = () => {
 
   return (
     <>
+      <MultBanner caffeineLvl={caffeineLvl} />
       <div className="absolute top-5 left-1/2 -translate-x-1/2 w-[70vh] h-[6vh]">
         <BarBackground
           color={currentBackground}

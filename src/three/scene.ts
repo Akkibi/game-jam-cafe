@@ -125,8 +125,6 @@ export class SceneManager {
       : deltatime * 1;
     this.stats.begin();
     this.physicsEngine.update(customDeltatime * 1.25);
-    this.camera.update(time, customDeltatime);
-    // this.water.update(time);
 
     this.gameEngine.update(time);
     const body = this.player.update(customDeltatime);
