@@ -1,6 +1,6 @@
 import Matter, { Engine } from 'matter-js';
 import * as THREE from 'three/webgpu';
-import { mapCoords } from '../matter/physics';
+import { mapCoords, PhysicsEngine } from '../matter/physics';
 import Animation from '../utils/animationManager';
 import {
 	characterFallingFrames,
@@ -108,38 +108,34 @@ export class Player {
 	public update(deltatime: number): Matter.Body {
 		const body = this.body;
 
-		const newPos = mapCoords(body.position, false);
+		const newPos = mapCoords(PhysicsEngine.getInstance().getRenderPosition(), false);
 		this.object.position.set(newPos.x, newPos.y + 0.14, 0);
 
 		// this.object.position.set((body.position.x+ physicsTransform.x) * physicsScale, (currentPhysics.position.y + physicsTransform.y) * -physicsScale, 0);
 		this.animationManager.update(deltatime);
 
-		const speed = this.controls.getSpeed();
+		const axis = this.controls.getMoveAxis();
+		const velocity = Matter.Body.getVelocity(body);
 
 		const lastRunning = this.isRunning;
 		const lastRight = this.isright;
 		const lastFalling = this.isFalling;
 
-		if (Math.abs(speed.x) < 0.5) {
-			this.isRunning = false;
-		} else {
-			this.isRunning = true;
-		}
+		this.isRunning = Math.abs(velocity.x) > 1;
 
-		if (speed.x > 0 && Math.abs(speed.x) > 0.1) {
+		if (axis > 0.1) {
 			this.isright = true;
-		} else if (speed.x < 0 && Math.abs(speed.x) > 0.1) {
+		} else if (axis < -0.1) {
 			this.isright = false;
 		}
 
-		this.isFalling =
-			this.collisionWatcher.getCollisions().length <= 1 && this.body.velocity.y > 0.1;
+		this.isFalling = !this.collisionWatcher.isGrounded() && velocity.y > 1;
 
 		this.states.running = this.isRunning || lastRunning !== this.isRunning;
 		this.states.falling = this.isFalling || lastFalling !== this.isFalling;
 
 		if (this.states.eating) {
-			if (this.animationManager.currentFrames !== characterFallingFrames) {
+			if (this.animationManager.currentFrames !== characterEatingFrames) {
 				this.animationManager.setSpeed(5000);
 				this.animationManager.set(characterEatingFrames);
 				this.animationManager.setFrame(0);

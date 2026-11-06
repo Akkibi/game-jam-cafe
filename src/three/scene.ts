@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { CameraManager } from './cameraManager';
 import { Environement } from './environement';
 import { PhysicsEngine } from '../matter/physics';
+import { SLOW_MOTION_SCALE, WORLD } from '../matter/tuning';
 import { Player } from './player';
 import { SeedManager } from './seedManager';
 import { GameEngine } from '../game_engine/GameEngine';
@@ -128,17 +129,17 @@ export class SceneManager {
 
 	private animate(time: number, deltatime: number) {
 		const { isPaused, isRestarting, isSlowed } = useStore.getState();
-		const customDeltatime = isSlowed ? deltatime * 0.25 : deltatime;
+		const customDeltatime = isSlowed ? deltatime * SLOW_MOTION_SCALE : deltatime;
 
 		if (!isPaused) {
-			this.physicsEngine.update(customDeltatime * 1.25);
+			this.physicsEngine.update(customDeltatime);
 		}
 		// Platforms spawn during the countdown so their colliders exist before the player drops.
 		if (!isPaused || isRestarting) {
 			this.gameEngine.update(time);
 			this.seedManager.update(time);
 			const body = this.player.update(customDeltatime);
-			if (body.position.y > window.innerHeight * 1.5) {
+			if (body.position.y > WORLD.height * 1.5) {
 				this.restart();
 			}
 		}

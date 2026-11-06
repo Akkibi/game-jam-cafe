@@ -6,6 +6,7 @@ import { GameControls } from '../classes/Controls';
 import { useStore } from '../store/globalStore';
 import { SoundManager } from '../sounds/soundManager';
 import { getRandomSautSound } from '../sounds/sounds';
+import { MAX_FRAME_MS, MOVE, PLAYER_RADIUS, SPAWN, STEP_MS, WORLD } from './tuning';
 
 export interface Vec2Type {
 	x: number;
@@ -24,12 +25,12 @@ export interface RangeType {
 
 const threeRange = { x: { min: -3.4, max: 3.4 }, y: { min: -1.9, max: 1.9 } };
 const matterRange = {
-	x: { min: 0, max: window.innerHeight * 1.77 },
-	y: { min: 0, max: window.innerHeight },
+	x: { min: 0, max: WORLD.width },
+	y: { min: 0, max: WORLD.height },
 };
 const amplitude = {
-	x: (window.innerHeight * 1.77) / 6.8,
-	y: window.innerHeight / 3.8,
+	x: WORLD.width / 6.8,
+	y: WORLD.height / 3.8,
 };
 export function mapRange(
 	value: number,
@@ -50,31 +51,42 @@ export function mapCoords({ x, y }: Vec2Type, tToM: boolean): Vec2Type {
 	};
 }
 
+// Matter velocities are expressed in px per 1/60s.
+const MATTER_VELOCITY_UNIT = 60;
+const RISING_THRESHOLD = -20;
+
+const approach = (value: number, target: number, maxDelta: number) =>
+	value < target ? Math.min(value + maxDelta, target) : Math.max(value - maxDelta, target);
+
 export class PhysicsEngine {
 	private static _instance: PhysicsEngine;
 	public engine: Matter.Engine;
 	private player: Matter.Body;
-	private visualizer: Visualizer;
 	private collisionWatcher: CollisionWatcher;
 	private gamecontrols: GameControls;
-	private lastTouch: number;
+	private platforms: Set<Matter.Body> = new Set();
+	private accumulator = 0;
+	private previousPosition: Vec2Type = { ...SPAWN };
+	private coyoteMs = 0;
+	private jumpBufferMs = 0;
+	private isJumpRising = false;
 
 	private constructor() {
-		this.lastTouch = 0;
 		this.gamecontrols = GameControls.getInstance();
 		this.gamecontrols.keyHandlerSetup();
 		this.engine = Matter.Engine.create();
-		const scale = window.innerHeight * 0.05;
-		this.player = Matter.Bodies.circle(20, -50, scale * 0.5, {
+		this.engine.gravity.scale = 0;
+		this.player = Matter.Bodies.circle(SPAWN.x, SPAWN.y, PLAYER_RADIUS, {
 			restitution: 0,
-			friction: 0.05,
+			friction: 0,
+			frictionStatic: 0,
+			frictionAir: 0,
 		});
 		this.player.inertia = Infinity;
-		// Matter.Body.setAngularVelocity(this.player, 0);
 
 		Matter.World.add(this.engine.world, this.player);
 		this.addWalls();
-		this.visualizer = Visualizer.getInstance(this.engine);
+		Visualizer.getInstance(this.engine);
 		this.collisionWatcher = CollisionWatcher.getInstance(this.player, this.engine);
 	}
 
@@ -86,11 +98,19 @@ export class PhysicsEngine {
 
 	public restart() {
 		Matter.Composite.clear(this.engine.world, false);
+		this.platforms.clear();
+		this.collisionWatcher.clear();
 		Matter.World.add(this.engine.world, this.player);
 		this.addWalls();
 
-		Matter.Body.setPosition(this.player, { x: 20, y: -50 });
+		Matter.Body.setPosition(this.player, SPAWN);
 		Matter.Body.setVelocity(this.player, { x: 0, y: 0 });
+		this.previousPosition = { ...SPAWN };
+		this.accumulator = 0;
+		this.coyoteMs = 0;
+		this.jumpBufferMs = 0;
+		this.isJumpRising = false;
+		this.gamecontrols.clearJump();
 	}
 
 	static getInstance(): PhysicsEngine {
@@ -99,6 +119,17 @@ export class PhysicsEngine {
 	}
 
 	public getPlayer = (): Matter.Body => this.player;
+
+	public isGrounded = (): boolean => this.collisionWatcher.isGrounded();
+
+	public getRenderPosition(): Vec2Type {
+		const alpha = this.accumulator / STEP_MS;
+		const { x, y } = this.player.position;
+		return {
+			x: this.previousPosition.x + (x - this.previousPosition.x) * alpha,
+			y: this.previousPosition.y + (y - this.previousPosition.y) * alpha,
+		};
+	}
 
 	public addObject(
 		position: THREE.Vector3,
@@ -123,6 +154,12 @@ export class PhysicsEngine {
 		return object;
 	}
 
+	public addPlatform(position: THREE.Vector3, size: THREE.Vector3): Matter.Body {
+		const platform = this.addObject(position, size);
+		this.platforms.add(platform);
+		return platform;
+	}
+
 	public addCircle(
 		position: THREE.Vector3,
 		radius: number,
@@ -141,58 +178,95 @@ export class PhysicsEngine {
 	}
 
 	public removeObject(object: Matter.Body): void {
+		this.platforms.delete(object);
 		Matter.World.remove(this.engine.world, object);
 	}
 
-	public update(deltaTime: number): void {
-		Matter.Engine.update(this.engine, deltaTime);
-		this.visualizer.update();
-
-		const speed = this.gamecontrols.getSpeed();
-		const bodyVelocity = Matter.Body.getVelocity(this.player);
-		const isCurrentTouch = this.collisionWatcher.getCollisions().length > 0;
-		if (this.collisionWatcher.getCollisions().length > 0) {
-			this.lastTouch = Date.now();
-			// console.log("speed Touch", this.collisionWatcher.getCollisions());
+	public update(deltaMs: number): void {
+		this.accumulator += Math.min(deltaMs, MAX_FRAME_MS);
+		while (this.accumulator >= STEP_MS) {
+			this.previousPosition.x = this.player.position.x;
+			this.previousPosition.y = this.player.position.y;
+			this.step();
+			this.accumulator -= STEP_MS;
 		}
-		const isTouch = isCurrentTouch ? true : this.lastTouch > Date.now() - 100;
+	}
 
-		let newVelocityY = bodyVelocity.y;
+	private step(): void {
+		const stepSeconds = STEP_MS / 1000;
+		const velocity = Matter.Body.getVelocity(this.player);
+		let vx = velocity.x * MATTER_VELOCITY_UNIT;
+		let vy = velocity.y * MATTER_VELOCITY_UNIT;
 
-		if (bodyVelocity.y > 0 && !isTouch) {
-			newVelocityY = Math.min(bodyVelocity.y + 0.05 * deltaTime, 25);
+		const grounded = vy > RISING_THRESHOLD && this.collisionWatcher.isGrounded();
+		if (grounded) {
+			this.coyoteMs = MOVE.coyoteMs;
+			this.isJumpRising = false;
+		} else {
+			this.coyoteMs -= STEP_MS;
 		}
-		if (speed.y < 0 && isTouch) {
-			newVelocityY = speed.y * 1.25;
-			SoundManager.getInstance().play(getRandomSautSound(), {
-				volume: 0.2,
-			});
+
+		if (this.gamecontrols.consumeJumpPress()) {
+			this.jumpBufferMs = MOVE.jumpBufferMs;
+		} else {
+			this.jumpBufferMs -= STEP_MS;
 		}
 
-		const newVelocityX = Math.min(
-			Math.max(
-				bodyVelocity.x +
-					speed.x *
-						(isCurrentTouch ? 2 : 1) *
-						(0.8 + useStore.getState().caffeineLvl * 0.02),
-				-5,
-			),
-			5,
-		);
-		Matter.Body.setVelocity(this.player, {
-			x: newVelocityX,
-			y: newVelocityY,
-		});
+		const axis = this.gamecontrols.getMoveAxis();
+		const caffeine = Math.min(Math.max(useStore.getState().caffeineLvl / 100, 0), 1);
+		const targetVx =
+			axis * (MOVE.runSpeedMin + (MOVE.runSpeedMax - MOVE.runSpeedMin) * caffeine);
+		const isAccelerating =
+			axis !== 0 && vx * targetVx >= 0 && Math.abs(targetVx) > Math.abs(vx);
+		const accel = grounded ? MOVE.groundAccel : MOVE.airAccel;
+		const decel = grounded ? MOVE.groundDecel : MOVE.airDecel;
+		vx = approach(vx, targetVx, (isAccelerating ? accel : decel) * stepSeconds);
+
+		if (this.isJumpRising && vy < 0 && !this.gamecontrols.isJumpHeld()) {
+			vy *= MOVE.jumpCutMultiplier;
+			this.isJumpRising = false;
+		}
+		const gravity = vy < 0 ? MOVE.riseGravity : MOVE.fallGravity;
+		vy = Math.min(vy + gravity * stepSeconds, MOVE.maxFallSpeed);
+
+		if (this.jumpBufferMs > 0 && this.coyoteMs > 0) {
+			vy = -MOVE.jumpSpeed;
+			this.jumpBufferMs = 0;
+			this.coyoteMs = 0;
+			this.isJumpRising = true;
+			SoundManager.getInstance().play(getRandomSautSound(), { volume: 0.2 });
+		}
+
 		const isTooHigh = this.player.position.y < -50;
 		if (
-			(isTooHigh && this.player.position.x < 50) ||
-			(isTooHigh && this.player.position.x > matterRange.x.max - 50)
+			isTooHigh &&
+			(this.player.position.x < 50 || this.player.position.x > matterRange.x.max - 50)
 		) {
-			Matter.Body.setVelocity(this.player, {
-				x: this.player.velocity.x,
-				y: 1,
-			});
+			vy = Math.max(vy, MATTER_VELOCITY_UNIT);
 		}
-		Matter.Body.setAngularSpeed(this.player, 0);
+
+		Matter.Body.setVelocity(this.player, {
+			x: vx / MATTER_VELOCITY_UNIT,
+			y: vy / MATTER_VELOCITY_UNIT,
+		});
+		this.updateOneWayPlatforms(vy, stepSeconds);
+		Matter.Engine.update(this.engine, STEP_MS);
+	}
+
+	// A platform only stops the player when landing on it from above.
+	private updateOneWayPlatforms(vy: number, stepSeconds: number): void {
+		const feetY = this.player.position.y + PLAYER_RADIUS;
+		const tolerance = 4 + Math.max(vy, 0) * stepSeconds;
+		this.platforms.forEach((platform) => {
+			platform.isSensor = vy < RISING_THRESHOLD || feetY > platform.bounds.min.y + tolerance;
+		});
+		// Matter copies isSensor when a pair is created, so live contacts need it too.
+		for (const pair of this.engine.pairs.list) {
+			if (pair.bodyA === this.player && this.platforms.has(pair.bodyB)) {
+				pair.isSensor = pair.bodyB.isSensor;
+			} else if (pair.bodyB === this.player && this.platforms.has(pair.bodyA)) {
+				pair.isSensor = pair.bodyA.isSensor;
+			}
+		}
 	}
 }

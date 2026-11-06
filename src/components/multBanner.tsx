@@ -21,8 +21,6 @@ const MultBanner = ({ caffeineLvl }: { caffeineLvl: number }) => {
 			x: '100%',
 		});
 
-		console.log('set');
-
 		openTimelineRef.current = gsap
 			.timeline({
 				paused: true,
@@ -92,7 +90,6 @@ const MultBanner = ({ caffeineLvl }: { caffeineLvl: number }) => {
 			caffeineLvl !== oldCaffeineLvl &&
 			(caffeineLvl > oldCaffeineLvl + 20 || caffeineLvl < oldCaffeineLvl - 20)
 		) {
-			console.log('caffeineLvl changed');
 			setOldCaffeineLvl(caffeineLvl);
 			openTimelineRef.current.progress(0).play();
 		}

@@ -52,13 +52,9 @@ export class SeedManager {
 		this.seeds.forEach((seed) => {
 			if (seed.position.distanceTo(this.player.getPosition()) < 0.3) {
 				seed.destroy();
-				if (useStore.getState().caffeineLvl + 20 >= 100) {
-					useStore.setState({ caffeineLvl: 100 });
-				} else {
-					useStore.setState({
-						caffeineLvl: useStore.getState().caffeineLvl + 10,
-					});
-				}
+				useStore.setState({
+					caffeineLvl: Math.min(useStore.getState().caffeineLvl + 10, 100),
+				});
 				this.player.eat();
 				SoundManager.getInstance().play(getRandomMangerSound(), {
 					volume: 0.2,

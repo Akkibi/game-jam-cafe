@@ -48,6 +48,18 @@ export class CollisionWatcher {
 	public getCollisions(): Body[] {
 		return Array.from(this.currentCollisions);
 	}
+
+	// Standing on a surface, not just touching a wall or a platform's side.
+	public isGrounded(): boolean {
+		for (const body of this.currentCollisions) {
+			if (!body.isSensor && this.character.position.y < body.bounds.min.y) return true;
+		}
+		return false;
+	}
+
+	public clear(): void {
+		this.currentCollisions.clear();
+	}
 }
 
 // Usage:

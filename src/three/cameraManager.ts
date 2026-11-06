@@ -2,6 +2,11 @@ import * as THREE from 'three/webgpu';
 import { mapCoords, PhysicsEngine } from '../matter/physics';
 import { useStore } from '../store/globalStore';
 
+const CAMERA_PAN = 0.35;
+const CAMERA_ZOOM = 0.2;
+const CAMERA_LOOK = 0.15;
+const CAMERA_FOLLOW_RATE = 0.04;
+
 export class CameraManager {
 	private static instance: CameraManager;
 	private cameraHandler: THREE.Group;
@@ -10,6 +15,8 @@ export class CameraManager {
 	private physicsEngine: PhysicsEngine;
 	private targetPosition: THREE.Vector3;
 	private cameraLookAtBuffer: THREE.Vector3;
+	private characterPosition = new THREE.Vector3();
+	private desiredPosition = new THREE.Vector3();
 
 	private constructor(scene: THREE.Scene) {
 		this.cameraLookAtBuffer = new THREE.Vector3(0, 0, 0);
@@ -59,31 +66,22 @@ export class CameraManager {
 			this.cameraHandler.position.lerp(targetPos, 0.001 * deltatime);
 			return;
 		}
-		// this.cameraHandler.position.x = Math.sin(time * 0.1) * 0.5;
-		// this.cameraHandler.position.y = Math.cos(time * 0.1 + 500) * 0.5 + 0.5;
-		// this.cameraHandler.position.z = 5
 		const characterThreePos = mapCoords(this.physicsEngine.getPlayer().position, false);
-		const characterThreeVec = new THREE.Vector3(characterThreePos.x, characterThreePos.y, 0);
+		this.characterPosition.set(characterThreePos.x, characterThreePos.y, 0);
+		this.targetPosition.lerp(this.characterPosition, 0.001 * deltatime);
 
-		this.targetPosition.lerp(characterThreeVec, 0.001 * deltatime);
-
-		const characterDistanceFromCenter = this.targetPosition.distanceTo(
-			new THREE.Vector3(0, 0, 0),
+		// Keep the whole room readable: the camera only leans toward the player.
+		const zoomIn = this.targetPosition.length() * CAMERA_ZOOM;
+		this.desiredPosition.copy(this.targetPosition).multiplyScalar(CAMERA_PAN);
+		this.desiredPosition.z = 7 - zoomIn;
+		this.cameraHandler.position.lerp(
+			this.desiredPosition,
+			1 - Math.exp(-CAMERA_FOLLOW_RATE * deltatime),
 		);
 
-		const lerpCamera = new THREE.Vector3(0, 0, 7 - characterDistanceFromCenter * 0.5).lerp(
-			this.targetPosition,
-			0.8,
-		);
-		lerpCamera.z = 7 - characterDistanceFromCenter * 0.5;
-		// this.cameraHandler.position.lerp(lerpCamera, 0.001 * deltatime);
-		this.cameraHandler.position.lerp(lerpCamera, 0.5);
-
-		this.cameraLookAtBuffer = new THREE.Vector3(0, -0.1, 0).lerp(this.targetPosition, 0.5);
-
+		this.cameraLookAtBuffer.set(0, -0.1, 0).lerp(this.targetPosition, CAMERA_LOOK);
 		this.cameraHandler.lookAt(this.cameraLookAtBuffer);
 
-		// console.log(mapCoords(this.physicsEngine.getPlayer().position, false));
 		const cameraShakeAmount = Math.max(useStore.getState().caffeineLvl - 70, 0);
 		const cameraShakeValue = Math.sin(time * 20) * 0.1;
 		this.camera.rotation.z = Math.PI + cameraShakeValue * cameraShakeAmount * 0.002;

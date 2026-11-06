@@ -78,7 +78,7 @@ export class BaseSceneElement {
 
 		this.colliderCall = gsap.delayedCall(1.5, () => {
 			this.colliderCall = null;
-			this.object = this.physics.addObject(this.position, this.size);
+			this.object = this.physics.addPlatform(this.position, this.size);
 			if (onComplete) {
 				onComplete();
 			}
