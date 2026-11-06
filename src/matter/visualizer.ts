@@ -1,24 +1,19 @@
 import Matter from 'matter-js';
 import { useStore } from '../store/globalStore';
+import { WORLD } from './tuning';
 
+// Dev-only physics overlay and cheats: $ toggles the overlay, p pauses, r adds 30000 points.
 export class Visualizer {
 	private static instance: Visualizer;
 	private render: Matter.Render | null = null;
 	private canvas: HTMLCanvasElement | null = null;
 	private visible = false;
 	private engine: Matter.Engine;
-	private width: number;
-	private height: number;
 
-	private constructor(
-		engine: Matter.Engine,
-		width = window.innerWidth,
-		height = window.innerHeight,
-	) {
+	private constructor(engine: Matter.Engine) {
 		this.engine = engine;
-		this.width = width;
-		this.height = height;
-		this.setupCanvas();
+		if (!import.meta.env.DEV) return;
+
 		document.addEventListener('keydown', (event) => {
 			if (event.key === '$') {
 				this.toggle();
@@ -41,13 +36,12 @@ export class Visualizer {
 
 	private setupCanvas(): void {
 		this.canvas = document.createElement('canvas');
-		this.canvas.width = this.width;
-		this.canvas.height = this.height;
+		this.canvas.width = WORLD.width;
+		this.canvas.height = WORLD.height;
 		this.canvas.style.position = 'fixed';
 		this.canvas.style.top = '50%';
 		this.canvas.style.left = '50%';
 		this.canvas.style.border = '1px solid #888';
-		this.canvas.style.display = 'none';
 		this.canvas.style.transform = 'scale(0.25) translate(-50%, -50%)';
 		document.body.appendChild(this.canvas);
 
@@ -55,33 +49,21 @@ export class Visualizer {
 			engine: this.engine,
 			canvas: this.canvas,
 			options: {
-				width: this.width,
-				height: this.height,
+				width: WORLD.width,
+				height: WORLD.height,
 				wireframes: true,
 				background: '#000000',
 			},
 		});
-
-		Matter.Render.run(this.render);
 	}
 
 	toggle(): void {
-		if (!this.canvas) return;
+		if (!this.render) this.setupCanvas();
+		if (!this.canvas || !this.render) return;
+
 		this.visible = !this.visible;
 		this.canvas.style.display = this.visible ? 'block' : 'none';
-	}
-
-	update(): void {
-		if (!this.visible || !this.render) return;
-
-		// // Ensure bodies are still in world
-		// const worldBodies = Matter.Composite.allBodies(this.engine.world);
-		// this.bodies.forEach(b => {
-		//   if (!worldBodies.includes(b)) {
-		//     Matter.World.add(this.engine.world, b);
-		//   }
-		// });
-
-		Matter.Render.world(this.render);
+		if (this.visible) Matter.Render.run(this.render);
+		else Matter.Render.stop(this.render);
 	}
 }

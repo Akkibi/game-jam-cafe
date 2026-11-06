@@ -1,10 +1,10 @@
 import * as THREE from 'three';
+import { loadTexture } from './loadTexture';
 
 type AnimationType = string[] | null;
 
 class Animation {
 	private material: THREE.MeshBasicMaterial;
-	private textureLoader: THREE.TextureLoader;
 	public speed: number; // in ms
 	private deltatime: number = 0;
 	private currentIndex: number = 0;
@@ -15,20 +15,11 @@ class Animation {
 		this.speed = 100;
 		this.material = material;
 		this.currentFrames = null;
-		this.textureLoader = new THREE.TextureLoader();
-		this.material.map = this.textureLoader.load('./default.png');
+		// Keeps map non-null so swapping frames never rebuilds the material.
+		const placeholder = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1);
+		placeholder.needsUpdate = true;
+		this.material.map = placeholder;
 	}
-
-	private loadTexture = (src: string): Promise<THREE.Texture> => {
-		return new Promise((resolve, reject) => {
-			this.textureLoader.load(
-				src,
-				(texture) => resolve(texture),
-				undefined,
-				(err) => reject(err),
-			);
-		});
-	};
 
 	public setSpeed = (speed: number) => {
 		this.speed = speed;
@@ -41,18 +32,13 @@ class Animation {
 
 	public set = async (animData: AnimationType) => {
 		this.currentFrames = animData;
-		const loop = [];
+		const loop = await Promise.all((animData ?? []).map(loadTexture));
+		// A newer animation was requested while this one was loading.
+		if (this.currentFrames !== animData) return;
 
-		if (animData && animData.length > 0) {
-			for (const src of animData) {
-				const texture = await this.loadTexture(src);
-				texture.colorSpace = THREE.SRGBColorSpace;
-				loop.push(texture);
-			}
-		}
+		loop.forEach((texture) => (texture.colorSpace = THREE.SRGBColorSpace));
 		this.currentIndex = 0;
 		this.loop = loop;
-		// console.log("loop", loop, loop.length);
 	};
 
 	public update = (deltatime: number) => {

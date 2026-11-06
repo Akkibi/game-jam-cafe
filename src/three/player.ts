@@ -2,6 +2,7 @@ import Matter, { Engine } from 'matter-js';
 import * as THREE from 'three/webgpu';
 import { mapCoords, PhysicsEngine } from '../matter/physics';
 import Animation from '../utils/animationManager';
+import { loadTexture } from '../utils/loadTexture';
 import {
 	characterFallingFrames,
 	characterIdleFrames,
@@ -74,6 +75,12 @@ export class Player {
 			material,
 		);
 		this.scene.add(this.object);
+		[
+			...characterIdleFrames,
+			...characterRunFrames,
+			...characterFallingFrames,
+			...characterEatingFrames,
+		].forEach(loadTexture);
 		this.animationManager = new Animation(material);
 		this.animationManager.setFrame(0);
 		this.animationManager.set(characterIdleFrames);

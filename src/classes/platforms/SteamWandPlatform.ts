@@ -4,10 +4,18 @@ import * as THREE from 'three/webgpu';
 import type { PhysicsEngine } from '../../matter/physics';
 import type { SeedManager } from '../../three/seedManager';
 import { loadGLTFModel } from '../../utils/loadGLTFModel';
+import { getTexture, loadTexture } from '../../utils/loadTexture';
 import gsap from 'gsap';
 import Matter from 'matter-js';
 import type { SoundManager } from '../../sounds/soundManager';
 import { SOUNDS } from '../../sounds/sounds';
+
+const STEAM_FRAME_URLS = Array.from(
+	{ length: 8 },
+	(_, i) => `/assets/sprites/steam/steam_${i + 1}.png`,
+);
+
+export const preloadSteamFrames = () => STEAM_FRAME_URLS.forEach(loadTexture);
 
 enum AnimationState {
 	IDLE,
@@ -52,22 +60,13 @@ export class SteamWandPlatform extends BaseSceneElement {
 		);
 
 		this.loadModels(platformGroup);
-		this.createSteamPlane(platformGroup);
 	}
 
 	private async loadModels(platformGroup: THREE.Group) {
 		await loadGLTFModel(platformGroup, '/assets/models/steamwand.glb', new Vector3(0, -0.2, 0));
 		await loadGLTFModel(platformGroup, '/assets/models/sugar_platform.glb');
 
-		// Load steam frame textures
-		const textureLoader = new THREE.TextureLoader();
-		const frameCount = 8; // Adjust based on how many frames you have
-
-		for (let i = 0; i < frameCount; i++) {
-			const texture = textureLoader.load(`/assets/sprites/steam/steam_${i}.png`);
-			this.steamFrames.push(texture);
-		}
-
+		this.steamFrames = STEAM_FRAME_URLS.map(getTexture);
 		this.modelsLoaded = true;
 	}
 
@@ -80,13 +79,9 @@ export class SteamWandPlatform extends BaseSceneElement {
 		// Create a plane geometry for the steam effect
 		const geometry = new THREE.PlaneGeometry(2, 2);
 
-		// Load texture for the steam frames
-		const textureLoader = new THREE.TextureLoader();
-		const texture = textureLoader.load('/assets/sprites/steam/steam_0.png');
-
 		// Create a material with transparency for steam effect
 		const material = new THREE.MeshBasicMaterial({
-			map: texture,
+			map: getTexture(STEAM_FRAME_URLS[0]!),
 			transparent: true,
 			opacity: 0,
 			side: THREE.DoubleSide,
@@ -209,8 +204,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 		this.frameInterval = setInterval(() => {
 			if (this.steamPlane && this.steamPlane.material instanceof THREE.MeshBasicMaterial) {
 				this.currentFrame = (this.currentFrame + 1) % this.steamFrames.length;
-				this.steamPlane.material.map = this.steamFrames[this.currentFrame];
-				this.steamPlane.material.needsUpdate = true;
+				this.steamPlane.material.map = this.steamFrames[this.currentFrame] ?? null;
 			}
 		}, frameDelay);
 	}
@@ -268,8 +262,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 			if (this.steamPlane.material instanceof THREE.MeshBasicMaterial) {
 				this.steamPlane.material.opacity = 0;
 				if (this.steamFrames.length > 0) {
-					this.steamPlane.material.map = this.steamFrames[0];
-					this.steamPlane.material.needsUpdate = true;
+					this.steamPlane.material.map = this.steamFrames[0] ?? null;
 				}
 			}
 		}

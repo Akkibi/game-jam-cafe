@@ -10,7 +10,18 @@ import { GameEngine } from '../game_engine/GameEngine';
 import { SoundManager } from '../sounds/soundManager';
 import { soundConfigs, SOUNDS } from '../sounds/sounds';
 import { useStore } from '../store/globalStore';
+import { preloadModels } from '../utils/loadGLTFModel';
+import { preloadSteamFrames } from '../classes/platforms/SteamWandPlatform';
 // import { FallingManager } from "./fallingManager";
+
+const MAX_PIXEL_RATIO = 1.5;
+const PRELOADED_MODELS = [
+	'/assets/models/grinder_platform.glb',
+	'/assets/models/grinder.glb',
+	'/assets/models/steamwand.glb',
+	'/assets/models/sugar_platform.glb',
+	'/assets/models/coffeegrain.glb',
+];
 
 export class SceneManager {
 	private static instance: SceneManager;
@@ -48,7 +59,6 @@ export class SceneManager {
 		// this.water = Water.getInstance(this.scene);
 		this.renderer = new THREE.WebGPURenderer();
 		this.renderer.init();
-		this.renderer.shadowMap.enabled = true;
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.camera = CameraManager.getInstance(this.scene);
 		this.env = Environement.getInstance(this.scene);
@@ -56,6 +66,9 @@ export class SceneManager {
 		const ambientLight = new THREE.AmbientLight(0x9090c0);
 		this.scene.add(ambientLight);
 		// sun light
+
+		preloadModels(PRELOADED_MODELS);
+		preloadSteamFrames();
 
 		this.soundManager.init(soundConfigs);
 		this.soundManager.play(SOUNDS.VOICE_INTRO_1, {
@@ -99,7 +112,7 @@ export class SceneManager {
 	}
 
 	private init(canvas: HTMLDivElement) {
-		this.renderer.setPixelRatio(window.devicePixelRatio);
+		this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO));
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.setClearColor(0x000000);
 		canvas.appendChild(this.renderer.domElement);

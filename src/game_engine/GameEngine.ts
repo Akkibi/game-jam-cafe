@@ -91,6 +91,7 @@ export class GameEngine {
 					block.isActive = true;
 					this.usedBlockIds.add(block.id);
 					this.blockActivationTimes.delete(blockId);
+					this.syncActiveBlocks();
 				}
 			}
 		});
@@ -192,10 +193,14 @@ export class GameEngine {
 							block: newBlock,
 							id: newBlock.id,
 						});
+						this.syncActiveBlocks();
 					}
 				}
 			}
 		}
+	}
+
+	private syncActiveBlocks() {
 		useStore.setState({
 			activeBlocks: this.activeBlocks.map((ab) => ({
 				id: ab.id,
