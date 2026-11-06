@@ -2,7 +2,6 @@ import * as THREE from 'three/webgpu';
 import gsap from 'gsap';
 import { CameraManager } from './cameraManager';
 import { Environement } from './environement';
-import Stats from 'stats.js';
 import { PhysicsEngine } from '../matter/physics';
 import { Player } from './player';
 import { SeedManager } from './seedManager';
@@ -21,7 +20,6 @@ export class SceneManager {
 	private renderer: THREE.WebGPURenderer;
 	private camera: CameraManager;
 	public env: Environement;
-	private stats: Stats;
 	private player: Player;
 	private physicsEngine: PhysicsEngine;
 	private seedManager: SeedManager;
@@ -29,10 +27,7 @@ export class SceneManager {
 	// private fallingManager: FallingManager;
 
 	private constructor(canvas: HTMLDivElement | null) {
-		// stats
 		this.physicsEngine = PhysicsEngine.getInstance();
-		this.stats = new Stats();
-		// document.body.appendChild(this.stats.dom);
 		this.scene = new THREE.Scene();
 		this.soundManager = SoundManager.getInstance();
 		this.player = Player.getInstance(
@@ -127,25 +122,29 @@ export class SceneManager {
 			isPaused: true,
 			score: 0,
 			isRestarting: true,
+			countdownTimeScale: 1.5,
 		});
 	};
 
 	private animate(time: number, deltatime: number) {
-		this.renderer.render(this.scene, this.camera.getCamera());
-		this.camera.update(time, deltatime);
-		if (useStore.getState().isPaused && time > 0.2) return;
-		const customDeltatime = useStore.getState().isSlowed ? deltatime * 0.25 : deltatime * 1;
-		this.stats.begin();
-		this.physicsEngine.update(customDeltatime * 1.25);
+		const { isPaused, isRestarting, isSlowed } = useStore.getState();
+		const customDeltatime = isSlowed ? deltatime * 0.25 : deltatime;
 
-		this.gameEngine.update(time);
-		const body = this.player.update(customDeltatime);
-
-		if (body.position.y > window.innerHeight * 1.5) {
-			this.restart();
+		if (!isPaused) {
+			this.physicsEngine.update(customDeltatime * 1.25);
 		}
-		this.seedManager.update(time);
-		this.stats.end();
+		// Platforms spawn during the countdown so their colliders exist before the player drops.
+		if (!isPaused || isRestarting) {
+			this.gameEngine.update(time);
+			this.seedManager.update(time);
+			const body = this.player.update(customDeltatime);
+			if (body.position.y > window.innerHeight * 1.5) {
+				this.restart();
+			}
+		}
+
+		this.camera.update(time, deltatime);
+		this.renderer.render(this.scene, this.camera.getCamera());
 	}
 
 	public getScene(): THREE.Scene {

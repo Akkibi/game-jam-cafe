@@ -21,6 +21,7 @@ export class BaseSceneElement {
 	protected group: Three.Group;
 	private object: Matter.Body | null = null;
 	private trembleTween: gsap.core.Tween | null = null;
+	private colliderCall: gsap.core.Tween | null = null;
 	private originalPosition: Vector3 = new Vector3();
 	public isRemoving: boolean = false;
 
@@ -75,7 +76,8 @@ export class BaseSceneElement {
 			duration: 2,
 		});
 
-		gsap.delayedCall(1.5, () => {
+		this.colliderCall = gsap.delayedCall(1.5, () => {
+			this.colliderCall = null;
 			this.object = this.physics.addObject(this.position, this.size);
 			if (onComplete) {
 				onComplete();
@@ -142,6 +144,8 @@ export class BaseSceneElement {
 		this.direction.set(0, 0, 0);
 
 		gsap.killTweensOf(this.group.position);
+		this.colliderCall?.kill();
+		this.colliderCall = null;
 
 		this.stopTrembling();
 

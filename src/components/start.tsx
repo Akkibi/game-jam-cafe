@@ -66,6 +66,7 @@ const Start = () => {
 					ease: 'expo.in',
 				});
 			openTimelineRef.current
+				.timeScale(useStore.getState().countdownTimeScale)
 				.progress(0)
 				.play()
 				.then(() => {
@@ -84,11 +85,11 @@ const Start = () => {
 				ref={oneRef}
 			></div>
 			<div
-				className="h-[50vh] w-[50vh] bg-[url(/assets/2.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
+				className="h-[50vh] w-[50vh] bg-[url(/assets/2.svg)] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
 				ref={twoRef}
 			></div>
 			<div
-				className="h-[50vh] w-[50vh] bg-[url(/assets/1.svg))] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
+				className="h-[50vh] w-[50vh] bg-[url(/assets/1.svg)] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat bg-contain"
 				ref={threeRef}
 			></div>
 		</div>

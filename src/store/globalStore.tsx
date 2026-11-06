@@ -28,6 +28,7 @@ type Store = {
 	setPlayerSmashed: (n: boolean) => void;
 	isGameOver: boolean;
 	isRestarting: boolean;
+	countdownTimeScale: number;
 	isEndAnimationPlaying: boolean;
 	restartButton: boolean;
 	nextButton: boolean;
@@ -39,6 +40,7 @@ export const useStore = create<Store>((set) => ({
 	nextButton: false,
 	isEndAnimationPlaying: false,
 	isRestarting: true,
+	countdownTimeScale: 1,
 	score: 0,
 	isPaused: true,
 	isSlowed: false,
