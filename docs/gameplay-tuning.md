@@ -29,13 +29,15 @@ Touching a room wall in the air allows one wall jump, which kicks the player awa
 
 ## Controls
 
-| Action | Keyboard | Gamepad | Axis button |
-| --- | --- | --- | --- |
-| Left | Q, A, Left arrow | Stick, D-pad, X | `a` |
-| Right | D, Right arrow | Stick, D-pad, B | `x` |
-| Jump | Z, W, Space, Up arrow | A | `i` |
+| Action | Keyboard | Gamepad | Touch | Axis button |
+| --- | --- | --- | --- | --- |
+| Left | Q, A, Left arrow | Stick, D-pad, X | Joystick | `a` |
+| Right | D, Right arrow | Stick, D-pad, B | Joystick | `x` |
+| Jump | Z, W, Space, Up arrow | A | Jump button | `i` |
 
-On the end screen, `a` restarts and `i` continues.
+On the end screen, `a` restarts and `i` continues. The Restart and Continue images send the same keys when tapped.
+
+See [mobile](mobile.md) for the touch controls and the landscape hold.
 
 ## Respawn flow
 

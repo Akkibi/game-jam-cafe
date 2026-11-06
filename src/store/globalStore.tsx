@@ -1,6 +1,9 @@
 import { create } from 'zustand';
+import { touchPortraitQuery } from '../utils/device';
 
 type Store = {
+	isRotateBlocked: boolean;
+	hasEnteredLandscape: boolean;
 	isPaused: boolean;
 	isSlowed: boolean;
 	score: number;
@@ -36,6 +39,8 @@ type Store = {
 };
 
 export const useStore = create<Store>((set) => ({
+	isRotateBlocked: touchPortraitQuery.matches,
+	hasEnteredLandscape: !touchPortraitQuery.matches,
 	restartButton: false,
 	nextButton: false,
 	isEndAnimationPlaying: false,
@@ -56,3 +61,10 @@ export const useStore = create<Store>((set) => ({
 	isGameOver: false,
 	activeBlocks: [],
 }));
+
+touchPortraitQuery.addEventListener('change', (e) => {
+	useStore.setState((state) => ({
+		isRotateBlocked: e.matches,
+		hasEnteredLandscape: state.hasEnteredLandscape || !e.matches,
+	}));
+});

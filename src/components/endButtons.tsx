@@ -3,6 +3,14 @@ import { useStore } from '../store/globalStore';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import FlipNumbers from 'react-flip-numbers';
+import { GameControls } from '../classes/Controls';
+import { isTouchDevice } from '../utils/device';
+
+const tapKey = (key: 'a' | 'i') => {
+	const controls = GameControls.getInstance();
+	controls.handleInputKeydown({ key, id: 1 });
+	controls.handleInputKeyup({ key, id: 1 });
+};
 
 const EndButtons = () => {
 	const openTimelineRef = useRef<gsap.core.Timeline>(gsap.timeline());
@@ -77,13 +85,13 @@ const EndButtons = () => {
 	return (
 		<div className="absolute inset-0 z-50" ref={scopeRef}>
 			<div
-				className="w-fit flex flex-col gap-20 top-1/2 left-1/2 -translate-x-1/2 absolute"
+				className="w-fit flex flex-col gap-20 pointer-coarse:gap-3 top-1/2 left-1/2 -translate-x-1/2 absolute"
 				ref={elemsRef}
 			>
 				<div className="flex gap-2 w-full justify-center items-center h-fit">
 					<FlipNumbers
-						height={140}
-						width={100}
+						height={isTouchDevice ? 64 : 140}
+						width={isTouchDevice ? 46 : 100}
 						color="white"
 						numberClassName="custom-shadow"
 						background="transparent"
@@ -95,20 +103,32 @@ const EndButtons = () => {
 					/>
 					<p className="absolute left-full">POINTS</p>
 				</div>
-				<div className="w-[50vh] h-[20vh] relative">
+				<button
+					aria-label="Restart"
+					className="w-[50vh] h-[20vh] relative !p-0 !border-0 !bg-transparent"
+					disabled={!isGameOver}
+					onClick={() => tapKey('a')}
+					type="button"
+				>
 					{restartButton ? (
 						<div className="absolute inset-0 bg-[url(/assets/end/restart-on.svg)] bg-no-repeat bg-center bg-contain"></div>
 					) : (
 						<div className="absolute inset-0 bg-[url(/assets/end/restart.svg)] bg-no-repeat bg-center bg-contain"></div>
 					)}
-				</div>
-				<div className="w-[50vh] h-[10vh] relative">
+				</button>
+				<button
+					aria-label="Continue"
+					className="w-[50vh] h-[10vh] relative !p-0 !border-0 !bg-transparent"
+					disabled={!isGameOver}
+					onClick={() => tapKey('i')}
+					type="button"
+				>
 					{nextButton ? (
 						<div className="absolute inset-0 bg-[url(/assets/end/next-on.svg)] bg-no-repeat bg-center bg-contain"></div>
 					) : (
 						<div className="absolute inset-0 bg-[url(/assets/end/next.svg)] bg-no-repeat bg-center bg-contain"></div>
 					)}
-				</div>
+				</button>
 			</div>
 		</div>
 	);

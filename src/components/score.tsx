@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { useStore } from '../store/globalStore';
 import FlipNumbers from 'react-flip-numbers';
+import { isTouchDevice } from '../utils/device';
 const Score = () => {
 	const score = useStore((s) => s.score);
 	const setScore = useStore((s) => s.setScore);
 	const cafeineLvl = useStore((s) => s.caffeineLvl);
-	const isPaused = useStore((s) => s.isPaused);
+	const isPaused = useStore((s) => s.isPaused || s.isRotateBlocked);
 	useEffect(() => {
 		const timer = setInterval(() => {
 			if (isPaused) return;
@@ -16,10 +17,10 @@ const Score = () => {
 
 	// return <p className="absolute right-5 bottom-5">Score : {score}</p>;
 	return (
-		<div className="absolute h-fit bottom-0 right-0 p-5 flex flex-row justify-end items-end">
+		<div className="absolute h-fit bottom-0 right-0 p-5 flex flex-row justify-end items-end pointer-coarse:bottom-auto pointer-coarse:top-0 pointer-coarse:pr-[max(1.25rem,env(safe-area-inset-right))]">
 			<FlipNumbers
-				height={70}
-				width={50}
+				height={isTouchDevice ? 36 : 70}
+				width={isTouchDevice ? 26 : 50}
 				color="white"
 				numberClassName="custom-shadow"
 				background="transparent"

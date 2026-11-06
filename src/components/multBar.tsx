@@ -14,7 +14,7 @@ const MultBar = () => {
 	const waveing2 = useRef<gsap.core.Timeline>(gsap.timeline({ paused: true }));
 	const waveing = useRef<gsap.core.Timeline>(gsap.timeline({ paused: true }));
 	const containerRef = useRef<HTMLDivElement>(null);
-	const isPaused = useStore((s) => s.isPaused);
+	const isPaused = useStore((s) => s.isPaused || s.isRotateBlocked);
 
 	const currentBackground = useMemo(() => {
 		if (caffeineLvl >= 80) {

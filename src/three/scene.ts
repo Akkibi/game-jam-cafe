@@ -36,6 +36,8 @@ export class SceneManager {
 	private physicsEngine: PhysicsEngine;
 	private seedManager: SeedManager;
 	private soundManager: SoundManager;
+	private hasPlayedIntro = false;
+	private rotateHoldSeconds = 0;
 	// private fallingManager: FallingManager;
 
 	private constructor(canvas: HTMLDivElement | null) {
@@ -71,19 +73,11 @@ export class SceneManager {
 		preloadSteamFrames();
 
 		this.soundManager.init(soundConfigs);
-		this.soundManager.play(SOUNDS.VOICE_INTRO_1, {
-			volume: 0.4,
-			onend: () => {
-				this.soundManager.play(SOUNDS.VOICE_INTRO_2, {
-					volume: 0.4,
-					onend: () => {
-						this.soundManager.play(SOUNDS.SOUNDTRACK, {
-							loop: true,
-							volume: 0.1,
-						});
-					},
-				});
-			},
+		this.applyRotateHold(useStore.getState().isRotateBlocked);
+		useStore.subscribe((state, previous) => {
+			if (state.isRotateBlocked !== previous.isRotateBlocked) {
+				this.applyRotateHold(state.isRotateBlocked);
+			}
 		});
 
 		gsap.ticker.add((time, deltatime) => this.animate(time, deltatime));
@@ -102,6 +96,37 @@ export class SceneManager {
 			SceneManager.instance = new SceneManager(canvas);
 		}
 		return SceneManager.instance;
+	}
+
+	private applyRotateHold(isBlocked: boolean) {
+		if (isBlocked) {
+			gsap.globalTimeline.pause();
+			this.soundManager.mute();
+			return;
+		}
+		gsap.globalTimeline.resume();
+		this.soundManager.unmute();
+		if (!this.hasPlayedIntro) {
+			this.hasPlayedIntro = true;
+			this.playIntro();
+		}
+	}
+
+	private playIntro() {
+		this.soundManager.play(SOUNDS.VOICE_INTRO_1, {
+			volume: 0.4,
+			onend: () => {
+				this.soundManager.play(SOUNDS.VOICE_INTRO_2, {
+					volume: 0.4,
+					onend: () => {
+						this.soundManager.play(SOUNDS.SOUNDTRACK, {
+							loop: true,
+							volume: 0.1,
+						});
+					},
+				});
+			},
+		});
 	}
 
 	private resize() {
@@ -141,19 +166,25 @@ export class SceneManager {
 	};
 
 	private animate(time: number, deltatime: number) {
-		const { isPaused, isRestarting, isSlowed } = useStore.getState();
+		const { isPaused, isRestarting, isSlowed, isRotateBlocked } = useStore.getState();
 		const customDeltatime = isSlowed ? deltatime * SLOW_MOTION_SCALE : deltatime;
 
-		if (!isPaused) {
-			this.physicsEngine.update(customDeltatime);
-		}
-		// Platforms spawn during the countdown so their colliders exist before the player drops.
-		if (!isPaused || isRestarting) {
-			this.gameEngine.update(time);
-			this.seedManager.update(time);
-			const body = this.player.update(customDeltatime);
-			if (body.position.y > WORLD.height * 1.5) {
-				this.restart();
+		if (isRotateBlocked) {
+			// Platform lifespans read this clock, so time spent held must not age them.
+			this.rotateHoldSeconds += deltatime / 1000;
+		} else {
+			const gameTime = time - this.rotateHoldSeconds;
+			if (!isPaused) {
+				this.physicsEngine.update(customDeltatime);
+			}
+			// Platforms spawn during the countdown so their colliders exist before the player drops.
+			if (!isPaused || isRestarting) {
+				this.gameEngine.update(gameTime);
+				this.seedManager.update(gameTime);
+				const body = this.player.update(customDeltatime);
+				if (body.position.y > WORLD.height * 1.5) {
+					this.restart();
+				}
 			}
 		}
 

@@ -1,10 +1,12 @@
 # Architecture
 
-See also [gameplay-tuning](gameplay-tuning.md).
+See also [gameplay-tuning](gameplay-tuning.md) and [mobile](mobile.md).
 
 ## Game loop
 
 `SceneManager.animate` (`src/three/scene.ts`) runs on the GSAP ticker, in this order:
+
+Steps 1 and 2 are skipped during the [landscape hold](mobile.md#landscape-hold).
 
 1. `PhysicsEngine.update`: only when not paused.
 2. `GameEngine.update`, `SeedManager.update`, `Player.update`: when not paused and during the countdown (`isRestarting`).

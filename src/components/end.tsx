@@ -58,7 +58,7 @@ const End = () => {
 	}, [isEndAnimationPlaying]);
 
 	return (
-		<div className="absolute inset-0 z-[99]" ref={elemsRef}>
+		<div className="pointer-events-none absolute inset-0 z-[99]" ref={elemsRef}>
 			{isEndAnimationPlaying && (
 				<div className="absolute inset-0 bg-black">
 					<video
@@ -66,6 +66,7 @@ const End = () => {
 						className="absolute inset-0 w-full h-full"
 						src="/video/outro.mp4"
 						autoPlay
+						playsInline
 					/>
 				</div>
 			)}

@@ -6,6 +6,7 @@ Coffee-themed 2D arcade platformer: stay on the platforms that drop into the mac
 
 - [docs/architecture.md](docs/architecture.md): game loop, singletons, world coordinates, asset caches
 - [docs/gameplay-tuning.md](docs/gameplay-tuning.md): movement constants, controls, one-way platforms, respawn flow
+- [docs/mobile.md](docs/mobile.md): touch controls, landscape hold
 
 ## Commands
 
