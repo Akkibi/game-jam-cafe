@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { Vector3 } from 'three';
 
 type BaseSceneElementType = {
 	size: Vector3;
@@ -7,13 +7,13 @@ type BaseSceneElementType = {
 };
 
 type PlateformType = BaseSceneElementType & {
-	type: "p" | "pc" | "pv" | "pcg";
+	type: 'p' | 'pc' | 'pv' | 'pcg';
 	isMoving?: boolean;
 };
 
 type WaterfallType = BaseSceneElementType & {
 	length: number;
-	type: "wc" | "wl";
+	type: 'wc' | 'wl';
 };
 
 type Block = {
@@ -24,12 +24,12 @@ type Block = {
 	blockElements: (PlateformType | WaterfallType)[];
 };
 
-const BLOCK_STAGGER = 1; // s
-const BLOCK_DELAY = 3; // s
+const BLOCK_STAGGER = 2; // s
+const BLOCK_DELAY = 5; // s
 
-const PLATEFORM_LIFESPAN = 15;
+const PLATEFORM_LIFESPAN = 20;
 const PLATEFORM_LIFESPAN_PHASE_1 = PLATEFORM_LIFESPAN;
-const PLATEFORM_LIFESPAN_PHASE_2 = PLATEFORM_LIFESPAN * 0.5;
+const PLATEFORM_LIFESPAN_PHASE_2 = PLATEFORM_LIFESPAN * 0.8;
 
 const PLATFORM_WIDTH = 0.8;
 const PLATFORM_HEIGHT = 0.2;
@@ -46,23 +46,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-3, 1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "p",
+				type: 'p',
 			},
 			{
 				position: new Vector3(-1.5, 0.4, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 		],
 	},
@@ -74,24 +66,16 @@ export const Blocks: Block[] = [
 		location: 1,
 		blockElements: [
 			{
-				position: new Vector3(0.5, 1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				position: new Vector3(0, 1, 0),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 			{
 				position: new Vector3(1.6, 0.2, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
-				lifeSpan: 10,
-				type: "p",
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
+				type: 'p',
 			},
 		],
 	},
@@ -104,23 +88,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-2.5, -1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 			{
 				position: new Vector3(-0.8, -0.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'p',
 			},
 		],
 	},
@@ -133,23 +109,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(0.5, -0.3, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "p",
+				type: 'p',
 			},
 			{
 				position: new Vector3(1.5, -1.3, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 		],
 	},
@@ -167,33 +135,21 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-3, 1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 			{
 				position: new Vector3(-2, 0.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pv",
+				type: 'pv',
 			},
 			{
 				position: new Vector3(-0.5, 0.2, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 		],
 	},
@@ -206,23 +162,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(0.5, 1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 			{
 				position: new Vector3(1.6, 0.2, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: 10,
-				type: "pc",
+				type: 'pc',
 			},
 		],
 	},
@@ -235,33 +183,21 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-2.5, -1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 			{
 				position: new Vector3(-0.2, -1.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pv",
+				type: 'pv',
 			},
 			{
 				position: new Vector3(-1.2, -0.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 		],
 	},
@@ -274,23 +210,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(2.4, -0.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pv",
+				type: 'pv',
 			},
 			{
 				position: new Vector3(1.5, -1.3, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 		],
 	},
@@ -308,33 +236,21 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-3, 1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 			{
 				position: new Vector3(-2, 0.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pv",
+				type: 'pv',
 			},
 			{
 				position: new Vector3(-0.5, 0.2, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 		],
 	},
@@ -347,23 +263,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(0.5, 1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 			{
 				position: new Vector3(1.6, 0.2, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: 10,
-				type: "pc",
+				type: 'pcg',
 			},
 		],
 	},
@@ -376,33 +284,21 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-2.5, -1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 			{
 				position: new Vector3(-0.2, -1.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pv",
+				type: 'pv',
 			},
 			{
 				position: new Vector3(-1.2, -0.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 		],
 	},
@@ -415,23 +311,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(2.4, -0.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pv",
+				type: 'pv',
 			},
 			{
 				position: new Vector3(1.5, -1.3, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_1,
-				type: "pc",
+				type: 'pc',
 			},
 		],
 	},
@@ -449,23 +337,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-2.5, 1.2, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pcg",
+				type: 'pcg',
 			},
 			{
 				position: new Vector3(-0.5, 1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pv",
+				type: 'pv',
 			},
 		],
 	},
@@ -478,13 +358,9 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(2, 0.3, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pcg",
+				type: 'pcg',
 			},
 		],
 	},
@@ -497,13 +373,9 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-1.4, -1.2, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pv",
+				type: 'pv',
 			},
 		],
 	},
@@ -516,23 +388,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(0.3, -0.8, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pcg",
+				type: 'pcg',
 			},
 			{
 				position: new Vector3(2.8, -0.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
 				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pv",
+				type: 'pv',
 			},
 		],
 	},
@@ -550,23 +414,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-2.5, 1.2, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pcg",
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
+				type: 'pcg',
 			},
 			{
 				position: new Vector3(-0.5, 1, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pv",
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
+				type: 'pv',
 			},
 		],
 	},
@@ -579,13 +435,9 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(2, 0.3, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pcg",
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
+				type: 'pcg',
 			},
 		],
 	},
@@ -598,13 +450,9 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(-1.4, -1.2, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pv",
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
+				type: 'pv',
 			},
 		],
 	},
@@ -617,23 +465,15 @@ export const Blocks: Block[] = [
 		blockElements: [
 			{
 				position: new Vector3(0.3, -0.8, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pcg",
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
+				type: 'pcg',
 			},
 			{
 				position: new Vector3(2.8, -0.5, 0),
-				size: new Vector3(
-					PLATFORM_WIDTH,
-					PLATFORM_HEIGHT,
-					PLATFORM_DEPTH
-				),
-				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2,
-				type: "pv",
+				size: new Vector3(PLATFORM_WIDTH, PLATFORM_HEIGHT, PLATFORM_DEPTH),
+				lifeSpan: PLATEFORM_LIFESPAN_PHASE_2 * (Math.random() + 0.5),
+				type: 'pv',
 			},
 		],
 	},

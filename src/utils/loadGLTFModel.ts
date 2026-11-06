@@ -1,10 +1,10 @@
-import { GLTFLoader } from "three/examples/jsm/Addons.js";
-import * as THREE from "three/webgpu";
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
+import * as THREE from 'three/webgpu';
 
 export async function loadGLTFModel(
 	group: THREE.Group,
 	url: string,
-	positionCorrection?: THREE.Vector3
+	positionCorrection?: THREE.Vector3,
 ): Promise<THREE.Group> {
 	const loader = new GLTFLoader();
 	return new Promise((resolve, reject) => {
@@ -19,7 +19,7 @@ export async function loadGLTFModel(
 				resolve(group);
 			},
 			undefined,
-			(error) => reject(error)
+			(error) => reject(error),
 		);
 	});
 }

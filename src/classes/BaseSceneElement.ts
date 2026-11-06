@@ -1,9 +1,9 @@
-import * as Three from "three";
-import { Vector3 } from "three";
-import { PhysicsEngine } from "../matter/physics";
-import type { SeedManager } from "../three/seedManager";
-import gsap from "gsap";
-import type { SoundManager } from "../sounds/soundManager";
+import * as Three from 'three';
+import { Vector3 } from 'three';
+import { PhysicsEngine } from '../matter/physics';
+import type { SeedManager } from '../three/seedManager';
+import gsap from 'gsap';
+import type { SoundManager } from '../sounds/soundManager';
 
 export class BaseSceneElement {
 	public id: number = -1;
@@ -33,7 +33,7 @@ export class BaseSceneElement {
 		position: Vector3,
 		size: Vector3,
 		lifeSpan: number | null,
-		group: Three.Group
+		group: Three.Group,
 	) {
 		this.id = id;
 		this.scene = scene;
@@ -71,11 +71,11 @@ export class BaseSceneElement {
 
 		gsap.to(this.group.position, {
 			y: this.position.y,
-			ease: "back.out",
+			ease: 'back.out',
 			duration: 2,
 		});
 
-		gsap.delayedCall(1.7, () => {
+		gsap.delayedCall(1.5, () => {
 			this.object = this.physics.addObject(this.position, this.size);
 			if (onComplete) {
 				onComplete();
@@ -92,14 +92,10 @@ export class BaseSceneElement {
 
 		const tremble = () => {
 			this.trembleTween = gsap.to(this.group.position, {
-				x:
-					this.originalPosition.x +
-					(Math.random() - 0.5) * trembleAmount,
-				z:
-					this.originalPosition.z +
-					(Math.random() - 0.5) * trembleAmount,
+				x: this.originalPosition.x + (Math.random() - 0.5) * trembleAmount,
+				z: this.originalPosition.z + (Math.random() - 0.5) * trembleAmount,
 				duration: trembleSpeed,
-				ease: "power1.inOut",
+				ease: 'power1.inOut',
 				onComplete: tremble,
 			});
 		};
@@ -122,7 +118,7 @@ export class BaseSceneElement {
 
 		gsap.to(this.group.position, {
 			y: 5,
-			ease: "back.out",
+			ease: 'back.out',
 			duration: 2,
 			onStart: () => {
 				this.isRemoving = true;
@@ -175,10 +171,7 @@ export class BaseSceneElement {
 		if (this.lifeSpan) {
 			if (timeElapsed > this.lifeSpan * 0.8) this.startTrembling();
 
-			if (
-				time - this.timestampAdded > this.lifeSpan &&
-				!this.isRemoving
-			) {
+			if (time - this.timestampAdded > this.lifeSpan && !this.isRemoving) {
 				this.removeFromScene();
 			}
 		}

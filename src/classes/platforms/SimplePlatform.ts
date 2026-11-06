@@ -1,10 +1,10 @@
-import { Vector3 } from "three";
-import { BaseSceneElement } from "../BaseSceneElement";
-import * as THREE from "three/webgpu";
-import type { PhysicsEngine } from "../../matter/physics";
-import type { SeedManager } from "../../three/seedManager";
-import { loadGLTFModel } from "../../utils/loadGLTFModel";
-import type { SoundManager } from "../../sounds/soundManager";
+import { Vector3 } from 'three';
+import { BaseSceneElement } from '../BaseSceneElement';
+import * as THREE from 'three/webgpu';
+import type { PhysicsEngine } from '../../matter/physics';
+import type { SeedManager } from '../../three/seedManager';
+import { loadGLTFModel } from '../../utils/loadGLTFModel';
+import type { SoundManager } from '../../sounds/soundManager';
 
 export class SimplePlatform extends BaseSceneElement {
 	constructor(
@@ -16,9 +16,9 @@ export class SimplePlatform extends BaseSceneElement {
 		soundManager: SoundManager,
 		size: Vector3,
 		lifeSpan: number | null,
-		platformGroup: THREE.Group
+		platformGroup: THREE.Group,
 	) {
-		loadGLTFModel(platformGroup, "/assets/models/grinder_platform.glb");
+		loadGLTFModel(platformGroup, '/assets/models/grinder_platform.glb');
 
 		super(
 			id,
@@ -29,7 +29,7 @@ export class SimplePlatform extends BaseSceneElement {
 			position,
 			size,
 			lifeSpan,
-			platformGroup
+			platformGroup,
 		);
 	}
 }

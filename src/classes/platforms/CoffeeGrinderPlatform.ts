@@ -1,14 +1,14 @@
-import { Vector3 } from "three";
-import { BaseSceneElement } from "../BaseSceneElement";
-import * as THREE from "three/webgpu";
-import type { PhysicsEngine } from "../../matter/physics";
-import type { SeedManager } from "../../three/seedManager";
-import { loadGLTFModel } from "../../utils/loadGLTFModel";
-import gsap from "gsap";
-import type { Seed } from "../../three/seed";
-import Matter from "matter-js";
-import type { SoundManager } from "../../sounds/soundManager";
-import { SOUNDS } from "../../sounds/sounds";
+import { Vector3 } from 'three';
+import { BaseSceneElement } from '../BaseSceneElement';
+import * as THREE from 'three/webgpu';
+import type { PhysicsEngine } from '../../matter/physics';
+import type { SeedManager } from '../../three/seedManager';
+import { loadGLTFModel } from '../../utils/loadGLTFModel';
+import gsap from 'gsap';
+import type { Seed } from '../../three/seed';
+import Matter from 'matter-js';
+import type { SoundManager } from '../../sounds/soundManager';
+import { SOUNDS } from '../../sounds/sounds';
 
 enum AnimationState {
 	IDLE,
@@ -24,6 +24,7 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 	private timeline: gsap.core.Timeline | null = null;
 	private seed: Seed | null = null;
 	private physicObject: Matter.Body | null = null;
+	private tremblingTween: gsap.core.Tween | null = null;
 
 	constructor(
 		id: number,
@@ -34,7 +35,7 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 		soundManager: SoundManager,
 		size: Vector3,
 		lifeSpan: number | null,
-		platformGroup: THREE.Group
+		platformGroup: THREE.Group,
 	) {
 		super(
 			id,
@@ -45,41 +46,31 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 			position,
 			size,
 			lifeSpan,
-			platformGroup
+			platformGroup,
 		);
 
 		this.loadModels(platformGroup);
 	}
 
 	private async loadModels(platformGroup: THREE.Group) {
-		await loadGLTFModel(
-			platformGroup,
-			"/assets/models/grinder_platform.glb"
-		);
-		await loadGLTFModel(platformGroup, "/assets/models/grinder.glb");
+		await loadGLTFModel(platformGroup, '/assets/models/grinder_platform.glb');
+		await loadGLTFModel(platformGroup, '/assets/models/grinder.glb');
 
 		this.modelsLoaded = true;
 		this.storeGriderObjects();
 	}
 
 	public addToScene(): void {
-		// console.log("addToScene", this.id);
 		const onComplete = () => (this.seed = this.addSeed());
 		super.addToScene(onComplete);
 	}
 
 	private storeGriderObjects() {
-		this.grinder_full = this.findObjectByName(this.group, "meule_full");
-		this.grinder_head = this.findObjectByName(
-			this.group,
-			"meule_head_controller"
-		);
+		this.grinder_full = this.findObjectByName(this.group, 'meule_full');
+		this.grinder_head = this.findObjectByName(this.group, 'meule_head_controller');
 	}
 
-	private findObjectByName(
-		parent: THREE.Object3D,
-		name: string
-	): THREE.Object3D | undefined {
+	private findObjectByName(parent: THREE.Object3D, name: string): THREE.Object3D | undefined {
 		if (parent.name === name) return parent;
 
 		for (const child of parent.children) {
@@ -90,13 +81,27 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 		return undefined;
 	}
 
+	public startTrembling() {
+		// Prevent starting the animation if it's already running
+		if (this.tremblingTween) return;
+
+		// Create a looping (yoyo) animation for the trembling effect
+		this.tremblingTween = gsap.to(this.group.position, {
+			x: this.position.x + 0.05, // Shake amount
+			duration: 0.05,
+			ease: 'power1.inOut',
+			yoyo: true, // Animate back and forth
+			repeat: -1, // Repeat indefinitely
+		});
+	}
+
 	private startAnimating() {
 		this.animationState = AnimationState.ANIMATING;
 
 		// Create timeline
 		this.timeline = gsap.timeline();
 
-		this.soundManager.playForDuration(SOUNDS.GRINDER, 3, { volume: 0.1 });
+		this.soundManager.play(SOUNDS.GRINDER, { volume: 0.1 });
 
 		// Phase 1: Just rotation (2 seconds)
 		if (this.grinder_head) {
@@ -104,10 +109,10 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 				this.grinder_head.rotation,
 				{
 					y: Math.PI * 2 * 3, // 3 full rotations during warmup
-					ease: "power1.in",
+					ease: 'power1.in',
 					duration: 2,
 				},
-				0
+				0,
 			);
 		}
 
@@ -116,30 +121,20 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 				this.grinder_full.position,
 				{
 					y: -3.83,
-					ease: "power2.out",
+					ease: 'power2.out',
 					duration: 1,
 					onStart: () => {
-						const headPosition = new Vector3().copy(this.position);
-						const headSize = new Vector3(0.7, 0.7, 1.9);
-
-						headPosition.y += 0.7;
-						this.physicObject = this.physics.addObject(
-							headPosition,
-							headSize,
-							40
-						);
 						if (this.seed) {
 							this.seed.destroy();
 							this.seed = null;
 						}
 					},
 				},
-				"<1s"
+				'<1s',
 			);
 		}
 
 		if (this.physicObject != null) {
-			// Create a temporary object to animate
 			const tempPosition = {
 				x: this.physicObject.position.x,
 				y: this.physicObject.position.y,
@@ -149,7 +144,7 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 				tempPosition,
 				{
 					y: 150,
-					ease: "power2.out",
+					ease: 'power2.out',
 					duration: 1,
 					onUpdate: () => {
 						if (this.physicObject) {
@@ -160,21 +155,27 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 						}
 					},
 				},
-				"<"
+				'<',
 			);
 		}
 
 		// Optional: Add callback when animation completes
-		this.timeline.eventCallback("onComplete", () => {
+		this.timeline.eventCallback('onComplete', () => {
 			this.animationState = AnimationState.COMPLETE;
 		});
 	}
 
 	public removeFromScene(): void {
-		// Kill timeline if it exists
+		// Kill timelines and tweens if they exist
 		if (this.timeline) {
 			this.timeline.kill();
 			this.timeline = null;
+		}
+		if (this.tremblingTween) {
+			this.tremblingTween.kill();
+			this.tremblingTween = null;
+			// Ensure the platform is at its original position
+			this.group.position.x = this.position.x;
 		}
 
 		if (this.physicObject) this.physics.removeObject(this.physicObject);
@@ -189,6 +190,10 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 		if (this.timeline) {
 			this.timeline.kill();
 			this.timeline = null;
+		}
+		if (this.tremblingTween) {
+			this.tremblingTween.kill();
+			this.tremblingTween = null;
 		}
 
 		if (this.modelsLoaded) {
@@ -208,9 +213,14 @@ export class CoffeeGrinderPlatform extends BaseSceneElement {
 		const timeElapsed = time - this.timestampAdded;
 		const progress = timeElapsed / this.lifeSpan;
 
-		// Start animation at 50% of lifespan
+		// Start main grinding animation at 50% of lifespan
 		if (progress > 0.5 && this.animationState === AnimationState.IDLE) {
 			this.startAnimating();
+		}
+
+		// Start trembling at 70% and let it continue until removed
+		if (progress > 0.7 && !this.tremblingTween) {
+			this.startTrembling();
 		}
 
 		// Remove from scene at end of lifespan

@@ -1,13 +1,10 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
-  "compilerOptions": {
-    "noImplicitAny": false,
-    "skipLibCheck": true,
-    "noEmitOnError": false
-  },
-  "buildCommand": "tsc --noEmit --skipLibCheck"
+	"files": [],
+	"references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+	"compilerOptions": {
+		"noImplicitAny": false,
+		"skipLibCheck": true,
+		"noEmitOnError": false
+	},
+	"buildCommand": "tsc --noEmit --skipLibCheck"
 }

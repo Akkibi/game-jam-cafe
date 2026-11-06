@@ -1,13 +1,13 @@
-import * as THREE from "three/webgpu";
-import { Vector3 } from "three";
-import type { PhysicsEngine } from "../../matter/physics";
-import type { SeedManager } from "../../three/seedManager";
-import type { BaseSceneElement } from "../BaseSceneElement";
-import { SteamWandPlatform } from "./SteamWandPlatform";
-import { CoffeeGrinderPlatform } from "./CoffeeGrinderPlatform";
-import { SimplePlatformCoffee } from "./SimplePlatformCoffee";
-import { SimplePlatform } from "./SimplePlatform";
-import type { SoundManager } from "../../sounds/soundManager";
+import * as THREE from 'three/webgpu';
+import { Vector3 } from 'three';
+import type { PhysicsEngine } from '../../matter/physics';
+import type { SeedManager } from '../../three/seedManager';
+import type { BaseSceneElement } from '../BaseSceneElement';
+import { SteamWandPlatform } from './SteamWandPlatform';
+import { CoffeeGrinderPlatform } from './CoffeeGrinderPlatform';
+import { SimplePlatformCoffee } from './SimplePlatformCoffee';
+import { SimplePlatform } from './SimplePlatform';
+import type { SoundManager } from '../../sounds/soundManager';
 
 export function createGamePlatform(
 	id: number,
@@ -18,12 +18,12 @@ export function createGamePlatform(
 	soundManager: SoundManager,
 	size: Vector3,
 	lifeSpan: number | null,
-	type: string = "pc"
+	type: string = 'pc',
 ): BaseSceneElement {
 	// Define colors for each platform type
 	let newPlatform: BaseSceneElement;
 	switch (type) {
-		case "pc":
+		case 'pc':
 			newPlatform = new SimplePlatformCoffee(
 				id,
 				scene,
@@ -33,10 +33,10 @@ export function createGamePlatform(
 				soundManager,
 				size,
 				lifeSpan,
-				new THREE.Group()
+				new THREE.Group(),
 			);
 			break;
-		case "pv":
+		case 'pv':
 			newPlatform = new SteamWandPlatform(
 				id,
 				scene,
@@ -47,10 +47,10 @@ export function createGamePlatform(
 
 				size,
 				lifeSpan,
-				new THREE.Group()
+				new THREE.Group(),
 			);
 			break;
-		case "pcg":
+		case 'pcg':
 			newPlatform = new CoffeeGrinderPlatform(
 				id,
 				scene,
@@ -61,7 +61,7 @@ export function createGamePlatform(
 
 				size,
 				lifeSpan,
-				new THREE.Group()
+				new THREE.Group(),
 			);
 			break;
 		default:
@@ -75,7 +75,7 @@ export function createGamePlatform(
 
 				size,
 				lifeSpan,
-				new THREE.Group()
+				new THREE.Group(),
 			);
 	}
 

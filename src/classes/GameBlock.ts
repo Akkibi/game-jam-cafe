@@ -1,6 +1,6 @@
-import * as THREE from "three/webgpu";
-import type { PhysicsEngine } from "../matter/physics";
-import type { BaseSceneElement } from "./BaseSceneElement";
+import * as THREE from 'three/webgpu';
+import type { PhysicsEngine } from '../matter/physics';
+import type { BaseSceneElement } from './BaseSceneElement';
 
 export class GameBlock {
 	public id: number;
@@ -27,7 +27,7 @@ export class GameBlock {
 		stagger: number,
 		platforms: BaseSceneElement[],
 		physics: PhysicsEngine,
-		scene: THREE.Scene
+		scene: THREE.Scene,
 	) {
 		this.id = id;
 		this.location = location;
@@ -127,9 +127,7 @@ export class GameBlock {
 
 		// Only check for completion AFTER all elements are fully added
 		if (this.allElementsFullyAdded) {
-			const allInactive = this.activeElements.every(
-				(ae) => !ae.elem.isActive
-			);
+			const allInactive = this.activeElements.every((ae) => !ae.elem.isActive);
 
 			if (allInactive && this.activeElements.length > 0) {
 				// console.log(

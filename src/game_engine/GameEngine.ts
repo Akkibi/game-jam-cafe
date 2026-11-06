@@ -1,10 +1,11 @@
-import type { PhysicsEngine } from "../matter/physics";
-import * as THREE from "three/webgpu";
-import { GameBlock } from "../classes/GameBlock";
-import { Blocks } from "./blocks";
-import { SeedManager } from "../three/seedManager";
-import { createGamePlatform } from "../classes/platforms/createGamePlatform";
-import type { SoundManager } from "../sounds/soundManager";
+import type { PhysicsEngine } from '../matter/physics';
+import * as THREE from 'three/webgpu';
+import { GameBlock } from '../classes/GameBlock';
+import { Blocks } from './blocks';
+import { SeedManager } from '../three/seedManager';
+import { createGamePlatform } from '../classes/platforms/createGamePlatform';
+import type { SoundManager } from '../sounds/soundManager';
+import { useStore } from '../store/globalStore';
 
 export class GameEngine {
 	private static _instance: GameEngine;
@@ -22,7 +23,7 @@ export class GameEngine {
 		physics: PhysicsEngine,
 		seedManager: SeedManager,
 		soundManager: SoundManager,
-		scene: THREE.Scene
+		scene: THREE.Scene,
 	) {
 		this.physics = physics;
 		this.seedManager = seedManager;
@@ -34,15 +35,10 @@ export class GameEngine {
 		physics: PhysicsEngine,
 		seedManager: SeedManager,
 		soundManager: SoundManager,
-		scene: THREE.Scene
+		scene: THREE.Scene,
 	): GameEngine {
 		if (!this._instance)
-			this._instance = new GameEngine(
-				physics,
-				seedManager,
-				soundManager,
-				scene
-			);
+			this._instance = new GameEngine(physics, seedManager, soundManager, scene);
 		return this._instance;
 	}
 
@@ -54,11 +50,11 @@ export class GameEngine {
 				p.position,
 				this.physics,
 				this.seedManager,
-                this.soundManager,
+				this.soundManager,
 				p.size,
 				p.lifeSpan,
-				p.type
-			)
+				p.type,
+			),
 		);
 
 		return new GameBlock(
@@ -68,7 +64,7 @@ export class GameEngine {
 			blockData.stagger,
 			platforms,
 			this.physics,
-			this.scene
+			this.scene,
 		);
 	}
 
@@ -76,8 +72,7 @@ export class GameEngine {
 		// Schedule the first 4 blocks for activation
 		Blocks.forEach((b, i) => {
 			if (i < 4) {
-				const activationTime =
-					currentTime + (i === 0 ? 0 : b.addDelay * i);
+				const activationTime = currentTime + (i === 0 ? 0 : b.addDelay * i);
 				this.blockActivationTimes.set(b.id, activationTime);
 			}
 		});
@@ -89,9 +84,7 @@ export class GameEngine {
 				const blockData = Blocks.find((b) => b.id === blockId);
 				if (
 					blockData &&
-					!this.activeBlocks.find(
-						(ab) => blockData.location === ab.block.location
-					)
+					!this.activeBlocks.find((ab) => blockData.location === ab.block.location)
 				) {
 					const block = this.createGameBlock(blockData);
 					this.activeBlocks.push({ block, id: block.id });
@@ -103,20 +96,14 @@ export class GameEngine {
 		});
 	}
 
-	private getNextBlockData(
-		oldBlock: GameBlock
-	): (typeof Blocks)[0] | undefined {
+	private getNextBlockData(oldBlock: GameBlock): (typeof Blocks)[0] | undefined {
 		// If we're in endless phase, cycle through all blocks
 		if (this.isEndlessPhase) {
-			const availableBlocks = Blocks.filter(
-				(b) => b.location === oldBlock.location
-			);
+			const availableBlocks = Blocks.filter((b) => b.location === oldBlock.location);
 
 			if (availableBlocks.length > 0) {
 				const nextBlockData =
-					availableBlocks[
-						Math.floor(Math.random() * availableBlocks.length)
-					];
+					availableBlocks[Math.floor(Math.random() * availableBlocks.length)];
 				// console.log("Endless phase - newBlock", nextBlockData);
 				return nextBlockData;
 			}
@@ -125,8 +112,7 @@ export class GameEngine {
 
 		// Normal phase: find unused block with same location
 		const nextBlockData = Blocks.find(
-			(b) =>
-				b.location === oldBlock.location && !this.usedBlockIds.has(b.id)
+			(b) => b.location === oldBlock.location && !this.usedBlockIds.has(b.id),
 		);
 
 		// If no unused blocks found, we've reached the endless phase
@@ -143,6 +129,32 @@ export class GameEngine {
 		}
 
 		return nextBlockData;
+	}
+
+	public restart() {
+		// 1. Clean up and remove all currently active blocks
+		// This involves destroying their physical bodies and removing them from the scene.
+		for (const ab of this.activeBlocks) {
+			// We assume the GameBlock class has a `destroy` method
+			// to properly clean up its resources (platforms, etc.).
+			ab.block.reset();
+		}
+
+		// 2. Clear all active block tracking arrays and maps
+		this.activeBlocks = [];
+		this.blockActivationTimes.clear();
+		this.usedBlockIds.clear();
+
+		// 3. Reset game state variables
+		this.isEndlessPhase = false;
+		this.initialTime = null; // This is crucial for the `update` loop to re-initialize the game
+
+		// 4. Update the global store to reflect the cleared state
+		useStore.setState({
+			activeBlocks: [],
+		});
+
+		// console.log("GameEngine restarted.");
 	}
 
 	public update(time: number) {
@@ -184,5 +196,11 @@ export class GameEngine {
 				}
 			}
 		}
+		useStore.setState({
+			activeBlocks: this.activeBlocks.map((ab) => ({
+				id: ab.id,
+				location: ab.block.location,
+			})),
+		});
 	}
 }

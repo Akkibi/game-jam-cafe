@@ -1,46 +1,46 @@
 // Sound IDs - use these constants throughout your game
 export const SOUNDS = {
 	// Machine sounds
-	COFFEE: "coffee",
-	GRINDER: "grinder",
-	STEAM: "steam",
+	COFFEE: 'coffee',
+	GRINDER: 'grinder',
+	STEAM: 'steam',
 
 	// Voice - Mathieu
-	VOICE_20PTS: "20kpts",
-	VOICE_30PTS: "30kpts",
-	VOICE_DOULEUR_1: "douleur1",
-	VOICE_DOULEUR_2: "douleur2",
-	VOICE_DOULEUR_3: "douleur3",
-	VOICE_DOULEUR_4: "douleur4",
-	VOICE_DOULEUR_5: "douleur5",
-	VOICE_DOULEUR_6: "douleur6",
-	VOICE_DOULEUR_7: "douleur7",
-	VOICE_ECHEC_1: "echec1_2",
-	VOICE_ECHEC_2: "echec2_2",
-	VOICE_ECHEC_3: "echec2",
-	VOICE_ECHEC_4: "echec3",
-	VOICE_ECHEC_5: "echec4",
-	VOICE_FIN_VALIDE: "fin_valide",
-	VOICE_INTRO_1: "intro1",
-	VOICE_INTRO_2: "intro2",
-	VOICE_MANGER_1: "manger1",
-	VOICE_MANGER_2: "manger2",
-	VOICE_MANGER_3: "manger3",
-	VOICE_MANGER_4: "manger4",
-	VOICE_SAUT_1: "saut1",
-	VOICE_SAUT_2: "saut2",
-	VOICE_SAUT_3: "saut3",
+	VOICE_20PTS: '20kpts',
+	VOICE_30PTS: '30kpts',
+	VOICE_DOULEUR_1: 'douleur1',
+	VOICE_DOULEUR_2: 'douleur2',
+	VOICE_DOULEUR_3: 'douleur3',
+	VOICE_DOULEUR_4: 'douleur4',
+	VOICE_DOULEUR_5: 'douleur5',
+	VOICE_DOULEUR_6: 'douleur6',
+	VOICE_DOULEUR_7: 'douleur7',
+	VOICE_ECHEC_1: 'echec1_2',
+	VOICE_ECHEC_2: 'echec2_2',
+	VOICE_ECHEC_3: 'echec2',
+	VOICE_ECHEC_4: 'echec3',
+	VOICE_ECHEC_5: 'echec4',
+	VOICE_FIN_VALIDE: 'fin_valide',
+	VOICE_INTRO_1: 'intro1',
+	VOICE_INTRO_2: 'intro2',
+	VOICE_MANGER_1: 'manger1',
+	VOICE_MANGER_2: 'manger2',
+	VOICE_MANGER_3: 'manger3',
+	VOICE_MANGER_4: 'manger4',
+	VOICE_SAUT_1: 'saut1',
+	VOICE_SAUT_2: 'saut2',
+	VOICE_SAUT_3: 'saut3',
 
 	// Multipliers
-	X2: "x2",
-	X4: "x4",
-	X6: "x6",
-	X8: "x8",
-	X10_1: "x10_1",
-	X10_2: "x10_2",
+	X2: 'x2',
+	X4: 'x4',
+	X6: 'x6',
+	X8: 'x8',
+	X10_1: 'x10_1',
+	X10_2: 'x10_2',
 
 	// Soundtrack
-	SOUNDTRACK: "soundtrack",
+	SOUNDTRACK: 'soundtrack',
 } as const;
 
 // Sound configurations for initialization
@@ -48,19 +48,19 @@ export const soundConfigs = [
 	// === MACHINE SOUNDS ===
 	{
 		id: SOUNDS.COFFEE,
-		src: ["/sounds/machine/coffee/coffee.wav"],
+		src: ['/sounds/machine/coffee/coffee.wav'],
 		volume: 0.6,
-		pool: 2,
+		pool: 1,
 	},
 	{
 		id: SOUNDS.GRINDER,
-		src: ["/sounds/machine/grinder/grinder.mp3"],
+		src: ['/sounds/machine/grinder/grinder.mp3'],
 		volume: 0.3,
-		pool: 2,
+		pool: 1,
 	},
 	{
 		id: SOUNDS.STEAM,
-		src: ["/sounds/machine/steam/steam.mp3"],
+		src: ['/sounds/machine/steam/steam.mp3'],
 		volume: 0.2,
 		pool: 2,
 	},
@@ -68,13 +68,13 @@ export const soundConfigs = [
 	// === VOICE - MATHIEU (Points) ===
 	{
 		id: SOUNDS.VOICE_20PTS,
-		src: ["/sounds/voice_mathieu/20Kpts/20kpts.mp3"],
+		src: ['/sounds/voice_mathieu/20Kpts/20kpts.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_30PTS,
-		src: ["/sounds/voice_mathieu/30Kpts/30Kpts.mp3"],
+		src: ['/sounds/voice_mathieu/30Kpts/30Kpts.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
@@ -82,43 +82,43 @@ export const soundConfigs = [
 	// === VOICE - MATHIEU (Douleurs - Pain sounds) ===
 	{
 		id: SOUNDS.VOICE_DOULEUR_1,
-		src: ["/sounds/voice_mathieu/douleurs/douleur1.mp3"],
+		src: ['/sounds/voice_mathieu/douleurs/douleur1.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_DOULEUR_2,
-		src: ["/sounds/voice_mathieu/douleurs/douleur2.mp3"],
+		src: ['/sounds/voice_mathieu/douleurs/douleur2.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_DOULEUR_3,
-		src: ["/sounds/voice_mathieu/douleurs/douleur3.mp3"],
+		src: ['/sounds/voice_mathieu/douleurs/douleur3.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_DOULEUR_4,
-		src: ["/sounds/voice_mathieu/douleurs/douleur4.mp3"],
+		src: ['/sounds/voice_mathieu/douleurs/douleur4.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_DOULEUR_5,
-		src: ["/sounds/voice_mathieu/douleurs/douleur5.mp3"],
+		src: ['/sounds/voice_mathieu/douleurs/douleur5.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_DOULEUR_6,
-		src: ["/sounds/voice_mathieu/douleurs/douleur6.mp3"],
+		src: ['/sounds/voice_mathieu/douleurs/douleur6.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_DOULEUR_7,
-		src: ["/sounds/voice_mathieu/douleurs/douleur7.mp3"],
+		src: ['/sounds/voice_mathieu/douleurs/douleur7.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
@@ -126,31 +126,31 @@ export const soundConfigs = [
 	// === VOICE - MATHIEU (Echecs - Failure sounds) ===
 	{
 		id: SOUNDS.VOICE_ECHEC_1,
-		src: ["/sounds/voice_mathieu/echecs/echec1_2.mp3"],
+		src: ['/sounds/voice_mathieu/echecs/echec1_2.mp3'],
 		volume: 0.75,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_ECHEC_2,
-		src: ["/sounds/voice_mathieu/echecs/echec2_2.mp3"],
+		src: ['/sounds/voice_mathieu/echecs/echec2_2.mp3'],
 		volume: 0.75,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_ECHEC_3,
-		src: ["/sounds/voice_mathieu/echecs/echec2.mp3"],
+		src: ['/sounds/voice_mathieu/echecs/echec2.mp3'],
 		volume: 0.75,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_ECHEC_4,
-		src: ["/sounds/voice_mathieu/echecs/echec3.mp3"],
+		src: ['/sounds/voice_mathieu/echecs/echec3.mp3'],
 		volume: 0.75,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_ECHEC_5,
-		src: ["/sounds/voice_mathieu/echecs/echec4.mp3"],
+		src: ['/sounds/voice_mathieu/echecs/echec4.mp3'],
 		volume: 0.75,
 		pool: 1,
 	},
@@ -158,7 +158,7 @@ export const soundConfigs = [
 	// === VOICE - MATHIEU (Fin validé - Success) ===
 	{
 		id: SOUNDS.VOICE_FIN_VALIDE,
-		src: ["/sounds/voice_mathieu/fin_validé/fin_validé.mp3"],
+		src: ['/sounds/voice_mathieu/fin_validé/fin_validé.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
@@ -166,13 +166,13 @@ export const soundConfigs = [
 	// === VOICE - MATHIEU (Intro) ===
 	{
 		id: SOUNDS.VOICE_INTRO_1,
-		src: ["/sounds/voice_mathieu/intro/intro1 .mp3"],
+		src: ['/sounds/voice_mathieu/intro/intro1 .mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_INTRO_2,
-		src: ["/sounds/voice_mathieu/intro/intro2.mp3"],
+		src: ['/sounds/voice_mathieu/intro/intro2.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
@@ -180,25 +180,25 @@ export const soundConfigs = [
 	// === VOICE - MATHIEU (Manger - Eating sounds) ===
 	{
 		id: SOUNDS.VOICE_MANGER_1,
-		src: ["/sounds/voice_mathieu/manger/manger1.mp3"],
+		src: ['/sounds/voice_mathieu/manger/manger1.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_MANGER_2,
-		src: ["/sounds/voice_mathieu/manger/manger2.mp3"],
+		src: ['/sounds/voice_mathieu/manger/manger2.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_MANGER_3,
-		src: ["/sounds/voice_mathieu/manger/manger3.mp3"],
+		src: ['/sounds/voice_mathieu/manger/manger3.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_MANGER_4,
-		src: ["/sounds/voice_mathieu/manger/manger4.mp3"],
+		src: ['/sounds/voice_mathieu/manger/manger4.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
@@ -206,19 +206,19 @@ export const soundConfigs = [
 	// === VOICE - MATHIEU (Sauts - Jump sounds) ===
 	{
 		id: SOUNDS.VOICE_SAUT_1,
-		src: ["/sounds/voice_mathieu/sauts/saut1.mp3"],
+		src: ['/sounds/voice_mathieu/sauts/saut1.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_SAUT_2,
-		src: ["/sounds/voice_mathieu/sauts/saut2.mp3"],
+		src: ['/sounds/voice_mathieu/sauts/saut2.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.VOICE_SAUT_3,
-		src: ["/sounds/voice_mathieu/sauts/saut3.mp3"],
+		src: ['/sounds/voice_mathieu/sauts/saut3.mp3'],
 		volume: 0.7,
 		pool: 1,
 	},
@@ -226,37 +226,37 @@ export const soundConfigs = [
 	// === MULTIPLIERS ===
 	{
 		id: SOUNDS.X2,
-		src: ["/sounds/voice_mathieu/x2/x2.mp3"],
+		src: ['/sounds/voice_mathieu/x2/x2.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.X4,
-		src: ["/sounds/voice_mathieu/x4/x4.mp3"],
+		src: ['/sounds/voice_mathieu/x4/x4.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.X6,
-		src: ["/sounds/voice_mathieu/x6/x6.mp3"],
+		src: ['/sounds/voice_mathieu/x6/x6.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.X8,
-		src: ["/sounds/voice_mathieu/x8/x8.mp3"],
+		src: ['/sounds/voice_mathieu/x8/x8.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.X10_1,
-		src: ["/sounds/voice_mathieu/x10/x10_1.mp3"],
+		src: ['/sounds/voice_mathieu/x10/x10_1.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
 	{
 		id: SOUNDS.X10_2,
-		src: ["/sounds/voice_mathieu/x10/x10_2.mp3"],
+		src: ['/sounds/voice_mathieu/x10/x10_2.mp3'],
 		volume: 0.8,
 		pool: 1,
 	},
@@ -264,7 +264,7 @@ export const soundConfigs = [
 	// === SOUNDTRACK ===
 	{
 		id: SOUNDS.SOUNDTRACK,
-		src: ["/sounds/soundtrack.mp3"],
+		src: ['/sounds/soundtrack.mp3'],
 		volume: 0.1,
 		loop: true,
 		pool: 1,
@@ -276,9 +276,9 @@ export const soundConfigs = [
 /**
  * Get a random douleur (pain) sound, with a 50% chance of no sound.
  */
-export function getRandomDouleurSound(): string | null {
+export function getRandomDouleurSound(): string {
 	if (Math.random() < 0.5) {
-		return null;
+		return '';
 	}
 	const douleurs = [
 		SOUNDS.VOICE_DOULEUR_1,
@@ -297,7 +297,7 @@ export function getRandomDouleurSound(): string | null {
  */
 export function getRandomEchecSound(): string {
 	if (Math.random() < 0.5) {
-		return "";
+		return '';
 	}
 	const echecs = [
 		SOUNDS.VOICE_ECHEC_1,
@@ -314,13 +314,9 @@ export function getRandomEchecSound(): string {
  */
 export function getRandomSautSound(): string {
 	if (Math.random() < 0.5) {
-		return "";
+		return '';
 	}
-	const sauts = [
-		SOUNDS.VOICE_SAUT_1,
-		SOUNDS.VOICE_SAUT_2,
-		SOUNDS.VOICE_SAUT_3,
-	];
+	const sauts = [SOUNDS.VOICE_SAUT_1, SOUNDS.VOICE_SAUT_2, SOUNDS.VOICE_SAUT_3];
 	return sauts[Math.floor(Math.random() * sauts.length)];
 }
 
@@ -329,7 +325,7 @@ export function getRandomSautSound(): string {
  */
 export function getRandomMangerSound(): string {
 	if (Math.random() < 0.5) {
-		return "";
+		return '';
 	}
 	const manger = [
 		SOUNDS.VOICE_MANGER_1,

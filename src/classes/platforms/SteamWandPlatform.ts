@@ -1,13 +1,13 @@
-import { Vector3 } from "three";
-import { BaseSceneElement } from "../BaseSceneElement";
-import * as THREE from "three/webgpu";
-import type { PhysicsEngine } from "../../matter/physics";
-import type { SeedManager } from "../../three/seedManager";
-import { loadGLTFModel } from "../../utils/loadGLTFModel";
-import gsap from "gsap";
-import Matter from "matter-js";
-import type { SoundManager } from "../../sounds/soundManager";
-import { SOUNDS } from "../../sounds/sounds";
+import { Vector3 } from 'three';
+import { BaseSceneElement } from '../BaseSceneElement';
+import * as THREE from 'three/webgpu';
+import type { PhysicsEngine } from '../../matter/physics';
+import type { SeedManager } from '../../three/seedManager';
+import { loadGLTFModel } from '../../utils/loadGLTFModel';
+import gsap from 'gsap';
+import Matter from 'matter-js';
+import type { SoundManager } from '../../sounds/soundManager';
+import { SOUNDS } from '../../sounds/sounds';
 
 enum AnimationState {
 	IDLE,
@@ -37,7 +37,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 		soundManager: SoundManager,
 		size: Vector3,
 		lifeSpan: number | null,
-		platformGroup: THREE.Group
+		platformGroup: THREE.Group,
 	) {
 		super(
 			id,
@@ -48,7 +48,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 			position,
 			size,
 			lifeSpan,
-			platformGroup
+			platformGroup,
 		);
 
 		this.loadModels(platformGroup);
@@ -56,21 +56,15 @@ export class SteamWandPlatform extends BaseSceneElement {
 	}
 
 	private async loadModels(platformGroup: THREE.Group) {
-		await loadGLTFModel(
-			platformGroup,
-			"/assets/models/steamwand.glb",
-			new Vector3(0, -0.2, 0)
-		);
-		await loadGLTFModel(platformGroup, "/assets/models/sugar_platform.glb");
+		await loadGLTFModel(platformGroup, '/assets/models/steamwand.glb', new Vector3(0, -0.2, 0));
+		await loadGLTFModel(platformGroup, '/assets/models/sugar_platform.glb');
 
 		// Load steam frame textures
 		const textureLoader = new THREE.TextureLoader();
 		const frameCount = 8; // Adjust based on how many frames you have
 
 		for (let i = 0; i < frameCount; i++) {
-			const texture = textureLoader.load(
-				`/assets/sprites/steam/steam_${i}.png`
-			);
+			const texture = textureLoader.load(`/assets/sprites/steam/steam_${i}.png`);
 			this.steamFrames.push(texture);
 		}
 
@@ -88,7 +82,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 
 		// Load texture for the steam frames
 		const textureLoader = new THREE.TextureLoader();
-		const texture = textureLoader.load("/assets/sprites/steam/steam_0.png");
+		const texture = textureLoader.load('/assets/sprites/steam/steam_0.png');
 
 		// Create a material with transparency for steam effect
 		const material = new THREE.MeshBasicMaterial({
@@ -121,34 +115,30 @@ export class SteamWandPlatform extends BaseSceneElement {
 		// Create timeline
 		this.timeline = gsap.timeline();
 
-		if (
-			this.steamPlane &&
-			this.steamPlane.material instanceof THREE.MeshBasicMaterial
-		) {
+		if (this.steamPlane && this.steamPlane.material instanceof THREE.MeshBasicMaterial) {
 			// Phase 1: Steam starts appearing (fade in)
 			this.timeline.to(
 				this.steamPlane.material,
 				{
 					opacity: 1,
-					ease: "power2.in",
+					ease: 'power2.in',
 					duration: 0.3,
 				},
-				0
+				0,
 			);
 
 			// Only create physics on second steam
 			if (this.steamCount === 2) {
 				// Phase 2: Create physics object to push character
 				this.timeline.add(() => {
-					const headPosition = new Vector3().copy(this.position);
-					const headSize = new Vector3(0.7, 0.7, 1.9);
-
-					headPosition.y += 0.7;
-					this.physicObject = this.physics.addObject(
-						headPosition,
-						headSize,
-						40
-					);
+					// const headPosition = new Vector3().copy(this.position);
+					// const headSize = new Vector3(0.7, 0.7, 1.9);
+					// headPosition.y += 0.7;
+					// this.physicObject = this.physics.addObject(
+					// 	headPosition,
+					// 	headSize,
+					// 	40
+					// );
 				}, 0.3);
 
 				// Phase 3: Push physics object upward
@@ -162,7 +152,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 						tempPosition,
 						{
 							y: 150,
-							ease: "power2.out",
+							ease: 'power2.out',
 							duration: 1.5,
 							onUpdate: () => {
 								if (this.physicObject) {
@@ -173,7 +163,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 								}
 							},
 						},
-						"<0.3"
+						'<0.3',
 					);
 				}
 			}
@@ -184,15 +174,15 @@ export class SteamWandPlatform extends BaseSceneElement {
 				this.steamPlane.material,
 				{
 					opacity: 0,
-					ease: "power2.out",
+					ease: 'power2.out',
 					duration: 0.5,
 				},
-				`+=${fadeOutDelay}`
+				`+=${fadeOutDelay}`,
 			);
 		}
 
 		// Animation complete callback
-		this.timeline.eventCallback("onComplete", () => {
+		this.timeline.eventCallback('onComplete', () => {
 			this.stopFrameAnimation();
 
 			if (this.steamCount === 1) {
@@ -217,14 +207,9 @@ export class SteamWandPlatform extends BaseSceneElement {
 		const frameDelay = 1000 / fps;
 
 		this.frameInterval = setInterval(() => {
-			if (
-				this.steamPlane &&
-				this.steamPlane.material instanceof THREE.MeshBasicMaterial
-			) {
-				this.currentFrame =
-					(this.currentFrame + 1) % this.steamFrames.length;
-				this.steamPlane.material.map =
-					this.steamFrames[this.currentFrame];
+			if (this.steamPlane && this.steamPlane.material instanceof THREE.MeshBasicMaterial) {
+				this.currentFrame = (this.currentFrame + 1) % this.steamFrames.length;
+				this.steamPlane.material.map = this.steamFrames[this.currentFrame];
 				this.steamPlane.material.needsUpdate = true;
 			}
 		}, frameDelay);
@@ -304,7 +289,7 @@ export class SteamWandPlatform extends BaseSceneElement {
 
 		// // Start trembling after both steams complete (at 80% like normal platforms)
 		if (progress > 0.8 && this.animationState === AnimationState.IDLE) {
-			this.soundManager.play(SOUNDS.STEAM, {volume: 0.2});
+			this.soundManager.play(SOUNDS.STEAM, { volume: 0.2 });
 			this.startAnimating();
 		}
 
