@@ -70,6 +70,9 @@ export class PhysicsEngine {
 	private coyoteMs = 0;
 	private jumpBufferMs = 0;
 	private isJumpRising = false;
+	private wallGraceMs = 0;
+	private wallSide = 0;
+	private wallJumpUsed = false;
 
 	private constructor() {
 		this.gamecontrols = GameControls.getInstance();
@@ -110,6 +113,9 @@ export class PhysicsEngine {
 		this.coyoteMs = 0;
 		this.jumpBufferMs = 0;
 		this.isJumpRising = false;
+		this.wallGraceMs = 0;
+		this.wallSide = 0;
+		this.wallJumpUsed = false;
 		this.gamecontrols.clearJump();
 	}
 
@@ -202,8 +208,17 @@ export class PhysicsEngine {
 		if (grounded) {
 			this.coyoteMs = MOVE.coyoteMs;
 			this.isJumpRising = false;
+			this.wallJumpUsed = false;
 		} else {
 			this.coyoteMs -= STEP_MS;
+		}
+
+		const wallSide = this.collisionWatcher.getWallSide();
+		if (wallSide !== 0) {
+			this.wallSide = wallSide;
+			this.wallGraceMs = MOVE.wallGraceMs;
+		} else {
+			this.wallGraceMs -= STEP_MS;
 		}
 
 		if (this.gamecontrols.consumeJumpPress()) {
@@ -233,6 +248,15 @@ export class PhysicsEngine {
 			vy = -MOVE.jumpSpeed;
 			this.jumpBufferMs = 0;
 			this.coyoteMs = 0;
+			this.isJumpRising = true;
+			SoundManager.getInstance().play(getRandomSautSound(), { volume: 0.2 });
+		} else if (this.jumpBufferMs > 0 && this.wallGraceMs > 0 && !this.wallJumpUsed) {
+			// One wall jump per time in the air: landing gives it back.
+			vy = -MOVE.wallJumpSpeed;
+			vx = -this.wallSide * MOVE.wallJumpPush;
+			this.jumpBufferMs = 0;
+			this.wallGraceMs = 0;
+			this.wallJumpUsed = true;
 			this.isJumpRising = true;
 			SoundManager.getInstance().play(getRandomSautSound(), { volume: 0.2 });
 		}

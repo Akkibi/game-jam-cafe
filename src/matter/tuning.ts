@@ -22,6 +22,9 @@ export const MOVE = {
 	maxFallSpeed: 1700,
 	coyoteMs: 100,
 	jumpBufferMs: 120,
+	wallJumpSpeed: 1450,
+	wallJumpPush: 650,
+	wallGraceMs: 100,
 };
 
 export const SLOW_MOTION_SCALE = 0.5;

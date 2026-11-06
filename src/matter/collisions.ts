@@ -57,6 +57,16 @@ export class CollisionWatcher {
 		return false;
 	}
 
+	// Side of the wall being touched: -1 left, 1 right, 0 none.
+	public getWallSide(): number {
+		for (const body of this.currentCollisions) {
+			if (!body.isSensor && this.character.position.y >= body.bounds.min.y) {
+				return body.position.x < this.character.position.x ? -1 : 1;
+			}
+		}
+		return 0;
+	}
+
 	public clear(): void {
 		this.currentCollisions.clear();
 	}

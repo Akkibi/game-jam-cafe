@@ -15,11 +15,17 @@ The player controller in `PhysicsEngine.step` runs at a fixed 120 Hz. Rendering 
 | `fallGravity`, `maxFallSpeed` | How fast the player comes down |
 | `jumpCutMultiplier` | Short hop when the jump button is released early |
 | `coyoteMs`, `jumpBufferMs` | Jump forgiveness after leaving a ledge, and before landing |
+| `wallJumpSpeed`, `wallJumpPush` | Height and sideways kick of a wall jump |
+| `wallGraceMs` | Wall jump forgiveness after leaving a wall |
 | `SLOW_MOTION_SCALE` | Time scale during the multiplier banner |
 
 ## Platforms
 
-Platforms are one-way: the player jumps up through them and lands on top. `updateOneWayPlatforms` switches them to sensors each step. Walls stay solid and do not allow jumping, because only a surface under the player counts as ground.
+Platforms are one-way: the player jumps up through them and lands on top. `updateOneWayPlatforms` switches them to sensors each step, so their sides never block the player or count as walls.
+
+## Wall jumps
+
+Touching a room wall in the air allows one wall jump, which kicks the player away from the wall. Landing on a surface gives it back, so a second wall jump needs a landing first.
 
 ## Controls
 
