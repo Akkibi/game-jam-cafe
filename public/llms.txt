@@ -1,0 +1,28 @@
+# Mathieu a un grain !
+
+> Jeu de plateforme arcade en 2D, gratuit et jouable dans le navigateur, sur le thème du café. Mathieu doit tenir sur les plateformes qui tombent dans une machine à café et manger des grains : la caféine accélère sa course et fait grimper le multiplicateur de score jusqu'à x10. Créé pendant une game jam sur le café (octobre 2025).
+> English: free browser-based 2D arcade platformer where Mathieu stays on platforms dropping into a coffee machine and eats coffee beans to boost his speed and score multiplier.
+
+- Site : https://mathieu-a-un-grain.akkibi.art/
+- Auteur : Akira Valade (@akkibi) https://akkibi.art, avec Fabrizio Manetti
+- Code source : https://github.com/Akkibi/game-jam-cafe
+- Stack : TypeScript, React 19, Three.js (WebGPURenderer, WebGL 2 sur Safari), Matter.js, GSAP, Zustand, Howler
+- Langue : français
+- Prix : gratuit, sans compte ni installation
+
+## Jeu
+
+- [Jouer](https://mathieu-a-un-grain.akkibi.art/) : page unique, la partie démarre après un compte à rebours 3, 2, 1.
+- Objectif : rester sur les plateformes (buse vapeur, moulin, sucre) qui descendent dans la machine et manger les grains de café. Plus la caféine est haute, plus Mathieu court vite et plus le multiplicateur (x2, x4, x6, x8, x10) augmente.
+- Chute : sous 30 000 points, la partie recommence ; au-delà, un écran de fin propose de rejouer ou de voir la cinématique de fin.
+
+## Contrôles
+
+- Clavier : Q, A ou flèche gauche / D ou flèche droite pour courir ; Z, W, Espace ou flèche haut pour sauter (maintenir pour sauter plus haut).
+- Manette : stick ou croix pour courir, A pour sauter.
+- Mobile : joystick à gauche et bouton de saut, en mode paysage (plein écran au premier tap si le navigateur le permet).
+- Saut mural : un par passage en l'air, rechargé à l'atterrissage.
+
+## Configuration requise
+
+- Navigateur récent avec WebGPU ou WebGL 2 (Chrome, Edge, Firefox, Safari), JavaScript activé.

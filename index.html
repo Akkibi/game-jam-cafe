@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 	<head>
 		<meta charset="UTF-8" />
 		<link rel="icon" type="image/svg+xml" href="/bean.svg" />
@@ -7,9 +7,100 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		<meta name="apple-mobile-web-app-title" content="Mathieu a un grain !" />
-		<title>Mathieu a un grain !</title>
+		<meta name="theme-color" content="#0b1028" />
+		<meta name="description" content="Jeu de plateforme arcade gratuit sur navigateur : tiens sur les plateformes qui tombent dans la machine à café et mange des grains pour multiplier ton score." />
+		<link rel="canonical" href="https://mathieu-a-un-grain.akkibi.art/" />
+		<meta name="robots" content="index, follow, max-image-preview:large" />
+		<meta name="author" content="Akira Valade" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Mathieu a un grain !" />
+		<meta property="og:title" content="Mathieu a un grain ! · Jeu de plateforme arcade au café" />
+		<meta property="og:description" content="Jeu de plateforme arcade gratuit sur navigateur : tiens sur les plateformes qui tombent dans la machine à café et mange des grains pour multiplier ton score." />
+		<meta property="og:url" content="https://mathieu-a-un-grain.akkibi.art/" />
+		<meta property="og:image" content="https://mathieu-a-un-grain.akkibi.art/og-image.jpg" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="Mathieu saute entre des plateformes dans une machine à café, avec le score et la jauge de caféine." />
+		<meta property="og:locale" content="fr_FR" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Mathieu a un grain ! · Jeu de plateforme arcade au café" />
+		<meta name="twitter:description" content="Jeu de plateforme arcade gratuit sur navigateur : reste sur les plateformes de la machine à café et mange des grains pour multiplier ton score." />
+		<meta name="twitter:image" content="https://mathieu-a-un-grain.akkibi.art/og-image.jpg" />
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@graph": [
+					{
+						"@type": "WebSite",
+						"@id": "https://mathieu-a-un-grain.akkibi.art/#website",
+						"url": "https://mathieu-a-un-grain.akkibi.art/",
+						"name": "Mathieu a un grain !",
+						"description": "Jeu de plateforme arcade gratuit sur navigateur, sur le thème du café.",
+						"inLanguage": "fr",
+						"author": { "@id": "https://akkibi.art/#person" }
+					},
+					{
+						"@type": "VideoGame",
+						"@id": "https://mathieu-a-un-grain.akkibi.art/#game",
+						"name": "Mathieu a un grain !",
+						"url": "https://mathieu-a-un-grain.akkibi.art/",
+						"description": "Jeu de plateforme arcade en 2D : Mathieu doit tenir sur les plateformes qui tombent dans une machine à café (buse vapeur, moulin, sucre) et manger des grains de café. La caféine accélère sa course et fait grimper le multiplicateur de score jusqu'à x10.",
+						"image": "https://mathieu-a-un-grain.akkibi.art/og-image.jpg",
+						"inLanguage": "fr",
+						"genre": ["Plateforme", "Arcade"],
+						"gamePlatform": "Web browser",
+						"applicationCategory": "GameApplication",
+						"operatingSystem": "Any",
+						"browserRequirements": "Navigateur récent avec WebGPU ou WebGL 2 (Chrome, Edge, Firefox, Safari). Clavier, manette ou écran tactile en mode paysage.",
+						"playMode": "SinglePlayer",
+						"dateCreated": "2025-10",
+						"isAccessibleForFree": true,
+						"offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+						"author": { "@id": "https://akkibi.art/#person" },
+						"contributor": { "@type": "Person", "name": "Fabrizio Manetti" }
+					},
+					{
+						"@type": "SoftwareSourceCode",
+						"name": "Mathieu a un grain !",
+						"codeRepository": "https://github.com/Akkibi/game-jam-cafe",
+						"programmingLanguage": ["TypeScript", "React", "Three.js"],
+						"runtimePlatform": "WebGPU, WebGL2",
+						"targetProduct": { "@id": "https://mathieu-a-un-grain.akkibi.art/#game" },
+						"author": { "@id": "https://akkibi.art/#person" }
+					},
+					{
+						"@type": "Person",
+						"@id": "https://akkibi.art/#person",
+						"name": "Akira Valade",
+						"alternateName": "Akkibi",
+						"url": "https://akkibi.art/",
+						"jobTitle": "Creative developer",
+						"sameAs": [
+							"https://www.linkedin.com/in/akkibi/",
+							"https://github.com/Akkibi",
+							"https://www.instagram.com/akkibi_/"
+						]
+					}
+				]
+			}
+		</script>
+		<title>Mathieu a un grain ! · Jeu de plateforme arcade au café</title>
 	</head>
 	<body>
+		<noscript>
+			<h1>Mathieu a un grain ! · Jeu de plateforme arcade au café</h1>
+			<p>
+				Jeu de plateforme arcade en 2D, gratuit et jouable dans le navigateur. Mathieu doit
+				tenir sur les plateformes qui tombent dans une machine à café et manger des grains : la
+				caféine accélère sa course et fait grimper le multiplicateur de score jusqu'à x10.
+			</p>
+			<p>
+				Le jeu demande JavaScript et un navigateur récent avec WebGPU ou WebGL 2. Contrôles :
+				clavier, manette ou écran tactile en mode paysage. Créé par
+				<a href="https://akkibi.art/">Akira Valade</a>, code source sur
+				<a href="https://github.com/Akkibi/game-jam-cafe">GitHub</a>.
+			</p>
+		</noscript>
 		<div id="root"></div>
 		<script type="module" src="/src/main.tsx"></script>
 	</body>
