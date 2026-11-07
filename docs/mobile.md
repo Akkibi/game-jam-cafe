@@ -27,6 +27,12 @@ Timers outside GSAP that change game state must check `isRotateBlocked` too, as 
 
 UI shown during the hold must use CSS animation, because GSAP is paused. `gsap.set` also does not render while paused, so the HUD only mounts once `hasEnteredLandscape` is true.
 
+## Fullscreen
+
+`src/utils/fullscreen.ts` requests fullscreen on the first tap of a page load, then locks the orientation to landscape. It listens to `pointerup` because a touch only counts as a user gesture once released. A locked phone in portrait turns landscape, which also lifts the [landscape hold](#landscape-hold).
+
+Browsers without these APIs, such as Safari on iPhone, skip this and rely on the rotate popup. It is not requested again after the player leaves fullscreen.
+
 ## Viewport
 
 `#root` is fixed and clips its content, and the viewport has `minimum-scale=1`. Without both, oversized HUD elements such as the `w-[275vh]` banner make mobile browsers widen the layout viewport.
