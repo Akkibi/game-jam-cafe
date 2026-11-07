@@ -3,10 +3,19 @@ import { useStore } from '../store/globalStore';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { SoundManager } from '../sounds/soundManager';
+import { SceneManager } from '../three/scene';
+
+const finishOutro = () => {
+	useStore.setState({ score: 0, isEndAnimationPlaying: false });
+	const scene = SceneManager.getInstance(null);
+	scene.restart();
+	scene.playSoundtrack();
+};
 
 const End = () => {
 	const openTimelineRef = useRef<gsap.core.Timeline>(gsap.timeline());
 	const elemsRef = useRef<HTMLDivElement>(null);
+	const videoRef = useRef<HTMLVideoElement>(null);
 
 	const isEndAnimationPlaying = useStore((state) => state.isEndAnimationPlaying);
 
@@ -32,44 +41,39 @@ const End = () => {
 	}, [isEndAnimationPlaying]);
 
 	useEffect(() => {
-		if (isEndAnimationPlaying) {
+		// Safari only allows sound when play() runs inside the tap, so this cannot wait for a render.
+		return useStore.subscribe((state, previous) => {
+			if (!state.isEndAnimationPlaying || previous.isEndAnimationPlaying) return;
 			SoundManager.getInstance().stopAll();
-			// console.log("isEndAnimationPlaying", isEndAnimationPlaying);
-			// useStore.setState({ isRestarting: false });
-			// useStore.setState({ isGameOver: true });
-		}
-
-		const videoEnd = document.getElementById('videoEnd');
-
-		const onEnded = () => {
-			// console.log("onended");
-			window.parent.postMessage({
-				type: 'elevator-command',
-				action: 'backToElevator',
-				data: { score: useStore.getState().score, gameIndex: 3 },
-			});
-		};
-
-		videoEnd?.addEventListener('ended', onEnded);
-
-		return () => {
-			videoEnd?.removeEventListener('ended', onEnded);
-		};
-	}, [isEndAnimationPlaying]);
+			const video = videoRef.current;
+			if (!video) return;
+			video.muted = false;
+			video.currentTime = 0;
+			video
+				.play()
+				.catch(() => {
+					video.muted = true;
+					return video.play();
+				})
+				.catch(finishOutro);
+		});
+	}, []);
 
 	return (
 		<div className="pointer-events-none absolute inset-0 z-[99]" ref={elemsRef}>
-			{isEndAnimationPlaying && (
-				<div className="absolute inset-0 bg-black">
-					<video
-						id="videoEnd"
-						className="absolute inset-0 w-full h-full"
-						src="/video/outro.mp4"
-						autoPlay
-						playsInline
-					/>
-				</div>
-			)}
+			<div
+				className={`absolute inset-0 bg-black ${isEndAnimationPlaying ? '' : 'invisible'}`}
+			>
+				<video
+					className="absolute inset-0 w-full h-full"
+					onEnded={finishOutro}
+					onError={finishOutro}
+					playsInline
+					preload="none"
+					ref={videoRef}
+					src="/video/outro.mp4"
+				/>
+			</div>
 		</div>
 	);
 };

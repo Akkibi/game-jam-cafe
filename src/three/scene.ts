@@ -12,6 +12,7 @@ import { soundConfigs, SOUNDS } from '../sounds/sounds';
 import { useStore } from '../store/globalStore';
 import { preloadModels } from '../utils/loadGLTFModel';
 import { preloadSteamFrames } from '../classes/platforms/SteamWandPlatform';
+import { isWebKit } from '../utils/device';
 // import { FallingManager } from "./fallingManager";
 
 const MAX_PIXEL_RATIO = 1.5;
@@ -59,7 +60,7 @@ export class SceneManager {
 		// this.scene.background = new THREE.Color(0x111121);
 		this.canvas = canvas;
 		// this.water = Water.getInstance(this.scene);
-		this.renderer = new THREE.WebGPURenderer();
+		this.renderer = new THREE.WebGPURenderer({ forceWebGL: isWebKit });
 		this.renderer.init();
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.camera = CameraManager.getInstance(this.scene);
@@ -81,7 +82,8 @@ export class SceneManager {
 		});
 
 		gsap.ticker.add((time, deltatime) => this.animate(time, deltatime));
-		window.addEventListener('resize', this.resize.bind(this));
+		const root = document.getElementById('root');
+		if (root) new ResizeObserver(() => this.resize(root)).observe(root);
 		if (canvas) {
 			this.init(canvas);
 		}
@@ -118,21 +120,26 @@ export class SceneManager {
 			onend: () => {
 				this.soundManager.play(SOUNDS.VOICE_INTRO_2, {
 					volume: 0.4,
-					onend: () => {
-						this.soundManager.play(SOUNDS.SOUNDTRACK, {
-							loop: true,
-							volume: 0.1,
-						});
-					},
+					onend: () => this.playSoundtrack(),
 				});
 			},
 		});
 	}
 
-	private resize() {
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
+	public playSoundtrack() {
+		this.soundManager.play(SOUNDS.SOUNDTRACK, {
+			loop: true,
+			volume: 0.1,
+		});
+	}
+
+	// Safari reports stale window sizes right after a rotation, so size from the laid out root.
+	private resize(root: HTMLElement) {
+		const { clientWidth: width, clientHeight: height } = root;
+		if (!width || !height) return;
+		this.renderer.setSize(width, height);
 		const camera = this.camera.getCamera();
-		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.aspect = width / height;
 		camera.updateProjectionMatrix();
 	}
 

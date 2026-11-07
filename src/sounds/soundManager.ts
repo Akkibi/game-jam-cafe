@@ -38,6 +38,10 @@ export class SoundManager {
 	private constructor() {
 		// Set up global Howler settings
 		Howler.autoUnlock = true;
+		// iOS keeps audio interrupted after a call or an app switch until the next tap.
+		window.addEventListener('pointerup', () => {
+			if (Howler.ctx && Howler.ctx.state !== 'running') void Howler.ctx.resume();
+		});
 	}
 
 	static getInstance(): SoundManager {

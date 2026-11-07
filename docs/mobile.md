@@ -33,6 +33,17 @@ UI shown during the hold must use CSS animation, because GSAP is paused. `gsap.s
 
 Browsers without these APIs, such as Safari on iPhone, skip this and rely on the rotate popup. It is not requested again after the player leaves fullscreen.
 
+## Safari
+
+Only the latest Safari is targeted. `isWebKit` in `src/utils/device.ts` also covers every other iOS browser, since they all run on WebKit.
+
+- Renderer: `SceneManager` forces the WebGL2 backend, because the game needs nothing from WebGPU and Safari's WebGPU is less proven.
+- Fullscreen: not available on iPhone. Adding the game to the Home Screen hides the Safari UI, through the `apple-mobile-web-app-*` meta tags in `index.html`.
+- Outro: `end.tsx` calls `play()` inside the tap through a store subscription, which keeps the sound. If that is refused it plays muted, and if that fails too the outro is skipped.
+- Audio: `SoundManager` resumes the audio context on the next tap after a call or an app switch.
+- Size: `SceneManager` reads the size of `#root` through a `ResizeObserver`, because window sizes can be stale after a rotation.
+- Zoom: `gesturestart` is cancelled, because iOS ignores `user-scalable=no`.
+
 ## Viewport
 
 `#root` is fixed and clips its content, and the viewport has `minimum-scale=1`. Without both, oversized HUD elements such as the `w-[275vh]` banner make mobile browsers widen the layout viewport.

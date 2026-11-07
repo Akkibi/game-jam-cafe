@@ -80,12 +80,14 @@ button:focus-visible {
 }
 
 @media (pointer: coarse) {
+	html,
 	body {
 		touch-action: none;
 		overscroll-behavior: none;
 		user-select: none;
 		-webkit-user-select: none;
 		-webkit-touch-callout: none;
+		-webkit-tap-highlight-color: transparent;
 	}
 }
 

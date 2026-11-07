@@ -44,6 +44,6 @@ See [mobile](mobile.md) for the touch controls and the landscape hold.
 Falling below `WORLD.height × 1.5` calls `SceneManager.restart`:
 
 - Score at or below 30000: reset, then replay the countdown (1.5× faster on retries).
-- Score above 30000: the end screen appears.
+- Score above 30000: the end screen appears. Restart replays straight away. Continue plays the outro video, then restarts with the score at 0.
 
 Blocks spawn during the countdown, because a platform's collider only appears 1.5 s after activation. The countdown must stay longer than that.
